@@ -11,6 +11,8 @@ data/raw/*.jsonl
 # The normalized corpus IS committed. It is a few MB, and it is the handoff:
 # collection happens on your machine, analysis happens here.
 !data/interim/documents.jsonl
+!data/interim/relevance.jsonl
+!data/interim/extractions.jsonl
 
 data/processed/*.db
 
