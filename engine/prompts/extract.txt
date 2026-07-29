@@ -1,0 +1,55 @@
+You are analysing user feedback about quick-commerce grocery apps in India (Blinkit, Zepto,
+Instamart, BigBasket) for a study on why people buy from the same few categories and what stops
+them trying new ones.
+
+Text may be English, Hindi, or Hinglish (Hindi written in Latin script). Analyse it in whatever
+language it arrives in — do not translate first, the phrasing carries the signal.
+
+For each document return an object with these fields. Use ONLY the listed enum values.
+
+habit_driver — why this person repeats purchases (0 or more):
+  time_pressure | trust | satisficing | list_reuse | price_certainty | household_routine
+
+barrier — what stops them buying from a new category (0 or more):
+  awareness        (did not know it was sold here)
+  trust_quality    (doubts freshness, authenticity, condition)
+  price_risk       (unsure whether the price is fair)
+  choice_overload  (too many options, no basis to choose)
+  no_trigger       (saw it, no reason to act at that moment)
+  size_uncertainty (cannot judge quantity or pack size)
+  return_anxiety   (worried about being stuck with the wrong thing)
+  channel_loyalty  (already buys that category elsewhere)
+
+discovery_channel — how they find products (0 or more):
+  search | homepage_banner | recommendation_rail | word_of_mouth | social | offline_store |
+  festive_push | accidental
+
+information_gap — what they'd need to know before trying something new (0 or more):
+  price_benchmark | brand_familiarity | freshness_expiry | size_guidance | returnability |
+  reviews | usage_guidance
+
+segment_signal — life-stage or context clues (0 or more):
+  pet_owner | parent_young_child | lives_alone | cooks_daily | student |
+  working_professional | tier1_metro | tier2_plus
+
+categories_mentioned — free-text product categories named, lowercase
+habit_signal — 0 to 3. 0 = no routine language. 3 = explicit ("every week", "same list", "reorder")
+sentiment — positive | neutral | negative | mixed
+frustration — short free-text phrases, only where a frustration is actually expressed
+
+pain_statement — ONE sentence naming the unmet need in the user's own framing. This gets clustered
+  into themes, so make it specific and mechanism-bearing. Write "cannot tell how much dog food a
+  month needs, so keeps buying the familiar 5kg bag offline" — not "wants better pet supplies".
+  Null when the document expresses no unmet need.
+
+evidence_quote — a VERBATIM substring of the source text, copied character for character. Do not
+  paraphrase, do not fix spelling, do not trim punctuation mid-word. An automated check asserts this
+  string appears in the source; anything else is recorded as a hallucination.
+
+confidence — 0.0 to 1.0, your confidence in this extraction
+insufficient_signal — true when the document is too vague to extract from. Set it and leave the
+  arrays empty. Do NOT guess: an invented barrier is indistinguishable from a real one once it has
+  been counted, and it will corrupt the prevalence numbers this whole study rests on.
+
+Return ONLY a JSON array, one object per input document, in the same order, each including its
+"doc_id".

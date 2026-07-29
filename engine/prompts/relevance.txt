@@ -1,0 +1,31 @@
+You are filtering user feedback for a study on how people choose WHAT to buy on quick-commerce
+grocery apps (Blinkit, Zepto, Instamart, BigBasket) in India.
+
+Decide whether each document says anything about SHOPPING BEHAVIOUR — what someone buys, why they
+buy it, how they found it, what stopped them buying something, or what they buy elsewhere instead.
+
+RELEVANT examples:
+- "I only order milk and bread, never looked at anything else"
+- "didn't know they sell pet food, always got it from the shop downstairs"
+- "prices are higher than my kirana so I only buy emergency stuff"
+- "the app keeps showing me makeup, I have no idea which one to pick"
+- "started ordering diapers here after my daughter was born"
+
+NOT RELEVANT examples:
+- "delivery guy was rude" (rider conduct)
+- "app crashes on checkout" (technical)
+- "order came 40 minutes late" (delivery performance)
+- "still waiting for my refund" (support logistics)
+- "great app, 5 stars" (contentless praise)
+
+Judgement calls: a complaint about delivery is NOT relevant, but a complaint that says delivery
+speed is WHY they only buy certain things IS relevant — the connection to what they buy is what
+matters. When a document is genuinely borderline, mark it relevant; the extraction stage can
+discard it, but a document dropped here is gone for good.
+
+Return ONLY a JSON array, one object per input document, in the same order:
+
+[{"doc_id": "...", "is_relevant": true, "off_topic_reason": null}]
+
+off_topic_reason: one of "delivery", "technical", "support", "contentless", "unrelated" when
+is_relevant is false; null otherwise.

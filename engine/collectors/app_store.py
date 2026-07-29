@@ -23,23 +23,45 @@ APPS: dict[str, str] = {
     "bigbasket": "663666583",
 }
 
-FEED = (
+# Apple has quietly moved this endpoint more than once and never documented it. Try both known
+# shapes per page and take whichever answers — the older country-prefixed path still works for some
+# storefronts, the query-param form for others.
+FEEDS = [
     "https://itunes.apple.com/{country}/rss/customerreviews/"
-    "page={page}/id={app_id}/sortby=mostrecent/json"
-)
+    "page={page}/id={app_id}/sortby=mostrecent/json",
+    "https://itunes.apple.com/rss/customerreviews/"
+    "page={page}/id={app_id}/sortby=mostrecent/json?l=en&cc={country}",
+]
+
+
+def _get_entries(app_id: str, country: str, page: int) -> list[dict] | None:
+    for template in FEEDS:
+        url = template.format(country=country, page=page, app_id=app_id)
+        try:
+            resp = requests.get(url, timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+            if resp.status_code != 200:
+                continue
+            entries = resp.json().get("feed", {}).get("entry", [])
+            if entries:
+                return entries
+        except Exception as exc:  # noqa: BLE001
+            log.debug("app_store: %s page %d via %s: %s", app_id, page, template[:40], exc)
+    return None
 
 
 def fetch_app(app_name: str, app_id: str, country: str = "in", max_pages: int = 10) -> list[dict]:
     collected: list[dict] = []
 
     for page in range(1, max_pages + 1):
-        url = FEED.format(country=country, page=page, app_id=app_id)
-        try:
-            resp = requests.get(url, timeout=20, headers={"User-Agent": "blinkit-discovery/0.1"})
-            resp.raise_for_status()
-            entries = resp.json().get("feed", {}).get("entry", [])
-        except Exception as exc:  # noqa: BLE001
-            log.warning("app_store: %s page %d failed: %s", app_name, page, exc)
+        entries = _get_entries(app_id, country, page)
+        if entries is None:
+            if page == 1:
+                log.warning(
+                    "app_store: %s (id=%s) returned nothing on page 1 — id may be stale or the "
+                    "feed is unavailable for this storefront",
+                    app_name,
+                    app_id,
+                )
             break
 
         # Page 1 leads with an app-metadata entry that has no "author" — skip it.
