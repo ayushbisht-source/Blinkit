@@ -1,0 +1,82 @@
+name: Collect corpus
+
+# Manual trigger only. Go to the Actions tab -> "Collect corpus" -> "Run workflow".
+# The runner has open internet access, so this is the path when your own machine
+# (or a sandboxed dev environment) cannot reach the review endpoints.
+on:
+  workflow_dispatch:
+    inputs:
+      per_app:
+        description: "Play Store reviews per app"
+        required: false
+        default: "1000"
+      sources:
+        description: "Comma-separated: play_store,app_store,reddit"
+        required: false
+        default: "play_store,app_store"
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # Only what collection needs. The heavy ML deps in requirements.txt are for
+      # later stages and would add several minutes to every run.
+      - name: Install collection dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-play-scraper requests praw pydantic python-dotenv datasketch
+
+      - name: Collect
+        env:
+          AUTHOR_HASH_SALT: ${{ secrets.AUTHOR_HASH_SALT || 'blinkit-discovery-default-salt' }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USER_AGENT: blinkit-discovery/0.1
+        run: |
+          python -m engine.collect \
+            --per-app "${{ github.event.inputs.per_app }}" \
+            --sources "${{ github.event.inputs.sources }}"
+
+      - name: Report corpus size
+        run: |
+          echo "### Corpus collected" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          wc -l data/interim/documents.jsonl >> $GITHUB_STEP_SUMMARY
+          du -h data/interim/documents.jsonl >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      # Also uploaded as an artifact so the run is recoverable even if the
+      # commit step fails (branch protection, races, etc).
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: corpus
+          path: data/interim/documents.jsonl
+          retention-days: 14
+
+      - name: Commit corpus back to branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/interim/documents.jsonl
+          if git diff --staged --quiet; then
+            echo "No corpus change to commit."
+          else
+            git commit -m "Collect corpus via Actions run ${{ github.run_number }}"
+            git pull --rebase origin ${{ github.ref_name }}
+            git push origin HEAD:${{ github.ref_name }}
+          fi
