@@ -4,11 +4,15 @@ __pycache__/
 .venv/
 venv/
 
-# Corpus artifacts — regenerable, and large. The seed sample under data/raw/seed/ is committed.
+# Raw snapshots are large and regenerable — keep them local.
 data/raw/*.jsonl
-data/interim/
-data/processed/*.db
 !data/raw/seed/
+
+# The normalized corpus IS committed. It is a few MB, and it is the handoff:
+# collection happens on your machine, analysis happens here.
+!data/interim/documents.jsonl
+
+data/processed/*.db
 
 # Interview material never leaves the machine unanonymised
 research/transcripts/*.raw.*
