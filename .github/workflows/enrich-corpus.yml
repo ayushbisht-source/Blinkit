@@ -39,7 +39,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install anthropic google-generativeai pydantic python-dotenv tenacity
+          pip install anthropic google-genai pydantic python-dotenv tenacity
 
       - name: Check credentials
         env:
@@ -51,6 +51,14 @@ jobs:
             exit 1
           fi
           echo "Credential present."
+
+      # One live call before committing to thousands. A bad model name or a dead key fails here
+      # with a readable traceback instead of quietly producing an empty output file.
+      - name: Self-test
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m engine.pipeline.enrich --selftest
 
       - name: Enrich
         env:

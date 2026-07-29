@@ -22,10 +22,12 @@ from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_ex
 
 log = logging.getLogger(__name__)
 
-ANTHROPIC_MODEL_FAST = "claude-haiku-4-5-20251001"
-ANTHROPIC_MODEL_STRONG = "claude-sonnet-5"
-GEMINI_MODEL_FAST = "gemini-2.0-flash"
-GEMINI_MODEL_STRONG = "gemini-2.0-flash"
+# Overridable without a code change — model names churn, and a stale identifier is the single
+# most likely reason a run dies on someone else's machine.
+ANTHROPIC_MODEL_FAST = os.getenv("ANTHROPIC_MODEL_FAST", "claude-haiku-4-5-20251001")
+ANTHROPIC_MODEL_STRONG = os.getenv("ANTHROPIC_MODEL_STRONG", "claude-sonnet-5")
+GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-2.5-flash")
+GEMINI_MODEL_STRONG = os.getenv("GEMINI_MODEL_STRONG", "gemini-2.5-flash")
 
 
 class LLMError(RuntimeError):
@@ -59,14 +61,41 @@ class LLMClient:
 
             self._client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
         elif self.provider == "gemini":
-            import google.generativeai as genai
+            # Google shipped a replacement SDK (`google-genai`) and put the old one
+            # (`google-generativeai`) into maintenance. Prefer the new one, fall back to the old,
+            # so this works whichever is installed.
+            try:
+                from google import genai as new_genai
 
-            genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-            self._genai = genai
+                self._gemini_sdk = "new"
+                self._client = new_genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+            except ImportError:
+                import google.generativeai as legacy_genai
+
+                self._gemini_sdk = "legacy"
+                legacy_genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+                self._genai = legacy_genai
+            log.info("Gemini SDK: %s", self._gemini_sdk)
         else:
             raise LLMError(f"Unknown provider: {self.provider}")
 
         log.info("LLM provider: %s", self.provider)
+
+    def selftest(self) -> None:
+        """One real call, with the traceback allowed to escape.
+
+        Worth its own entry point: a bad model name or key fails identically to a rate limit once
+        it has been swallowed by batch-level error handling, and telling those apart after the fact
+        costs more than checking up front.
+        """
+        log.info("selftest: provider=%s model=%s", self.provider, self.model("fast"))
+        result = self.structured(
+            system='Reply with JSON only, exactly: [{"ok": true}]',
+            user="respond now",
+            tier="fast",
+            max_tokens=100,
+        )
+        log.info("selftest OK -> %r", result)
 
     @staticmethod
     def _autodetect() -> str:
@@ -115,6 +144,18 @@ class LLMClient:
                 messages=[{"role": "user", "content": user}],
             )
             return _extract_json(resp.content[0].text)
+
+        if self._gemini_sdk == "new":
+            resp = self._client.models.generate_content(
+                model=self.model(tier),
+                contents=user,
+                config={
+                    "system_instruction": system,
+                    "response_mime_type": "application/json",
+                    "max_output_tokens": max_tokens,
+                },
+            )
+            return _extract_json(resp.text)
 
         model = self._genai.GenerativeModel(
             self.model(tier),

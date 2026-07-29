@@ -70,17 +70,36 @@ def _batches(items: list, size: int):
         yield items[i : i + size]
 
 
+class TooManyFailures(RuntimeError):
+    """Raised when a stage is failing so consistently that continuing is pointless.
+
+    Without this, a wrong model name or a dead key produces an empty output file and a green
+    tick — the worst possible outcome, because it looks like the corpus had nothing in it.
+    """
+
+
+def _guard(stage: str, failures: int, total: int) -> None:
+    if total >= 3 and failures / total > 0.5:
+        raise TooManyFailures(
+            f"{stage}: {failures}/{total} batches failed. This is a configuration problem "
+            f"(model name, API key, or quota), not bad data. Fix it before re-running."
+        )
+
+
 def run_relevance(client: LLMClient, docs: list[Document]) -> None:
     system = (PROMPTS / "relevance.txt").read_text()
     pending = [d for d in docs if d.doc_id not in done_ids(RELEVANCE)]
     log.info("relevance: %d documents pending", len(pending))
+    failures = 0
 
     with RELEVANCE.open("a") as out:
         for n, batch in enumerate(_batches(pending, RELEVANCE_BATCH), 1):
             try:
                 result = client.structured(system, _render(batch), tier="fast", max_tokens=1500)
             except Exception as exc:  # noqa: BLE001
-                log.warning("relevance batch %d failed, skipping: %s", n, exc)
+                failures += 1
+                log.warning("relevance batch %d failed: %s", n, exc)
+                _guard("relevance", failures, n)
                 continue
 
             got = {r.get("doc_id") for r in result if isinstance(r, dict)}
@@ -113,13 +132,16 @@ def run_extraction(client: LLMClient, docs: list[Document]) -> None:
     already = done_ids(EXTRACTIONS)
     pending = [d for d in docs if d.doc_id in relevant and d.doc_id not in already]
     log.info("extraction: %d relevant, %d pending", len(relevant), len(pending))
+    failures = 0
 
     with EXTRACTIONS.open("a") as out:
         for n, batch in enumerate(_batches(pending, EXTRACTION_BATCH), 1):
             try:
                 result = client.structured(system, _render(batch), tier="strong", max_tokens=4000)
             except Exception as exc:  # noqa: BLE001
-                log.warning("extraction batch %d failed, skipping: %s", n, exc)
+                failures += 1
+                log.warning("extraction batch %d failed: %s", n, exc)
+                _guard("extraction", failures, n)
                 continue
 
             for r in result:
@@ -141,7 +163,12 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", choices=["relevance", "extraction", "all"], default="all")
     ap.add_argument("--limit", type=int, default=0, help="cap documents, for trial runs")
+    ap.add_argument("--selftest", action="store_true", help="one live call, then exit")
     args = ap.parse_args()
+
+    if args.selftest:
+        LLMClient().selftest()
+        return
 
     INTERIM.mkdir(parents=True, exist_ok=True)
     docs = load_docs()
