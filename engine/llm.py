@@ -208,31 +208,38 @@ class LLMClient:
             return _extract_json(resp.content[0].text)
 
         if self._gemini_sdk == "new":
-            gen_config = {
-                "system_instruction": system,
-                "response_mime_type": "application/json",
-                "max_output_tokens": max_tokens,
-                # Newer flash models default to spending part of max_output_tokens on invisible
-                # "thinking" content before ever emitting the answer. For a fixed-schema
-                # classification task that budget is pure waste — worse, at a small max_tokens it
-                # can consume the whole budget and leave resp.text as None. Disabling it is both
-                # cheaper and more reliable here.
-                "thinking_config": {"thinking_budget": 0},
-            }
+
+            def gen(with_thinking_off: bool, tokens: int):
+                config = {
+                    "system_instruction": system,
+                    "response_mime_type": "application/json",
+                    "max_output_tokens": tokens,
+                }
+                if with_thinking_off:
+                    # Newer flash models default to spending part of max_output_tokens on
+                    # invisible "thinking" content before the visible answer. For a fixed-schema
+                    # classification task that budget is pure waste. Not every model accepts the
+                    # field though (some 400 on it), so this is attempted, not assumed.
+                    config["thinking_config"] = {"thinking_budget": 0}
+                return self._client.models.generate_content(
+                    model=self.model(tier), contents=user, config=config
+                )
+
             try:
-                resp = self._client.models.generate_content(
-                    model=self.model(tier), contents=user, config=gen_config
-                )
+                resp = gen(with_thinking_off=True, tokens=max_tokens)
             except Exception as exc:  # noqa: BLE001
-                # Only "this model no longer exists" triggers discovery — a quota or content
-                # error on a model that IS valid should surface as itself, not be masked by a
-                # silent swap to a different model.
-                if "NOT_FOUND" not in str(exc) and "404" not in str(exc):
+                msg = str(exc)
+                if "NOT_FOUND" in msg or "404" in msg:
+                    self._resolved_model[tier] = self._discover_gemini_model()
+                    resp = gen(with_thinking_off=True, tokens=max_tokens)
+                elif "INVALID_ARGUMENT" in msg or "400" in msg:
+                    # This model rejects thinking_config outright. Retry without it, and give the
+                    # invisible thinking budget room so it doesn't eat the whole response the way
+                    # it did before this fallback existed.
+                    log.warning("Gemini rejected thinking_config, retrying without it: %s", msg)
+                    resp = gen(with_thinking_off=False, tokens=max(max_tokens, 1024))
+                else:
                     raise
-                self._resolved_model[tier] = self._discover_gemini_model()
-                resp = self._client.models.generate_content(
-                    model=self.model(tier), contents=user, config=gen_config
-                )
             return _extract_json(self._gemini_text(resp))
 
         model = self._genai.GenerativeModel(
