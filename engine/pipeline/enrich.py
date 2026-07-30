@@ -164,7 +164,15 @@ def main() -> None:
     ap.add_argument("--stage", choices=["relevance", "extraction", "all"], default="all")
     ap.add_argument("--limit", type=int, default=0, help="cap documents, for trial runs")
     ap.add_argument("--selftest", action="store_true", help="one live call, then exit")
+    ap.add_argument(
+        "--list-models", action="store_true", help="print this key's Gemini model catalog, then exit"
+    )
     args = ap.parse_args()
+
+    if args.list_models:
+        for line in LLMClient().list_gemini_models():
+            log.info(line)
+        return
 
     if args.selftest:
         LLMClient().selftest()

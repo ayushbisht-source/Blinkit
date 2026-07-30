@@ -194,6 +194,19 @@ class LLMClient:
         self._resolved_model[tier] = configured
         return configured
 
+    def list_gemini_models(self) -> list[str]:
+        """Raw model catalog for this key — a metadata call, not a generate_content call, so it
+        doesn't spend generation quota. Use this to see the real menu before guessing further.
+        """
+        if self.provider != "gemini" or self._gemini_sdk != "new":
+            raise LLMError("list_gemini_models only applies to the new Gemini SDK.")
+        out = []
+        for m in self._client.models.list():
+            name = m.name.split("/")[-1]
+            actions = getattr(m, "supported_actions", None) or []
+            out.append(f"{name}  actions={actions}")
+        return out
+
     def selftest(self) -> None:
         """One real call, with the traceback allowed to escape.
 
@@ -279,32 +292,49 @@ class LLMClient:
                     model=self.model(tier), contents=user, config=config
                 )
 
-            try:
-                resp = gen(with_thinking_off=True, tokens=max_tokens)
-            except Exception as exc:  # noqa: BLE001
-                msg = str(exc)
-                if "NOT_FOUND" in msg or "404" in msg:
-                    self._resolved_model[tier] = self._discover_gemini_model()
-                    resp = gen(with_thinking_off=True, tokens=max_tokens)
-                elif "RESOURCE_EXHAUSTED" in msg and "PerDay" in msg:
-                    # A per-DAY cap has nothing to back off into — waiting doesn't help until
-                    # tomorrow. Different model names appear to carry independent quota buckets,
-                    # so switch models instead of retrying this one.
-                    exhausted = self._exhausted_models.setdefault(tier, set())
-                    exhausted.add(self.model(tier))
-                    self._resolved_model[tier] = self._discover_gemini_model(exclude=exhausted)
-                    resp = gen(with_thinking_off=True, tokens=max_tokens)
-                elif "INVALID_ARGUMENT" in msg or "400" in msg:
-                    # This model rejects thinking_config outright. Retry without it, and give the
-                    # invisible thinking budget room so it doesn't eat the whole response the way
-                    # it did before this fallback existed.
-                    log.warning("Gemini rejected thinking_config, retrying without it: %s", msg)
-                    resp = gen(with_thinking_off=False, tokens=max(max_tokens, 1024))
-                else:
+            exhausted = self._exhausted_models.setdefault(tier, set())
+            thinking_off, tokens = True, max_tokens
+            last_exc: Exception | None = None
+
+            # Bounded loop, not a single fallback: the next candidate model can be just as dead
+            # as the first (observed — it switched straight into gemini-2.5-flash, a name already
+            # known 404 from an earlier fix). Each iteration handles one failure class and moves
+            # to the next candidate; only a genuinely unhandled error or per-minute exhaustion
+            # breaks out to the caller.
+            for _ in range(6):
+                try:
+                    resp = gen(with_thinking_off=thinking_off, tokens=tokens)
+                    return _extract_json(self._gemini_text(resp))
+                except Exception as exc:  # noqa: BLE001
+                    msg = str(exc)
+                    last_exc = exc
+                    dead_or_exhausted = ("NOT_FOUND" in msg or "404" in msg) or (
+                        "RESOURCE_EXHAUSTED" in msg and "PerDay" in msg
+                    )
+                    if dead_or_exhausted:
+                        # Exclude both the name we called it by (may be an alias) and whatever
+                        # real model name the API's own error message reports — the alias rarely
+                        # matches an entry in models.list(), so excluding only it lets discovery
+                        # hand back the very same underlying model next time.
+                        exhausted.add(self.model(tier))
+                        reported = re.search(r"model:\s*([\w.\-]+)", msg)
+                        if reported:
+                            exhausted.add(reported.group(1))
+                        self._resolved_model[tier] = self._discover_gemini_model(exclude=exhausted)
+                        thinking_off, tokens = True, max_tokens
+                        continue
+                    if "INVALID_ARGUMENT" in msg or "400" in msg:
+                        # This model rejects thinking_config outright. Retry it without one, with
+                        # room for the invisible thinking budget so it doesn't eat the whole
+                        # response the way it did before this fallback existed.
+                        log.warning("Gemini rejected thinking_config, retrying without it: %s", msg)
+                        thinking_off, tokens = False, max(tokens, 1024)
+                        continue
                     # Includes per-MINUTE RESOURCE_EXHAUSTED, which the outer @retry on
                     # _is_retryable will wait out and retry against this same model.
                     raise
-            return _extract_json(self._gemini_text(resp))
+
+            raise LLMError(f"Exhausted every Gemini model fallback attempt. Last error: {last_exc}")
 
         self._pace_gemini()
         model = self._genai.GenerativeModel(

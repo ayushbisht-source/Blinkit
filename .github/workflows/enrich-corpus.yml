@@ -17,6 +17,10 @@ on:
         description: "relevance | extraction | all"
         required: false
         default: "all"
+      list_models:
+        description: "true: only print this key's Gemini model catalog (no generation calls, no quota spent), then exit"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -52,15 +56,30 @@ jobs:
           fi
           echo "Credential present."
 
+      # Metadata call only — no generation quota spent. Run this first whenever the model
+      # situation is unclear rather than burning generation attempts to find out by guessing.
+      - name: List Gemini models
+        if: github.event.inputs.list_models == 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "### Gemini model catalog" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          python -m engine.pipeline.enrich --list-models | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
       # One live call before committing to thousands. A bad model name or a dead key fails here
       # with a readable traceback instead of quietly producing an empty output file.
       - name: Self-test
+        if: github.event.inputs.list_models != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python -m engine.pipeline.enrich --selftest
 
       - name: Enrich
+        if: github.event.inputs.list_models != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -70,7 +89,7 @@ jobs:
             --limit "${{ github.event.inputs.limit }}"
 
       - name: Summarise
-        if: always()
+        if: always() && github.event.inputs.list_models != 'true'
         run: |
           echo "### Enrichment" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
