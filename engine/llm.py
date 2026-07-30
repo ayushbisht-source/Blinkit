@@ -26,8 +26,13 @@ log = logging.getLogger(__name__)
 # most likely reason a run dies on someone else's machine.
 ANTHROPIC_MODEL_FAST = os.getenv("ANTHROPIC_MODEL_FAST", "claude-haiku-4-5-20251001")
 ANTHROPIC_MODEL_STRONG = os.getenv("ANTHROPIC_MODEL_STRONG", "claude-sonnet-5")
-GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-2.5-flash")
-GEMINI_MODEL_STRONG = os.getenv("GEMINI_MODEL_STRONG", "gemini-2.5-flash")
+
+# Google retires dated Gemini snapshots for new API keys faster than any hardcoded name survives
+# (gemini-2.5-flash 404'd within months of release). "-latest" aliases are Google's own answer to
+# this and are tried first; if even those are gone, the client asks the account's own model list
+# at runtime instead of guessing a name that will just as quickly go stale.
+GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-flash-latest")
+GEMINI_MODEL_STRONG = os.getenv("GEMINI_MODEL_STRONG", "gemini-flash-latest")
 
 
 class LLMError(RuntimeError):
@@ -79,7 +84,51 @@ class LLMClient:
         else:
             raise LLMError(f"Unknown provider: {self.provider}")
 
+        self._resolved_model: dict[str, str] = {}
         log.info("LLM provider: %s", self.provider)
+
+    def _discover_gemini_model(self) -> str:
+        """Ask the account's own model list for something that still exists.
+
+        Only reached once the configured name and the "-latest" alias have both 404'd — i.e. the
+        account's usable model names have moved somewhere this code has no way to predict.
+        """
+        if self._gemini_sdk != "new":
+            raise LLMError(
+                "Configured Gemini model is unavailable and the legacy SDK has no model-listing "
+                "API here. Set GEMINI_MODEL_FAST/GEMINI_MODEL_STRONG to a current model name from "
+                "https://ai.google.dev/gemini-api/docs/models"
+            )
+
+        candidates = []
+        for m in self._client.models.list():
+            name = m.name.split("/")[-1]
+            actions = getattr(m, "supported_actions", None) or []
+            if actions and "generateContent" not in actions:
+                continue
+            if "flash" in name and not any(x in name for x in ("tts", "embedding", "vision", "image")):
+                candidates.append(name)
+
+        if not candidates:
+            raise LLMError(
+                "No usable Gemini text model found on this API key. Check the key at "
+                "https://aistudio.google.com/apikey and pick a model name from "
+                "https://ai.google.dev/gemini-api/docs/models to set as GEMINI_MODEL_FAST."
+            )
+
+        # "-latest" aliases first (Google's own answer to name churn), otherwise whatever the
+        # account's list returns — it is generally ordered with current models first.
+        candidates.sort(key=lambda n: "latest" not in n)
+        chosen = candidates[0]
+        log.warning("Configured Gemini model unavailable; discovered '%s' from account instead", chosen)
+        return chosen
+
+    def _gemini_model_for(self, tier: str) -> str:
+        if tier in self._resolved_model:
+            return self._resolved_model[tier]
+        configured = GEMINI_MODEL_STRONG if tier == "strong" else GEMINI_MODEL_FAST
+        self._resolved_model[tier] = configured
+        return configured
 
     def selftest(self) -> None:
         """One real call, with the traceback allowed to escape.
@@ -112,7 +161,7 @@ class LLMClient:
         strong = tier == "strong"
         if self.provider == "anthropic":
             return ANTHROPIC_MODEL_STRONG if strong else ANTHROPIC_MODEL_FAST
-        return GEMINI_MODEL_STRONG if strong else GEMINI_MODEL_FAST
+        return self._gemini_model_for(tier)
 
     @retry(
         retry=retry_if_exception_type((LLMError, ConnectionError, TimeoutError)),
@@ -146,15 +195,32 @@ class LLMClient:
             return _extract_json(resp.content[0].text)
 
         if self._gemini_sdk == "new":
-            resp = self._client.models.generate_content(
-                model=self.model(tier),
-                contents=user,
-                config={
-                    "system_instruction": system,
-                    "response_mime_type": "application/json",
-                    "max_output_tokens": max_tokens,
-                },
-            )
+            try:
+                resp = self._client.models.generate_content(
+                    model=self.model(tier),
+                    contents=user,
+                    config={
+                        "system_instruction": system,
+                        "response_mime_type": "application/json",
+                        "max_output_tokens": max_tokens,
+                    },
+                )
+            except Exception as exc:  # noqa: BLE001
+                # Only "this model no longer exists" triggers discovery — a quota or content
+                # error on a model that IS valid should surface as itself, not be masked by a
+                # silent swap to a different model.
+                if "NOT_FOUND" not in str(exc) and "404" not in str(exc):
+                    raise
+                self._resolved_model[tier] = self._discover_gemini_model()
+                resp = self._client.models.generate_content(
+                    model=self.model(tier),
+                    contents=user,
+                    config={
+                        "system_instruction": system,
+                        "response_mime_type": "application/json",
+                        "max_output_tokens": max_tokens,
+                    },
+                )
             return _extract_json(resp.text)
 
         model = self._genai.GenerativeModel(
