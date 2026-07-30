@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -36,8 +37,13 @@ DOCS = INTERIM / "documents.jsonl"
 RELEVANCE = INTERIM / "relevance.jsonl"
 EXTRACTIONS = INTERIM / "extractions.jsonl"
 
-RELEVANCE_BATCH = 20
-EXTRACTION_BATCH = 8
+# Batch sizes are the main lever against a per-DAY request quota, because the cap counts requests,
+# not tokens. Bigger batches mean fewer calls for identical work: at 20/batch the relevance gate
+# needs ~169 calls for a 3.4k corpus; at 50 it needs ~68. Sized against output volume, not input —
+# relevance emits one short JSON object per document, so 50 fits comfortably; extraction emits a
+# large object per document, so it stays much smaller to avoid truncation mid-array.
+RELEVANCE_BATCH = int(os.getenv("RELEVANCE_BATCH", "50"))
+EXTRACTION_BATCH = int(os.getenv("EXTRACTION_BATCH", "15"))
 
 
 def load_docs() -> list[Document]:
@@ -95,7 +101,11 @@ def run_relevance(client: LLMClient, docs: list[Document]) -> None:
     with RELEVANCE.open("a") as out:
         for n, batch in enumerate(_batches(pending, RELEVANCE_BATCH), 1):
             try:
-                result = client.structured(system, _render(batch), tier="fast", max_tokens=1500)
+                # Scale with batch size: ~40 output tokens per document plus headroom. A budget
+                # that silently truncates the JSON array loses the tail of the batch.
+                result = client.structured(
+                    system, _render(batch), tier="fast", max_tokens=len(batch) * 60 + 500
+                )
             except Exception as exc:  # noqa: BLE001
                 failures += 1
                 log.warning("relevance batch %d failed: %s", n, exc)
@@ -137,7 +147,11 @@ def run_extraction(client: LLMClient, docs: list[Document]) -> None:
     with EXTRACTIONS.open("a") as out:
         for n, batch in enumerate(_batches(pending, EXTRACTION_BATCH), 1):
             try:
-                result = client.structured(system, _render(batch), tier="strong", max_tokens=4000)
+                # Extraction emits a full structured object per document — budget generously,
+                # since a truncated array silently drops the tail of the batch.
+                result = client.structured(
+                    system, _render(batch), tier="strong", max_tokens=len(batch) * 400 + 1000
+                )
             except Exception as exc:  # noqa: BLE001
                 failures += 1
                 log.warning("extraction batch %d failed: %s", n, exc)
