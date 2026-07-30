@@ -122,12 +122,51 @@ a recurrence metric. One-off trial doesn't move it. Two implications:
 
 ---
 
-## 6. Honest note on research artifacts
+## 6. AI-synthesized personas — a labeled method, not a substitute for interviews
 
-Two files of interview-style transcripts were produced with AI assistance during this project. They
-are **not** records of conducted interviews — both carry explicit headers to that effect
-("illustrative, constructed interviews, not real transcripts"; "I could not conduct literal
-follow-up interviews with the actual people"). They are excluded from this project's evidence base
-and are not cited in Part 3.
+Alongside the survey, six **AI-synthesized respondent personas** were generated. Each is anchored to
+one real survey row — that respondent's app, order mix, stated blockers, household type and
+near-miss reason are taken directly from their answers — with an LLM writing first-person narrative
+around those fixed data points.
 
-The analysis in §1–§4 above is drawn from the 40 real survey responses only.
+**This is stated openly because the distinction decides whether the artifact is useful or
+disqualifying.** These are not interviews. No person said these words. They are a probe for
+generating hypotheses from structured data, and they are reported as such.
+
+### Why include them at all
+
+The project's premise is an AI-native research workflow. Synthetic personas are a real and current
+technique in that space, and testing where they help and where they mislead is itself a finding
+worth reporting — arguably more interesting than the personas' content.
+
+### What they legitimately produced
+
+Two hypotheses that the raw survey tabulation did not make obvious, both of which are checkable
+against the real data:
+
+| Hypothesis from personas | Checkable against survey? | Verdict |
+|---|---|---|
+| Category breadth can reflect **order consolidation**, not curiosity — infrequent users bundle many categories into one order | Partly. Cross-tab of order frequency against category count is computable from the real data. | **Testable — worth running.** If low-frequency users show *higher* category counts, breadth is a misleading proxy for exploration, which would change how the target segment is defined. |
+| Crossover into baby/pet categories is **life-event driven**, i.e. "buying for someone" rather than self-exploration | Weakly. Baby (3) and pet (2) are the rarest categories, consistent with life-stage gating, but n is far too small to confirm. | **Unconfirmed.** Directionally plausible, not evidenced. |
+
+### What they cannot do — the structural limit
+
+A synthetic persona is generated *from* the survey responses. It therefore cannot contain
+information the survey did not already capture. It can recombine and articulate, but it cannot
+surprise. Every "insight" it produces is a restatement of the input data in more fluent language.
+
+That is precisely the capability Part 3 needs and does not have: the ability to surface a barrier
+nobody thought to put on the form. **This is the strongest available demonstration of why
+AI-generated research cannot replace primary research** — and it is the honest answer to the
+brief's framing that "AI-generated insights are only a starting point."
+
+### Rules applied
+
+1. No persona is quoted as evidence for any claim in Part 3.
+2. No persona-derived hypothesis is treated as validated unless independently checkable against the
+   40 real responses (see table above).
+3. Personas are never described as interviews, participants, or respondents in any deliverable.
+4. The files are retained in the repository as method artifacts, with their original
+   "constructed, not real transcripts" headers intact.
+
+The analysis in §1–§4 is drawn from the 40 real survey responses only.
