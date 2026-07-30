@@ -162,12 +162,19 @@ class LLMClient:
                 "tonight, or wait for the free tier's daily quota to reset."
             )
 
-        # "-latest" resolved to gemini-3.6-flash, which carries a 20-request/day free-tier cap —
-        # far stingier than older numbered snapshots typically get. Once that's been observed,
-        # deprioritize both the alias and anything from the same generation in favor of an older,
-        # presumably more standard allocation.
+        # Ranking learned from two live failures, cheapest-signal first:
+        #   - gemini-2.5-flash 404'd with "no longer available to new users" — an account-age
+        #     gate, not a missing model. The whole 2.x generation (and older) is almost certainly
+        #     gated the same way for this key, so it's actively deprioritized rather than retried
+        #     one snapshot at a time.
+        #   - gemini-flash-latest resolved to gemini-3.6-flash: a 20-request/DAY free cap. "Lite"
+        #     variants and the open-weight gemma models conventionally carry more generous free
+        #     allocations than a generation's flagship model, so they're tried first.
         def rank(name: str) -> tuple:
-            return ("latest" in name, bool(re.search(r"-3\.\d", name)))
+            old_generation = bool(re.match(r"gemini-[0-2]\.", name))
+            flagship_alias = name in ("gemini-flash-latest", "gemini-pro-latest")
+            preferred = "lite" in name or "gemma" in name
+            return (old_generation, flagship_alias, not preferred)
 
         candidates.sort(key=rank)
         chosen = candidates[0]
@@ -301,7 +308,7 @@ class LLMClient:
             # known 404 from an earlier fix). Each iteration handles one failure class and moves
             # to the next candidate; only a genuinely unhandled error or per-minute exhaustion
             # breaks out to the caller.
-            for _ in range(6):
+            for _ in range(10):
                 try:
                     resp = gen(with_thinking_off=thinking_off, tokens=tokens)
                     return _extract_json(self._gemini_text(resp))
