@@ -16,11 +16,33 @@ import json
 import logging
 import os
 import re
+import threading
+import time
 from typing import Any
 
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
 log = logging.getLogger(__name__)
+
+# Gemini's free tier is capped per-minute, not just per-day (5 requests/minute observed on the
+# flash tier) — a batch loop with no pacing exhausts it within seconds of starting, every single
+# run. Anthropic's paid tier has no equivalent ceiling worth pre-emptively throttling for.
+GEMINI_MIN_INTERVAL_SECONDS = float(os.getenv("GEMINI_MIN_INTERVAL_SECONDS", "13"))
+
+_RATE_LIMIT_MARKERS = ("429", "RESOURCE_EXHAUSTED", "rate_limit", "overloaded", "503")
+
+
+def _is_retryable(exc: BaseException) -> bool:
+    """Retry on our own errors plus anything that looks like a transient provider hiccup.
+
+    Deliberately message-based rather than exception-type-based: Anthropic and Gemini raise
+    different exception classes for the same underlying condition (a 429), and matching on type
+    silently misses one SDK's version of "try again later" — which is exactly what happened here,
+    where the tenacity retry list didn't include google.genai.errors.ClientError at all.
+    """
+    if isinstance(exc, (LLMError, ConnectionError, TimeoutError)):
+        return True
+    return any(marker in str(exc) for marker in _RATE_LIMIT_MARKERS)
 
 # Overridable without a code change — model names churn, and a stale identifier is the single
 # most likely reason a run dies on someone else's machine.
@@ -85,7 +107,25 @@ class LLMClient:
             raise LLMError(f"Unknown provider: {self.provider}")
 
         self._resolved_model: dict[str, str] = {}
+        self._last_call_lock = threading.Lock()
+        self._last_call_at = 0.0
         log.info("LLM provider: %s", self.provider)
+
+    def _pace_gemini(self) -> None:
+        """Block until GEMINI_MIN_INTERVAL_SECONDS has passed since the last call.
+
+        The free tier enforces a per-minute request cap (observed: 5/min on the flash tier), which
+        a plain retry loop cannot outrun — every retry after a 429 just contends for the same
+        exhausted minute. Pacing calls up front avoids tripping the limit at all, which is faster
+        in aggregate than repeatedly hitting it and waiting out the backoff.
+        """
+        if self.provider != "gemini":
+            return
+        with self._last_call_lock:
+            wait = self._last_call_at + GEMINI_MIN_INTERVAL_SECONDS - time.monotonic()
+            if wait > 0:
+                time.sleep(wait)
+            self._last_call_at = time.monotonic()
 
     def _discover_gemini_model(self) -> str:
         """Ask the account's own model list for something that still exists.
@@ -177,9 +217,11 @@ class LLMClient:
         return self._gemini_model_for(tier)
 
     @retry(
-        retry=retry_if_exception_type((LLMError, ConnectionError, TimeoutError)),
-        wait=wait_exponential(multiplier=2, min=2, max=30),
-        stop=stop_after_attempt(4),
+        retry=retry_if_exception(_is_retryable),
+        # Google's own 429 payload suggested a 19s retry delay on a 5-req/min free-tier quota;
+        # min=15 respects that instead of retrying straight into the same exhausted minute.
+        wait=wait_exponential(multiplier=2, min=15, max=90),
+        stop=stop_after_attempt(5),
         reraise=True,
     )
     def structured(
@@ -221,6 +263,7 @@ class LLMClient:
                     # classification task that budget is pure waste. Not every model accepts the
                     # field though (some 400 on it), so this is attempted, not assumed.
                     config["thinking_config"] = {"thinking_budget": 0}
+                self._pace_gemini()  # every real call goes through here, retries included
                 return self._client.models.generate_content(
                     model=self.model(tier), contents=user, config=config
                 )
@@ -242,6 +285,7 @@ class LLMClient:
                     raise
             return _extract_json(self._gemini_text(resp))
 
+        self._pace_gemini()
         model = self._genai.GenerativeModel(
             self.model(tier),
             system_instruction=system,
