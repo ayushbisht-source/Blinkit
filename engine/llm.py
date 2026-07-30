@@ -123,6 +123,19 @@ class LLMClient:
         log.warning("Configured Gemini model unavailable; discovered '%s' from account instead", chosen)
         return chosen
 
+    @staticmethod
+    def _gemini_text(resp) -> str:
+        """resp.text is a convenience getter that returns None when there's no plain-text part —
+        empty candidates, a safety block, or a thinking-only response that never reached an
+        answer. Surface WHY instead of letting a bare None reach json.loads as an AttributeError.
+        """
+        if resp.text is not None:
+            return resp.text
+
+        candidates = getattr(resp, "candidates", None) or []
+        finish_reason = candidates[0].finish_reason if candidates else "no candidates"
+        raise LLMError(f"Gemini returned no text (finish_reason={finish_reason}). Full response: {resp!r:.500}")
+
     def _gemini_model_for(self, tier: str) -> str:
         if tier in self._resolved_model:
             return self._resolved_model[tier]
@@ -195,15 +208,20 @@ class LLMClient:
             return _extract_json(resp.content[0].text)
 
         if self._gemini_sdk == "new":
+            gen_config = {
+                "system_instruction": system,
+                "response_mime_type": "application/json",
+                "max_output_tokens": max_tokens,
+                # Newer flash models default to spending part of max_output_tokens on invisible
+                # "thinking" content before ever emitting the answer. For a fixed-schema
+                # classification task that budget is pure waste — worse, at a small max_tokens it
+                # can consume the whole budget and leave resp.text as None. Disabling it is both
+                # cheaper and more reliable here.
+                "thinking_config": {"thinking_budget": 0},
+            }
             try:
                 resp = self._client.models.generate_content(
-                    model=self.model(tier),
-                    contents=user,
-                    config={
-                        "system_instruction": system,
-                        "response_mime_type": "application/json",
-                        "max_output_tokens": max_tokens,
-                    },
+                    model=self.model(tier), contents=user, config=gen_config
                 )
             except Exception as exc:  # noqa: BLE001
                 # Only "this model no longer exists" triggers discovery — a quota or content
@@ -213,15 +231,9 @@ class LLMClient:
                     raise
                 self._resolved_model[tier] = self._discover_gemini_model()
                 resp = self._client.models.generate_content(
-                    model=self.model(tier),
-                    contents=user,
-                    config={
-                        "system_instruction": system,
-                        "response_mime_type": "application/json",
-                        "max_output_tokens": max_tokens,
-                    },
+                    model=self.model(tier), contents=user, config=gen_config
                 )
-            return _extract_json(resp.text)
+            return _extract_json(self._gemini_text(resp))
 
         model = self._genai.GenerativeModel(
             self.model(tier),
