@@ -107,6 +107,7 @@ class LLMClient:
             raise LLMError(f"Unknown provider: {self.provider}")
 
         self._resolved_model: dict[str, str] = {}
+        self._exhausted_models: dict[str, set[str]] = {}
         self._last_call_lock = threading.Lock()
         self._last_call_at = 0.0
         log.info("LLM provider: %s", self.provider)
@@ -127,11 +128,13 @@ class LLMClient:
                 time.sleep(wait)
             self._last_call_at = time.monotonic()
 
-    def _discover_gemini_model(self) -> str:
-        """Ask the account's own model list for something that still exists.
+    def _discover_gemini_model(self, exclude: set[str] | None = None) -> str:
+        """Ask the account's own model list for something that still exists and isn't exhausted.
 
-        Only reached once the configured name and the "-latest" alias have both 404'd — i.e. the
-        account's usable model names have moved somewhere this code has no way to predict.
+        Reached in two cases: the configured name 404'd (moved/retired), or it hit its per-day
+        free-tier quota and `exclude` names it so a different model gets picked instead. Different
+        model names appear to carry independent daily quota buckets, so switching is a real escape
+        hatch rather than hitting the same wall again under a different name.
         """
         if self._gemini_sdk != "new":
             raise LLMError(
@@ -140,9 +143,12 @@ class LLMClient:
                 "https://ai.google.dev/gemini-api/docs/models"
             )
 
+        exclude = exclude or set()
         candidates = []
         for m in self._client.models.list():
             name = m.name.split("/")[-1]
+            if name in exclude:
+                continue
             actions = getattr(m, "supported_actions", None) or []
             if actions and "generateContent" not in actions:
                 continue
@@ -151,16 +157,21 @@ class LLMClient:
 
         if not candidates:
             raise LLMError(
-                "No usable Gemini text model found on this API key. Check the key at "
-                "https://aistudio.google.com/apikey and pick a model name from "
-                "https://ai.google.dev/gemini-api/docs/models to set as GEMINI_MODEL_FAST."
+                "No usable Gemini flash model left untried on this API key (all either 404'd or "
+                "hit their daily free-tier quota). Add ANTHROPIC_API_KEY for a paid-tier run "
+                "tonight, or wait for the free tier's daily quota to reset."
             )
 
-        # "-latest" aliases first (Google's own answer to name churn), otherwise whatever the
-        # account's list returns — it is generally ordered with current models first.
-        candidates.sort(key=lambda n: "latest" not in n)
+        # "-latest" resolved to gemini-3.6-flash, which carries a 20-request/day free-tier cap —
+        # far stingier than older numbered snapshots typically get. Once that's been observed,
+        # deprioritize both the alias and anything from the same generation in favor of an older,
+        # presumably more standard allocation.
+        def rank(name: str) -> tuple:
+            return ("latest" in name, bool(re.search(r"-3\.\d", name)))
+
+        candidates.sort(key=rank)
         chosen = candidates[0]
-        log.warning("Configured Gemini model unavailable; discovered '%s' from account instead", chosen)
+        log.warning("Switching Gemini model (unavailable or quota-exhausted) -> '%s'", chosen)
         return chosen
 
     @staticmethod
@@ -275,6 +286,14 @@ class LLMClient:
                 if "NOT_FOUND" in msg or "404" in msg:
                     self._resolved_model[tier] = self._discover_gemini_model()
                     resp = gen(with_thinking_off=True, tokens=max_tokens)
+                elif "RESOURCE_EXHAUSTED" in msg and "PerDay" in msg:
+                    # A per-DAY cap has nothing to back off into — waiting doesn't help until
+                    # tomorrow. Different model names appear to carry independent quota buckets,
+                    # so switch models instead of retrying this one.
+                    exhausted = self._exhausted_models.setdefault(tier, set())
+                    exhausted.add(self.model(tier))
+                    self._resolved_model[tier] = self._discover_gemini_model(exclude=exhausted)
+                    resp = gen(with_thinking_off=True, tokens=max_tokens)
                 elif "INVALID_ARGUMENT" in msg or "400" in msg:
                     # This model rejects thinking_config outright. Retry without it, and give the
                     # invisible thinking budget room so it doesn't eat the whole response the way
@@ -282,6 +301,8 @@ class LLMClient:
                     log.warning("Gemini rejected thinking_config, retrying without it: %s", msg)
                     resp = gen(with_thinking_off=False, tokens=max(max_tokens, 1024))
                 else:
+                    # Includes per-MINUTE RESOURCE_EXHAUSTED, which the outer @retry on
+                    # _is_retryable will wait out and retry against this same model.
                     raise
             return _extract_json(self._gemini_text(resp))
 
