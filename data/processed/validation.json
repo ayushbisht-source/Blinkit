@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "name": "quote grounding",
+      "checked": 3,
+      "exact": 3,
+      "whitespace_normalised": 0,
+      "hallucinated": 0,
+      "hallucination_rate": 0.0,
+      "pass": true,
+      "examples": []
+    },
+    {
+      "name": "theme saturation",
+      "pass": false,
+      "reason": "only 3 extractions"
+    },
+    {
+      "name": "hold-out generalisation",
+      "pass": false,
+      "reason": "no themes"
+    },
+    {
+      "name": "source spread",
+      "status": "NOT RUN",
+      "pass": null,
+      "note": "no themes yet \u2014 run engine.pipeline.cluster first"
+    },
+    {
+      "name": "relevance gate audit",
+      "rejected_total": 1523,
+      "sampled": 40,
+      "possible_false_negatives": 1,
+      "false_negative_rate_estimate": 0.025,
+      "pass": true,
+      "examples": [
+        {
+          "doc_id": "pl_1a8eb327332a6802",
+          "reason_given": "support",
+          "text": "Extremely disappointing after-sales support. I received a defective GoBoult product (left side not working) and reported it within 20 minutes of delivery. Inste"
+        }
+      ]
+    },
+    {
+      "name": "human agreement (Cohen's kappa)",
+      "status": "NOT RUN",
+      "pass": null,
+      "note": "No data/gold/labels.jsonl. Hand-label ~50 documents with {doc_id, is_relevant} to enable."
+    }
+  ]
+}
