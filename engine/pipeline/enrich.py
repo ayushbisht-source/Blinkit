@@ -181,7 +181,19 @@ def main() -> None:
     ap.add_argument(
         "--list-models", action="store_true", help="print this key's Gemini model catalog, then exit"
     )
+    ap.add_argument(
+        "--probe-models", action="store_true",
+        help="try one tiny call per model and report which are usable, then exit"
+    )
     args = ap.parse_args()
+
+    if args.probe_models:
+        rows = LLMClient().probe_gemini_models()
+        ok = [r["model"] for r in rows if r["status"] == "OK"]
+        log.info("")
+        log.info("USABLE NOW: %d of %d -> %s", len(ok), len(rows), ", ".join(ok) or "(none)")
+        log.info("Each usable model carries its own per-day free-tier quota.")
+        return
 
     if args.list_models:
         for line in LLMClient().list_gemini_models():

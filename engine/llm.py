@@ -201,6 +201,55 @@ class LLMClient:
         self._resolved_model[tier] = configured
         return configured
 
+    def probe_gemini_models(self) -> list[dict]:
+        """Try one tiny generation against every candidate model and report what happens.
+
+        Free-tier quota is enforced per model ("GenerateRequestsPerDayPerProjectPerModel"), so the
+        practical daily budget is the number of *working* models times each one's cap — not a single
+        shared pool. That makes "can this run on the free tier at all" an empirical question, and
+        this answers it for a handful of tokens rather than by guessing.
+        """
+        if self.provider != "gemini" or self._gemini_sdk != "new":
+            raise LLMError("probe_gemini_models only applies to the new Gemini SDK.")
+
+        candidates = []
+        for m in self._client.models.list():
+            name = m.name.split("/")[-1]
+            actions = getattr(m, "supported_actions", None) or []
+            if actions and "generateContent" not in actions:
+                continue
+            if not any(k in name for k in ("flash", "gemma", "pro")):
+                continue
+            if any(k in name for k in ("tts", "embedding", "image", "audio", "live", "robotics",
+                                       "computer-use", "deep-research", "veo", "lyria", "banana")):
+                continue
+            candidates.append(name)
+
+        results = []
+        for name in candidates:
+            entry = {"model": name}
+            try:
+                self._pace_gemini()
+                resp = self._client.models.generate_content(
+                    model=name,
+                    contents="reply with JSON: [{\"ok\":true}]",
+                    config={"response_mime_type": "application/json", "max_output_tokens": 2048},
+                )
+                entry["status"] = "OK" if resp.text else "EMPTY"
+            except Exception as exc:  # noqa: BLE001
+                msg = str(exc)
+                if "NOT_FOUND" in msg or "404" in msg:
+                    entry["status"] = "404_GATED"
+                elif "RESOURCE_EXHAUSTED" in msg and "PerDay" in msg:
+                    entry["status"] = "QUOTA_DAY"
+                elif "RESOURCE_EXHAUSTED" in msg:
+                    entry["status"] = "QUOTA_MIN"
+                else:
+                    entry["status"] = f"ERR: {msg[:80]}"
+            log.info("  %-38s %s", name, entry["status"])
+            results.append(entry)
+        return results
+
     def list_gemini_models(self) -> list[str]:
         """Raw model catalog for this key — a metadata call, not a generate_content call, so it
         doesn't spend generation quota. Use this to see the real menu before guessing further.

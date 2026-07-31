@@ -21,6 +21,10 @@ on:
         description: "true: only print this key's Gemini model catalog (no generation calls, no quota spent), then exit"
         required: false
         default: "false"
+      probe_models:
+        description: "true: try one tiny call per model and report which are actually usable, then exit"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -69,17 +73,25 @@ jobs:
           python -m engine.pipeline.enrich --list-models | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
+      # Answers "is the free tier viable at all" empirically: quota is enforced per model, so the
+      # real daily budget is (working models x per-model cap), not one shared pool.
+      - name: Probe Gemini models
+        if: github.event.inputs.probe_models == 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python -m engine.pipeline.enrich --probe-models
+
       # One live call before committing to thousands. A bad model name or a dead key fails here
       # with a readable traceback instead of quietly producing an empty output file.
       - name: Self-test
-        if: github.event.inputs.list_models != 'true'
+        if: github.event.inputs.list_models != 'true' && github.event.inputs.probe_models != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python -m engine.pipeline.enrich --selftest
 
       - name: Enrich
-        if: github.event.inputs.list_models != 'true'
+        if: github.event.inputs.list_models != 'true' && github.event.inputs.probe_models != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -89,7 +101,7 @@ jobs:
             --limit "${{ github.event.inputs.limit }}"
 
       - name: Summarise
-        if: always() && github.event.inputs.list_models != 'true'
+        if: always() && github.event.inputs.list_models != 'true' && github.event.inputs.probe_models != 'true'
         run: |
           echo "### Enrichment" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
