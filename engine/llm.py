@@ -109,24 +109,30 @@ class LLMClient:
         self._resolved_model: dict[str, str] = {}
         self._exhausted_models: dict[str, set[str]] = {}
         self._last_call_lock = threading.Lock()
-        self._last_call_at = 0.0
+        self._last_call_at: dict[str, float] = {}
         log.info("LLM provider: %s", self.provider)
 
-    def _pace_gemini(self) -> None:
-        """Block until GEMINI_MIN_INTERVAL_SECONDS has passed since the last call.
+    def _pace_gemini(self, model: str | None = None) -> None:
+        """Block until GEMINI_MIN_INTERVAL_SECONDS has passed since the last call TO THIS MODEL.
 
-        The free tier enforces a per-minute request cap (observed: 5/min on the flash tier), which
-        a plain retry loop cannot outrun — every retry after a 429 just contends for the same
-        exhausted minute. Pacing calls up front avoids tripping the limit at all, which is faster
-        in aggregate than repeatedly hitting it and waiting out the backoff.
+        Both the per-minute and per-day free-tier caps are enforced per model
+        ("...PerProjectPerModel"), so pacing has to be per model too. A single global timer made
+        every model switch cost a full interval, which meant one batch could spend minutes rotating
+        and the failure guard would trip before rotation reached a model with quota remaining —
+        the reason a 10-model fallback chain still failed in under three minutes.
+
+        Tracking per model also means switching is genuinely free: a model that has not been called
+        yet has no interval to wait out.
         """
         if self.provider != "gemini":
             return
+        key = model or "_global"
         with self._last_call_lock:
-            wait = self._last_call_at + GEMINI_MIN_INTERVAL_SECONDS - time.monotonic()
+            last = self._last_call_at.get(key, 0.0)
+            wait = last + GEMINI_MIN_INTERVAL_SECONDS - time.monotonic()
             if wait > 0:
                 time.sleep(wait)
-            self._last_call_at = time.monotonic()
+            self._last_call_at[key] = time.monotonic()
 
     def _discover_gemini_model(self, exclude: set[str] | None = None) -> str:
         """Ask the account's own model list for something that still exists and isn't exhausted.
@@ -152,8 +158,13 @@ class LLMClient:
             actions = getattr(m, "supported_actions", None) or []
             if actions and "generateContent" not in actions:
                 continue
-            if "flash" in name and not any(x in name for x in ("tts", "embedding", "vision", "image")):
-                candidates.append(name)
+            # gemma-* are text models with their own quota buckets and were confirmed usable by
+            # the probe; matching only "flash" silently excluded two working fallbacks.
+            if not any(k in name for k in ("flash", "gemma")):
+                continue
+            if any(x in name for x in ("tts", "embedding", "vision", "image", "audio", "live")):
+                continue
+            candidates.append(name)
 
         if not candidates:
             raise LLMError(
@@ -343,7 +354,11 @@ class LLMClient:
                     # classification task that budget is pure waste. Not every model accepts the
                     # field though (some 400 on it), so this is attempted, not assumed.
                     config["thinking_config"] = {"thinking_budget": 0}
-                self._pace_gemini()  # every real call goes through here, retries included
+                # Pace per MODEL, not globally. The per-minute limit is enforced per model, so
+                # after switching models there is nothing to wait for — and waiting anyway meant a
+                # single batch could burn minutes just rotating, which is what made the failure
+                # guard trip before rotation ever reached a model with quota left.
+                self._pace_gemini(self.model(tier))
                 return self._client.models.generate_content(
                     model=self.model(tier), contents=user, config=config
                 )

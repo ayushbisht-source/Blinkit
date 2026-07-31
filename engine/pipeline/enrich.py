@@ -84,11 +84,21 @@ class TooManyFailures(RuntimeError):
     """
 
 
-def _guard(stage: str, failures: int, total: int) -> None:
-    if total >= 3 and failures / total > 0.5:
+def _guard(stage: str, failures: int, total: int, successes: int = 0) -> None:
+    """Abort a stage that is failing systematically — but only once that is actually established.
+
+    The original threshold (3 batches, >50% failed) fired before the client had worked through its
+    model-rotation chain, killing runs that would have recovered on a later model. Free-tier quota
+    is per model, so early failures are expected and survivable; what is not survivable is failing
+    everywhere. So: never abort while any batch has succeeded, and require a longer losing streak
+    before concluding the configuration is broken.
+    """
+    if successes > 0:
+        return
+    if total >= 8 and failures == total:
         raise TooManyFailures(
-            f"{stage}: {failures}/{total} batches failed. This is a configuration problem "
-            f"(model name, API key, or quota), not bad data. Fix it before re-running."
+            f"{stage}: all {failures} batches failed with no successes. This is a configuration "
+            f"problem (model name, API key, or every model's quota exhausted), not bad data."
         )
 
 
@@ -96,7 +106,7 @@ def run_relevance(client: LLMClient, docs: list[Document]) -> None:
     system = (PROMPTS / "relevance.txt").read_text()
     pending = [d for d in docs if d.doc_id not in done_ids(RELEVANCE)]
     log.info("relevance: %d documents pending", len(pending))
-    failures = 0
+    failures = successes = 0
 
     with RELEVANCE.open("a") as out:
         for n, batch in enumerate(_batches(pending, RELEVANCE_BATCH), 1):
@@ -109,8 +119,9 @@ def run_relevance(client: LLMClient, docs: list[Document]) -> None:
             except Exception as exc:  # noqa: BLE001
                 failures += 1
                 log.warning("relevance batch %d failed: %s", n, exc)
-                _guard("relevance", failures, n)
+                _guard("relevance", failures, n, successes)
                 continue
+            successes += 1
 
             got = {r.get("doc_id") for r in result if isinstance(r, dict)}
             for r in result:
@@ -142,7 +153,7 @@ def run_extraction(client: LLMClient, docs: list[Document]) -> None:
     already = done_ids(EXTRACTIONS)
     pending = [d for d in docs if d.doc_id in relevant and d.doc_id not in already]
     log.info("extraction: %d relevant, %d pending", len(relevant), len(pending))
-    failures = 0
+    failures = successes = 0
 
     with EXTRACTIONS.open("a") as out:
         for n, batch in enumerate(_batches(pending, EXTRACTION_BATCH), 1):
@@ -155,8 +166,9 @@ def run_extraction(client: LLMClient, docs: list[Document]) -> None:
             except Exception as exc:  # noqa: BLE001
                 failures += 1
                 log.warning("extraction batch %d failed: %s", n, exc)
-                _guard("extraction", failures, n)
+                _guard("extraction", failures, n, successes)
                 continue
+            successes += 1
 
             for r in result:
                 if not isinstance(r, dict) or not r.get("doc_id"):
