@@ -1,0 +1,62 @@
+name: Deploy MVP
+
+# Publishes mvp/ to GitHub Pages.
+#
+# GitHub Pages rather than Vercel deliberately: no third-party account, no deploy token, nothing to
+# configure outside this repo. The app runs entirely client-side on the agent's deterministic path,
+# so a static host is sufficient and the demo cannot be broken by an API quota.
+#
+# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/category-exploration-discovery-q5hqgb]
+    paths:
+      - "mvp/**"
+      - ".github/workflows/deploy-mvp.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify the agent still passes its evals before shipping
+        run: node mvp/evals/run.mjs
+
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp -r mvp/index.html mvp/main.js mvp/agent mvp/data _site/
+          # Pages serves 404.html for unknown paths; point it at the app so deep links work.
+          cp mvp/index.html _site/404.html
+          echo "Staged:" && find _site -type f | sort
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Report URL
+        run: |
+          echo "### MVP deployed" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
