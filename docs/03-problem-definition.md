@@ -1,9 +1,10 @@
 # Part 3 — Problem Definition
 
-> **Status of evidence.** Everything below rests on the 40-response survey (real) and the discovery
-> engine's corpus of 3,372 documents. Where a claim depends on engine output still being processed,
-> it is marked `[pending engine]` rather than asserted. Depth interviews were not conducted — see
-> `docs/02-user-research.md` §5.
+> **Status of evidence.** Everything below rests on the 40-response survey (real), the discovery
+> engine's corpus of 3,372 documents, and 2 depth interviews (real, async text — target is 5–6, see
+> `docs/02-user-research.md` §5 and §8). Where a claim depends on engine output still being
+> processed, it is marked `[pending engine]` rather than asserted. Interview evidence is labelled
+> n=2 wherever it appears and never carries a claim on its own.
 
 ---
 
@@ -194,13 +195,29 @@ insights. Honest reporting of that comparison, including its limits:
 | **Confirmed by survey** | `[pending engine]` — filled once theme prevalences are computed. |
 | **Challenged by survey** | `[pending engine]` |
 | **Structural limit of the survey** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
+| **Confirmed by interview** (n=2) | Fetch-mode arrival and event-triggered crossover both held in both interviews, in the respondents' own words: *"I shop when I needed the products"* (P01), *"urgent for me and no shop around me that time"* (P02). Both named **quality and price** as the information they'd need before trying a new category — unprompted, and matching F3. Neither mentioned delivery speed, returns, or brand. |
+| **Challenged by interview** (n=2) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** Both respondents named a never-bought category (baby care) and both explained it as irrelevance, not obstruction — *"I don't have kids"* — and neither named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked. Forced onto the survey's closed list, both would have been recorded as blocked, overstating addressable demand. See `docs/02-user-research.md` §8. |
+| **Also challenged** (n=2, weaker) | Both respondents' reason for opening the app was **absence of an alternative** — *"only Blinkit is available there"* (P01), *"late night… no shop around me"* (P02). No `HabitDriver` value covers access-of-last-resort; all six describe choosing between available options. Recorded as a hypothesis to check against extraction output, not a finding. |
 | **Challenged by testing AI output against data** | **A synthetic-persona hypothesis was falsified.** Personas generated from the survey claimed category breadth reflects order consolidation, predicting that infrequent users would show *more* categories. Computed against the real rows: r = **+0.25**, the opposite direction. One of five generated hypotheses was testable; it was wrong. See `docs/02-user-research.md` §7. |
 
-**The most important methodological finding of this project is that last row.** AI-synthesized
-personas were also generated from the survey (`docs/02-user-research.md` §6) and produced fluent,
-plausible narratives — but a persona generated *from* survey data cannot contain information the
-survey did not capture. It can rephrase; it cannot surprise.
+**Read the persona row and the interview rows together — that pairing is the methodological finding
+of this project.**
+
+AI-synthesized personas were generated from the survey (`docs/02-user-research.md` §6) and produced
+fluent, plausible, mechanism-shaped narratives. Of the five hypotheses they generated, four could
+not be tested with the available instruments and the fifth was falsified. A persona generated *from*
+survey data cannot contain information the survey did not capture: it can rephrase, it cannot
+surprise.
+
+Two real conversations then produced something none of the three AI-driven or instrument-driven
+methods could reach — a barrier category that does not exist in the engine's vocabulary, because
+absence of need generates no reviews to mine and no box to tick. The engine scaled; it could not
+find its own blind spot. The interviews did not scale; they found it on the second respondent.
 
 That is the concrete demonstration of the brief's own premise that *"AI-generated insights are only
-a starting point."* Not asserted — observed, and reported as a limitation of this project's own
-method rather than a general claim about AI.
+a starting point."* Not asserted — observed, on this project's own data, and reported as a
+limitation of this project's own method rather than a general claim about AI.
+
+**What is not claimed:** n=2 cannot establish how common this is. The finding is that the taxonomy
+is incomplete, which two respondents are enough to show; the prevalence question needs the remaining
+interviews and a survey instrument that offers the option.

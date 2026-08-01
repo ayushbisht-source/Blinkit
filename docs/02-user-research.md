@@ -5,28 +5,35 @@
 | Instrument | n | Status |
 |---|---|---|
 | Screener-matched survey (Google Forms) | **40** | Collected 28–29 Jul 2026. Real respondents. |
-| Depth interviews | 0 | **Not conducted.** See §5 and §7. |
+| Depth interviews (async, text) | **2** | Collected 1 Aug 2026. Real respondents. Target is 5–6 — see §5 and §8. |
 | AI-synthesized personas | 5 | Generated from survey rows. **Not interviews.** See §6. |
 
 Everything in §1–§4 is derived from the 40 real survey responses. Nothing there is reconstructed,
 voiced, or inferred dialogue.
 
-> ### On the missing interviews
+> ### On the interviews
 >
-> The brief asks for 5–6 depth interviews. They were not conducted, and this document does not
-> pretend otherwise.
+> The brief asks for 5–6 depth interviews. **Two** have been conducted at the time of writing, both
+> real, both async over text, both recorded verbatim in `research/transcripts/`. That is short of
+> the brief and this document does not present it as anything else.
 >
-> Rather than leave that as an unexplained hole, §6 and §7 do something with it: personas were
-> generated from the survey data — the obvious substitute — and then **tested**. The result is the
-> most useful finding in this project, and it is a measured one rather than an assertion.
+> Two things follow, and they point in opposite directions.
 >
-> Four of the five hypotheses those personas produced were untestable from the available data. The
-> fifth was testable, and was **wrong** (§7). The exercise demonstrates concretely why the brief's
-> own premise — *"AI-generated insights are only a starting point"* — holds, and why synthetic
-> research does not substitute for talking to people.
+> **First, the shortfall is real.** n=2 supports quoting and pattern-noticing. It does not support
+> generalisation, and §8 makes no claim that requires it.
 >
-> That is offered as a genuine finding, not as compensation for the gap. The gap is real and is
-> stated as a limitation in §5.
+> **Second, the two interviews already did the one thing the survey and the personas structurally
+> could not: they surfaced a barrier that was not on the form.** Both respondents named a category
+> they had never bought and gave the same reason — the category does not apply to them. There is no
+> code for that in the engine's `barrier[]` enum, and no option for it on the survey. Two of two
+> hit it. See §8.
+>
+> §6 and §7 then test the obvious substitute for interviews — personas generated from the survey —
+> and find that of five hypotheses they produced, one was testable and it was **wrong**. Read
+> together with §8, the comparison is the point: the synthetic method produced fluent claims that
+> failed under test, and two real conversations produced a finding neither the survey nor the
+> engine could have reached. That is the brief's *"AI-generated insights are only a starting point"*
+> demonstrated on this project's own data rather than asserted.
 
 ---
 
@@ -117,10 +124,11 @@ a recurrence metric. One-off trial doesn't move it. Two implications:
 
 ## 5. Limitations — stated plainly
 
-1. **No depth interviews were conducted.** The brief asks for 5–6. This was not achieved.
-   Consequence: the survey can confirm *what* and *how many*, but cannot explain *why* in the
-   respondent's own words, and cannot surface a barrier that wasn't already an option on the form.
-   Every finding above is bounded by the questions asked.
+1. **Only 2 depth interviews were conducted, against a target of 5–6.** Consequence: §1–§4 rest
+   entirely on the survey, which can confirm *what* and *how many* but cannot explain *why* in the
+   respondent's own words. Every finding in §1–§4 is bounded by the questions asked. §8 is bounded
+   by n=2 and is written as pattern-noticing, not measurement — the same finding appearing in both
+   interviews is recorded as worth checking, never as a rate.
 
 2. **The survey shares the discovery engine's vocabulary by design.** Barrier options were written
    from the engine's `barrier[]` enum so the two datasets compare directly. The cost is that the
@@ -228,4 +236,96 @@ because a project about validating AI output should show its own validation fail
 
 ---
 
-The analysis in §1–§4 is drawn from the 40 real survey responses only.
+## 8. Depth interviews (n=2) — what real conversations added
+
+Two async text interviews, 1 Aug 2026, five open questions each
+(`research/async-interview-kit.md`). Verbatim transcripts with coding and analyst notes:
+`research/transcripts/P01.md`, `P02.md`. No names; P01/P02 only.
+
+Async text rather than calls is a deliberate tradeoff and a stated weakness: answers are short and
+there is no live probe. What it buys is that the questions are **open**, so an answer can land
+outside the vocabulary of the instrument. That is exactly what happened.
+
+### The finding: the engine has no code for "this category is not for me"
+
+Both respondents, unprompted and on different apps (P01 Blinkit, P02 Zepto), named the same
+never-bought category and gave the same reason.
+
+> **P01:** *"Pet supplies, baby care never bought. I don't have kids and pets so never bought it and
+> also if I have in future I would love to try."*
+>
+> **P02:** *"Baby care never bought because I don't have kids and in future I can try."*
+
+Neither answered the second half of the question — *where do you buy that instead?* — because the
+premise doesn't hold. Nobody is buying it anywhere.
+
+The engine's `barrier[]` enum has eight values (`awareness`, `trust_quality`, `price_risk`,
+`choice_overload`, `no_trigger`, `size_uncertainty`, `return_anxiety`, `channel_loyalty`) and the
+survey's blocker options were written from that same list (§5, limitation 2). **Every one of them
+presumes latent demand that something is obstructing.** There is no code for a category that is
+simply irrelevant to the respondent. Forced to choose, both of these people would have been recorded
+as blocked by something, and the resulting number would overstate addressable demand.
+
+Why neither of the other two methods could find this:
+
+| Method | Why it misses it |
+|---|---|
+| Discovery engine (3,372 reviews) | Nobody writes a review about a product they have no reason to buy. Absence of need leaves no text. |
+| Survey (n=40) | Closed options, all drawn from the same enum. A respondent in this position has no honest box to tick. |
+| Synthetic personas | Vocabulary is the survey's vocabulary (§7). Cannot produce a category that isn't in its input. |
+
+Note the tail of both answers: *"in future I would love to try"* / *"in future I can try."* The
+category is not rejected, it is **dormant pending a life event**. For the MVP that is a suppression
+rule, not a conversion opportunity — a baby-care card shown to either respondent is a wasted
+impression, and dismissal rate is a pre-registered guardrail (`docs/03-problem-definition.md` §5).
+
+### A second gap, same shape
+
+Both respondents' stated reason for opening the app at all was the **absence of an alternative**:
+
+> **P01:** *"I'm at my hometown and only Blinkit is available there as of now."*
+>
+> **P02:** *"it's late night and it is available on zepto"* · *"no shop around me that time"*
+
+The `HabitDriver` enum's six values all describe a *preference between available options*
+(`time_pressure`, `trust`, `satisficing`, `list_reuse`, `price_certainty`, `household_routine`).
+Access-of-last-resort is not among them. If it is common, it describes a session where the user has
+no alternative and no browsing intent — the worst moment to surface a new category and, plausibly, a
+frequent one. Recorded as a hypothesis to check against extraction output, not as a finding.
+
+### What the interviews confirmed
+
+| Claim | P01 | P02 |
+|---|---|---|
+| Users arrive knowing what they want (F2) | Confirmed | Confirmed |
+| Crossover is event-triggered, not curiosity-driven (§3) | Confirmed — refined oil, *"needed that very urgent"* | Confirmed — liquid detergent, *"urgent for me and no shop around me"* |
+| Information needed first is quality and price (F3) | Confirmed — *"quality and quantity also of course pricing"* | Confirmed — *"pricing… and quality as well"* |
+| Price is what triggers a crossover | — | **Challenged** — price named third, after urgency and absence of alternatives |
+
+Both named price and quality unprompted; neither mentioned delivery speed, returns, or brand.
+
+### What they disagreed about
+
+The only direct contradiction between the two respondents is shopping rhythm:
+
+- **P01:** *"I don't shop everyday, I shop when I needed the products."*
+- **P02:** *"I shop mostly regularly because it's very easy to shop on app."*
+
+This matters because the root cause in `docs/03-problem-definition.md` §2 rests on a two-minute
+fetch session. P02's other answers — a single late-night item, one urgent detergent — read as
+fetch behaviour at high frequency, which is the segment definition in `docs/00-foundation.md`
+(frequent *and* narrow) rather than a counterexample. But that reconciliation is **inference from
+their other answers, not something P02 said**, and it is recorded as a partial challenge in
+`research/transcripts/P02.md` for that reason. If a later respondent describes actually browsing,
+the fetch-mode model is in trouble and Part 3 needs rewriting.
+
+### Status
+
+3 of the target 5–6 interviews remain outstanding. The transcripts are committed as they arrive and
+this section is updated with them; the confirm/challenge matrix in
+`docs/03-problem-definition.md` §6 is rebuilt at each addition.
+
+---
+
+The analysis in §1–§4 is drawn from the 40 real survey responses only. §8 is drawn from 2 real
+interviews and is labelled n=2 throughout.

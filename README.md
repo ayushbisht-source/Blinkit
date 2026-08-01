@@ -159,16 +159,22 @@ first and refuses to publish if any check fails.
 
 Stated up front rather than discovered by a reader.
 
-1. **Depth interviews were not conducted.** The brief asks for 5–6. Primary research is the
-   40-response survey only. It can establish *what* and *how many*, not *why* in a user's own words.
+1. **2 depth interviews against a target of 5–6.** Real, async over text, verbatim in
+   `research/transcripts/`. Short of the brief, and the quantitative findings rest on the survey
+   alone. Interview evidence is labelled n=2 everywhere it appears
+   (`docs/02-user-research.md` §8).
 2. **The survey shares the engine's vocabulary by design**, so the two datasets compare directly —
    at the cost of being structurally poor at *challenging* the engine. It can confirm a hypothesised
-   barrier; it cannot surface one nobody thought to ask about.
+   barrier; it cannot surface one nobody thought to ask about. Both interviews then did exactly
+   that: they named a barrier — *"this category does not apply to me"* — that exists in neither the
+   engine's `barrier[]` enum nor the survey's options, and that reviews cannot contain because
+   absence of need generates no text.
 3. **AI-synthesized personas were generated and are excluded from the evidence base**
    (`docs/02-user-research.md` §6). They are retained as a labelled method artifact. A persona
    generated *from* survey data cannot contain what the survey did not capture — it can rephrase,
-   never surprise. That is this project's concrete demonstration of why AI research cannot replace
-   primary research.
+   never surprise. Of five hypotheses they produced, one was testable and it was wrong. That,
+   against the enum gap two real conversations found, is this project's concrete demonstration of
+   why AI research cannot replace primary research.
 4. **n=40 convenience sample**, skewed young, metro and English-literate. Baby (3) and pet (2) owners
    are too thin to support claims about those segments.
 5. **The MVP runs on synthetic order histories.** It demonstrates the mechanism, not real-world lift.
