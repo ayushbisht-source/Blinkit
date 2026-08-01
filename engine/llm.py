@@ -77,6 +77,21 @@ def _extract_json(text: str) -> Any:
         return json.loads(match.group(0))
 
 
+def _anthropic_text(resp) -> str:
+    """First text block in the response.
+
+    Not `content[0]`. When a model returns extended thinking, block 0 is a ThinkingBlock with no
+    `.text` attribute and the answer sits further down the list. Indexing blindly worked on Haiku
+    and crashed every batch on Sonnet — which meant the cheap relevance stage passed and the
+    expensive extraction stage failed, the most expensive way for this to break.
+    """
+    for block in resp.content:
+        if getattr(block, "type", None) == "text" and getattr(block, "text", None):
+            return block.text
+    kinds = [getattr(b, "type", "?") for b in resp.content]
+    raise LLMError(f"No text block in Anthropic response (blocks: {kinds}, stop={resp.stop_reason})")
+
+
 class LLMClient:
     """One method that matters: `structured()`."""
 
@@ -347,7 +362,7 @@ class LLMClient:
                 ],
                 messages=[{"role": "user", "content": user}],
             )
-            return _extract_json(resp.content[0].text)
+            return _extract_json(_anthropic_text(resp))
 
         if self._gemini_sdk == "new":
 
