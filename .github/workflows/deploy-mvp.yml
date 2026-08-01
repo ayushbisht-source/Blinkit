@@ -34,10 +34,19 @@ jobs:
       - name: Verify the agent still passes its evals before shipping
         run: node mvp/evals/run.mjs
 
+      # LLM writes the card copy here, in CI, where the key is a secret. The published site is
+      # static and cannot hold a key, so without this step the demo would only ever show the
+      # deterministic fallback and understate what the agent actually does.
+      - name: Pre-generate LLM card copy
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node mvp/scripts/pregenerate-copy.mjs
+
       - name: Stage site
         run: |
           mkdir -p _site
           cp -r mvp/index.html mvp/main.js mvp/agent mvp/data _site/
+          ls -la _site/data/llm-copy.json || echo 'no llm-copy.json — site will use deterministic copy'
           # Pages serves 404.html for unknown paths; point it at the app so deep links work.
           cp mvp/index.html _site/404.html
           echo "Staged:" && find _site -type f | sort

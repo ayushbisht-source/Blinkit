@@ -7,6 +7,15 @@ import { USERS, CATALOGUE } from './data/seed.js';
 import { suggest } from './agent/suggest.js';
 import { categoryHistory } from './agent/eligibility.js';
 
+// LLM-written copy, generated in CI where the API key lives (see scripts/pregenerate-copy.mjs).
+// Absent or empty is fine — the agent's deterministic copy takes over and the card still works.
+let LLM_COPY = {};
+try {
+  LLM_COPY = await fetch('./data/llm-copy.json').then((r) => (r.ok ? r.json() : {}));
+} catch {
+  LLM_COPY = {};
+}
+
 const $ = (id) => document.getElementById(id);
 const rupees = (n) => '₹' + n.toLocaleString('en-IN');
 
@@ -70,6 +79,19 @@ async function renderCart() {
 
   // Cart review is the trigger point: the task the user came for is done, so attention is free.
   const out = await suggest(currentUser);
+
+  // Swap in the pre-generated copy only if it was written for this exact decision. If the agent
+  // picked a different category or product than it did at build time, the stored line would be a
+  // false statement about this user — so it is discarded rather than shown.
+  const pre = LLM_COPY[currentUser.id];
+  if (out.card && pre && pre.category === out.card.category && pre.productId === out.card.product.id) {
+    out.card.reason = pre.reason;
+    out.card.trust = pre.trust;
+    out.copySource = `LLM (${pre.model})`;
+  } else if (out.card) {
+    out.copySource = 'deterministic fallback';
+  }
+
   renderSuggestion(out);
 }
 
@@ -124,7 +146,11 @@ function renderSuggestion(out) {
     `product:     ${c.product.name} (${c.product.id})`,
     `anchor:      ${c.anchorLine ?? '(none — no comparable spend)'}`,
     `favourable:  ${c.anchorFavourable}`,
+    `copy:        ${out.copySource ?? 'deterministic fallback'}`,
     `rationale:   ${out.rationale.join(' | ')}`,
+    ``,
+    `note: mode, category, product and anchor are computed deterministically`,
+    `      and are identical either way. only the wording differs.`,
   ].join('\n');
 }
 
