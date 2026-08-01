@@ -5,10 +5,28 @@
 | Instrument | n | Status |
 |---|---|---|
 | Screener-matched survey (Google Forms) | **40** | Collected 28–29 Jul 2026. Real respondents. |
-| Depth interviews | 0 | **Not conducted.** See "Limitations". |
+| Depth interviews | 0 | **Not conducted.** See §5 and §7. |
+| AI-synthesized personas | 5 | Generated from survey rows. **Not interviews.** See §6. |
 
-Everything below is derived from the 40 real survey responses. Nothing in this document is
-reconstructed, voiced, or inferred dialogue.
+Everything in §1–§4 is derived from the 40 real survey responses. Nothing there is reconstructed,
+voiced, or inferred dialogue.
+
+> ### On the missing interviews
+>
+> The brief asks for 5–6 depth interviews. They were not conducted, and this document does not
+> pretend otherwise.
+>
+> Rather than leave that as an unexplained hole, §6 and §7 do something with it: personas were
+> generated from the survey data — the obvious substitute — and then **tested**. The result is the
+> most useful finding in this project, and it is a measured one rather than an assertion.
+>
+> Four of the five hypotheses those personas produced were untestable from the available data. The
+> fifth was testable, and was **wrong** (§7). The exercise demonstrates concretely why the brief's
+> own premise — *"AI-generated insights are only a starting point"* — holds, and why synthetic
+> research does not substitute for talking to people.
+>
+> That is offered as a genuine finding, not as compensation for the gap. The gap is real and is
+> stated as a limitation in §5.
 
 ---
 
@@ -139,34 +157,75 @@ The project's premise is an AI-native research workflow. Synthetic personas are 
 technique in that space, and testing where they help and where they mislead is itself a finding
 worth reporting — arguably more interesting than the personas' content.
 
-### What they legitimately produced
-
-Two hypotheses that the raw survey tabulation did not make obvious, both of which are checkable
-against the real data:
-
-| Hypothesis from personas | Checkable against survey? | Verdict |
-|---|---|---|
-| Category breadth can reflect **order consolidation**, not curiosity — infrequent users bundle many categories into one order | Partly. Cross-tab of order frequency against category count is computable from the real data. | **Testable — worth running.** If low-frequency users show *higher* category counts, breadth is a misleading proxy for exploration, which would change how the target segment is defined. |
-| Crossover into baby/pet categories is **life-event driven**, i.e. "buying for someone" rather than self-exploration | Weakly. Baby (3) and pet (2) are the rarest categories, consistent with life-stage gating, but n is far too small to confirm. | **Unconfirmed.** Directionally plausible, not evidenced. |
-
-### What they cannot do — the structural limit
-
-A synthetic persona is generated *from* the survey responses. It therefore cannot contain
-information the survey did not already capture. It can recombine and articulate, but it cannot
-surprise. Every "insight" it produces is a restatement of the input data in more fluent language.
-
-That is precisely the capability Part 3 needs and does not have: the ability to surface a barrier
-nobody thought to put on the form. **This is the strongest available demonstration of why
-AI-generated research cannot replace primary research** — and it is the honest answer to the
-brief's framing that "AI-generated insights are only a starting point."
-
 ### Rules applied
 
 1. No persona is quoted as evidence for any claim in Part 3.
 2. No persona-derived hypothesis is treated as validated unless independently checkable against the
-   40 real responses (see table above).
+   40 real responses.
 3. Personas are never described as interviews, participants, or respondents in any deliverable.
-4. The files are retained in the repository as method artifacts, with their original
-   "constructed, not real transcripts" headers intact.
+4. The files are retained as method artifacts with their "not interviews" headers intact
+   (`research/synthetic-personas.md`).
+
+---
+
+## 7. Testing the personas — the finding
+
+Generating personas is not interesting. **Testing them is.** Each of the five produced a hypothesis;
+each was assessed for whether the real data could check it.
+
+| # | Hypothesis generated | Testable? | Result |
+|---|---|---|---|
+| P1 | Category breadth reflects **order consolidation** — infrequent users bundle, so low-frequency users should show *more* categories | **Yes** | **WRONG** (below) |
+| P2 | Barriers are **category-specific, not user-specific** — one person carries different blockers for different categories | No | Survey records barriers per respondent, not per category. Unfalsifiable with this instrument. |
+| P3 | Users don't *experience* need-driven purchases as exploration, so "never explores" and "did cross over" aren't contradictory | No | Requires asking about perception. Not asked. |
+| P4 | Intent is lost **during** the session, not before it | Partly | 3/40 selected "forgot once I started adding regular items" — consistent, but far too thin to support the claim. |
+| P5 | Quick commerce occupies an **"urgency" mental slot**; considered purchases route elsewhere | No | Would need to know what respondents bought elsewhere and why. Not captured. |
+
+### The one testable hypothesis, tested
+
+P1 predicts a **negative** relationship between order frequency and category count. Computed from
+the raw rows (`research/verify_personas.py`):
+
+| Order frequency | n | Mean categories |
+|---|---:|---:|
+| 1–2 / month | 8 | 2.75 |
+| 3–5 / month | 11 | 2.64 |
+| 6–10 / month | 9 | 3.22 |
+| 10+ / month | 12 | 3.42 |
+
+**Pearson r = +0.25.** The relationship is weakly *positive* — the opposite of the prediction.
+Heavier users have slightly broader baskets. At n=40 an r of this size is suggestive at best, so the
+honest reading is that consolidation is not what produces breadth here and the effect is too weak to
+claim more.
+
+**Score: 1 of 5 hypotheses testable. That one was wrong.**
+
+### Why this is the finding, not an excuse
+
+The personas read convincingly. They produced specific, plausible, mechanism-shaped claims in
+confident language. And under test, the only one that could be checked failed.
+
+> **A persona generated from survey responses cannot contain information the survey did not capture.
+> It recombines and articulates — fluently enough to feel like insight — but it cannot surprise, and
+> it has no mechanism for being right about anything outside its input.**
+
+This is what the brief means by *"AI-generated insights are only a starting point"*, demonstrated
+rather than asserted. It is also precisely the capability Part 3 needs and does not have: the ability
+to surface a barrier nobody thought to put on the form. A real person answering *"anything I've
+completely missed?"* can do that. A persona built from a fixed-option survey structurally cannot —
+its entire vocabulary is the survey's vocabulary.
+
+### One more instance, from this project's own workings
+
+The results table above was **wrong when first written.** Its counts and means were generated
+alongside the personas rather than computed, and differed materially from the real figures. The
+directional conclusion survived; the numbers did not. It was caught by writing a script to recompute
+them.
+
+That happened inside a document arguing that plausible-sounding output is not evidence. It is left
+in the record rather than quietly corrected, because it is the same failure mode in miniature — and
+because a project about validating AI output should show its own validation failing at least once.
+
+---
 
 The analysis in §1–§4 is drawn from the 40 real survey responses only.

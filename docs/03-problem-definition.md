@@ -191,9 +191,10 @@ insights. Honest reporting of that comparison, including its limits:
 
 | | |
 |---|---|
-| **Confirmed** | `[pending engine]` — filled once theme prevalences are computed. |
-| **Challenged** | `[pending engine]` |
-| **Challenged, already known** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
+| **Confirmed by survey** | `[pending engine]` — filled once theme prevalences are computed. |
+| **Challenged by survey** | `[pending engine]` |
+| **Structural limit of the survey** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
+| **Challenged by testing AI output against data** | **A synthetic-persona hypothesis was falsified.** Personas generated from the survey claimed category breadth reflects order consolidation, predicting that infrequent users would show *more* categories. Computed against the real rows: r = **+0.25**, the opposite direction. One of five generated hypotheses was testable; it was wrong. See `docs/02-user-research.md` §7. |
 
 **The most important methodological finding of this project is that last row.** AI-synthesized
 personas were also generated from the survey (`docs/02-user-research.md` §6) and produced fluent,
