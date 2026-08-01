@@ -5,7 +5,7 @@
 | Instrument | n | Status |
 |---|---|---|
 | Screener-matched survey (Google Forms) | **40** | Collected 28–29 Jul 2026. Real respondents. |
-| Depth interviews (async, text) | **2** | Collected 1 Aug 2026. Real respondents. Target is 5–6 — see §5 and §8. |
+| Depth interviews (async, text) | **3** | Collected 1 Aug 2026. Real respondents. Target is 5–6 — see §5 and §8. |
 | AI-synthesized personas | 5 | Generated from survey rows. **Not interviews.** See §6. |
 
 Everything in §1–§4 is derived from the 40 real survey responses. Nothing there is reconstructed,
@@ -13,27 +13,29 @@ voiced, or inferred dialogue.
 
 > ### On the interviews
 >
-> The brief asks for 5–6 depth interviews. **Two** have been conducted at the time of writing, both
-> real, both async over text, both recorded verbatim in `research/transcripts/`. That is short of
-> the brief and this document does not present it as anything else.
+> The brief asks for 5–6 depth interviews. **Three** have been conducted at the time of writing, all
+> real, all async over text, all recorded verbatim in `research/transcripts/`. That is short of the
+> brief and this document does not present it as anything else.
 >
 > Two things follow, and they point in opposite directions.
 >
-> **First, the shortfall is real.** n=2 supports quoting and pattern-noticing. It does not support
+> **First, the shortfall is real.** n=3 supports quoting and pattern-noticing. It does not support
 > generalisation, and §8 makes no claim that requires it.
 >
-> **Second, the two interviews already did the one thing the survey and the personas structurally
-> could not: they surfaced a barrier that was not on the form.** Both respondents named a category
-> they had never bought and gave the same reason — the category does not apply to them. There is no
-> code for that in the engine's `barrier[]` enum, and no option for it on the survey. Two of two
-> hit it. See §8.
+> **Second, three conversations found three things this project's vocabulary cannot express** — the
+> one job neither the survey nor the personas could do, because both are built out of that same
+> vocabulary. All three respondents named a never-bought category and explained it as *irrelevance*
+> rather than obstruction, which no `barrier[]` value can encode. Two described using the app
+> because nothing else was open, which no `HabitDriver` value can encode. One described organising
+> their basket around a free-delivery threshold — and that one the engine **did** collect, 133
+> documents of it, with nowhere to put a single one. See §8.
 >
-> §6 and §7 then test the obvious substitute for interviews — personas generated from the survey —
-> and find that of five hypotheses they produced, one was testable and it was **wrong**. Read
-> together with §8, the comparison is the point: the synthetic method produced fluent claims that
-> failed under test, and two real conversations produced a finding neither the survey nor the
-> engine could have reached. That is the brief's *"AI-generated insights are only a starting point"*
-> demonstrated on this project's own data rather than asserted.
+> §6 and §7 test the obvious substitute for interviews — personas generated from the survey — and
+> find that of five hypotheses they produced, one was testable and it was **wrong**. Read against
+> §8, that is the whole argument: the synthetic method produced fluent claims that failed under
+> test, while three real conversations produced findings the survey, the personas, and 3,372 mined
+> documents could not. The brief's *"AI-generated insights are only a starting point"*, demonstrated
+> on this project's own data rather than asserted.
 
 ---
 
@@ -124,11 +126,13 @@ a recurrence metric. One-off trial doesn't move it. Two implications:
 
 ## 5. Limitations — stated plainly
 
-1. **Only 2 depth interviews were conducted, against a target of 5–6.** Consequence: §1–§4 rest
+1. **Only 3 depth interviews were conducted, against a target of 5–6.** Consequence: §1–§4 rest
    entirely on the survey, which can confirm *what* and *how many* but cannot explain *why* in the
    respondent's own words. Every finding in §1–§4 is bounded by the questions asked. §8 is bounded
-   by n=2 and is written as pattern-noticing, not measurement — the same finding appearing in both
-   interviews is recorded as worth checking, never as a rate.
+   by n=3 and is written as pattern-noticing, not measurement — a finding appearing in all three
+   interviews is recorded as worth checking, never as a rate. All three respondents are non-parents
+   and two describe single-person households, which is a recruitment confound §8.7 states rather
+   than resolves.
 
 2. **The survey shares the discovery engine's vocabulary by design.** Barrier options were written
    from the engine's `barrier[]` enum so the two datasets compare directly. The cost is that the
@@ -236,37 +240,45 @@ because a project about validating AI output should show its own validation fail
 
 ---
 
-## 8. Depth interviews (n=2) — what real conversations added
+## 8. Depth interviews (n=3) — what real conversations added
 
-Two async text interviews, 1 Aug 2026, five open questions each
+Three async text interviews, 1 Aug 2026, five open questions each
 (`research/async-interview-kit.md`). Verbatim transcripts with coding and analyst notes:
-`research/transcripts/P01.md`, `P02.md`. No names; P01/P02 only.
+`research/transcripts/P01.md`, `P02.md`, `P03.md`. No names; P01–P03 only.
 
 Async text rather than calls is a deliberate tradeoff and a stated weakness: answers are short and
-there is no live probe. What it buys is that the questions are **open**, so an answer can land
-outside the vocabulary of the instrument. That is exactly what happened.
+there is no live probe (§8.6 gives the case where that cost something concrete). What it buys is
+that the questions are **open**, so an answer can land outside the vocabulary of the instrument.
+That is what happened three times.
 
-### The finding: the engine has no code for "this category is not for me"
+**Headline: three interviews found three things the engine's vocabulary cannot represent.** Two of
+them the engine was structurally blind to. The third it collected 133 documents of and has no field
+to store.
 
-Both respondents, unprompted and on different apps (P01 Blinkit, P02 Zepto), named the same
-never-bought category and gave the same reason.
+### 8.1 First gap — no code for "this category is not for me"
+
+All three respondents, unprompted, across two different apps, named a never-bought category and
+explained it as an **absence of need** rather than an obstruction.
 
 > **P01:** *"Pet supplies, baby care never bought. I don't have kids and pets so never bought it and
 > also if I have in future I would love to try."*
 >
 > **P02:** *"Baby care never bought because I don't have kids and in future I can try."*
+>
+> **P03:** *"Home appliance, because I live alone and I live in full furnished so nothing to do with
+> it."*
 
-Neither answered the second half of the question — *where do you buy that instead?* — because the
+None answered the second half of the question — *where do you buy that instead?* — because the
 premise doesn't hold. Nobody is buying it anywhere.
 
 The engine's `barrier[]` enum has eight values (`awareness`, `trust_quality`, `price_risk`,
 `choice_overload`, `no_trigger`, `size_uncertainty`, `return_anxiety`, `channel_loyalty`) and the
 survey's blocker options were written from that same list (§5, limitation 2). **Every one of them
 presumes latent demand that something is obstructing.** There is no code for a category that is
-simply irrelevant to the respondent. Forced to choose, both of these people would have been recorded
-as blocked by something, and the resulting number would overstate addressable demand.
+simply irrelevant. Forced onto the closed list, all three would have been recorded as blocked, and
+the resulting number would overstate addressable demand.
 
-Why neither of the other two methods could find this:
+Why none of the other three methods could find it:
 
 | Method | Why it misses it |
 |---|---|
@@ -274,14 +286,15 @@ Why neither of the other two methods could find this:
 | Survey (n=40) | Closed options, all drawn from the same enum. A respondent in this position has no honest box to tick. |
 | Synthetic personas | Vocabulary is the survey's vocabulary (§7). Cannot produce a category that isn't in its input. |
 
-Note the tail of both answers: *"in future I would love to try"* / *"in future I can try."* The
-category is not rejected, it is **dormant pending a life event**. For the MVP that is a suppression
-rule, not a conversion opportunity — a baby-care card shown to either respondent is a wasted
-impression, and dismissal rate is a pre-registered guardrail (`docs/03-problem-definition.md` §5).
+Note the tail of all three answers: *"in future I would love to try"* (P01), *"in future I can try"*
+(P02), *"when i have my own house I would love to buy"* (P03). The category is not rejected, it is
+**dormant pending a life event**. For the MVP that is a suppression rule, not a conversion
+opportunity — such a card is a wasted impression, and dismissal rate is a pre-registered guardrail
+(`docs/03-problem-definition.md` §5).
 
-### A second gap, same shape
+### 8.2 Second gap — access of last resort
 
-Both respondents' stated reason for opening the app at all was the **absence of an alternative**:
+P01 and P02's stated reason for opening the app at all was the **absence of an alternative**:
 
 > **P01:** *"I'm at my hometown and only Blinkit is available there as of now."*
 >
@@ -289,41 +302,117 @@ Both respondents' stated reason for opening the app at all was the **absence of 
 
 The `HabitDriver` enum's six values all describe a *preference between available options*
 (`time_pressure`, `trust`, `satisficing`, `list_reuse`, `price_certainty`, `household_routine`).
-Access-of-last-resort is not among them. If it is common, it describes a session where the user has
-no alternative and no browsing intent — the worst moment to surface a new category and, plausibly, a
-frequent one. Recorded as a hypothesis to check against extraction output, not as a finding.
+Access-of-last-resort is not among them. If common, it describes a session where the user has no
+alternative and no browsing intent — the worst moment to surface a new category and, plausibly, a
+frequent one. P03 does **not** replicate it (their trigger was a price advantage), so this stands at
+2 of 3 and is recorded as a hypothesis to check against extraction output, not as a finding.
 
-### What the interviews confirmed
+### 8.3 Third gap — basket economics, and the one the engine can actually see
 
-| Claim | P01 | P02 |
-|---|---|---|
-| Users arrive knowing what they want (F2) | Confirmed | Confirmed |
-| Crossover is event-triggered, not curiosity-driven (§3) | Confirmed — refined oil, *"needed that very urgent"* | Confirmed — liquid detergent, *"urgent for me and no shop around me"* |
-| Information needed first is quality and price (F3) | Confirmed — *"quality and quantity also of course pricing"* | Confirmed — *"pricing… and quality as well"* |
-| Price is what triggers a crossover | — | **Challenged** — price named third, after urgency and absence of alternatives |
+P03 volunteered something no other respondent, the survey, or the corpus vocabulary has:
 
-Both named price and quality unprompted; neither mentioned delivery speed, returns, or brand.
+> *"the problem is we need to buy atleast minimum rs product like 150 or 200 rs of products for not
+> to charge delivery fees too so I never bought home appliance"*
 
-### What they disagreed about
+**The stated mechanism is ambiguous** — a minimum-order threshold should push a basket *up*, and a
+home appliance clears ₹200 easily. The reading recorded in `research/transcripts/P03.md` §2 is
+**basket-shape mismatch**: the user has internalised what the app is *for* — assembling ₹150–200 of
+small top-up items — and a category outside that shape never enters consideration. That is
+explicitly flagged as interpretation, not as something P03 said.
 
-The only direct contradiction between the two respondents is shopping rhythm:
+What is *not* ambiguous is that the concept has no home in the schema. And unlike the first two
+gaps, this one **leaves text**, so it can be checked against the corpus rather than argued.
+Recomputed by `research/check_basket_economics.py`:
+
+| | n |
+|---|---:|
+| Documents using minimum-order / delivery-fee / free-delivery-threshold language | **133** of 3,372 |
+| — kept as relevant by the gate | 69 |
+| — rejected by the gate | 64 (38 `delivery`, 10 `unrelated`, 9 `support`, 5 `technical`, 2 `contentless`) |
+| Narrower: language describing a **threshold shaping the basket** | **63** |
+| — kept as relevant | 39 |
+
+Two separate problems:
+
+**(a) The relevance gate discarded some of it.** Its instruction excludes "pure delivery-speed…
+complaints," and a fee complaint reads like one:
+
+> *"the app is good but there is one problem that it is not free delivery tell me not at the items
+> still 199 but there should be rs 100 that would be more suitable"* — rejected as `delivery`
+
+**(b) The 39 it kept have nowhere to land.** No `barrier[]` value describes basket economics.
+`price_risk` means *"unsure if the price is fair"* — a different claim; these users know exactly
+what the fee is and are organising their basket around it. Extraction will either force them into
+`price_risk`, misdescribing them, or lose the signal. The clearest instance the gate correctly kept:
+
+> *"this scammer app.. when I adding 20/- item showing free delivery on above 150rs when I adding
+> 180/- more item it's showing free delivery above 299/- and showing fake line"*
+
+A user watching the threshold move as the basket grows, and adjusting to it. Nothing in
+`engine/schema.py` can represent that.
+
+**This gap differs in kind from the first two, and that difference is the methodological point.**
+Irrelevance and access-of-last-resort leave no text at all — the engine is structurally blind to
+them. Basket economics leaves plenty; the engine ingested 133 documents of it. The failure there is
+not collection, it is **taxonomy**: the vocabulary was written before anyone asked a user an open
+question, and scale cannot repair a category scheme that is missing a category.
+
+### 8.4 What the interviews confirmed
+
+| Claim | P01 | P02 | P03 |
+|---|---|---|---|
+| Users arrive knowing what they want (F2) | Confirmed | Confirmed | Confirmed — though with cross-platform price comparison first |
+| Crossover is event-triggered, not curiosity-driven (§3) | Confirmed — refined oil, *"needed that very urgent"* | Confirmed — liquid detergent, *"urgent for me and no shop around me"* | Confirmed — sipper, *"i joined gym… so i bought urgently"* |
+| Information needed first is quality and price (F3) | Confirmed — *"quality and quantity also of course pricing"* | Confirmed — *"pricing… and quality as well"* | Confirmed — *"quality matters to me"* |
+| Price is what triggers a crossover | — | **Challenged** — price named third, after urgency | **Confirmed** — a ₹200 discount was the trigger, no urgency present |
+
+**3 of 3 on event-triggered crossover, with three different triggers** — ran out (P01), urgent need
+with no alternative (P02), and a life event creating a need that did not previously exist (P03,
+joining a gym). `docs/03-problem-definition.md` §5 predicted exactly that set.
+
+**3 of 3 named quality unprompted.** None mentioned delivery speed, returns, or brand — the three
+things quick-commerce marketing leads with.
+
+### 8.5 What they disagreed about
+
+**Shopping rhythm — the one direct contradiction, now 2 against 1:**
 
 - **P01:** *"I don't shop everyday, I shop when I needed the products."*
 - **P02:** *"I shop mostly regularly because it's very easy to shop on app."*
+- **P03:** *"I shop regularly from these quick commerce so nothing left."*
 
 This matters because the root cause in `docs/03-problem-definition.md` §2 rests on a two-minute
-fetch session. P02's other answers — a single late-night item, one urgent detergent — read as
-fetch behaviour at high frequency, which is the segment definition in `docs/00-foundation.md`
-(frequent *and* narrow) rather than a counterexample. But that reconciliation is **inference from
-their other answers, not something P02 said**, and it is recorded as a partial challenge in
-`research/transcripts/P02.md` for that reason. If a later respondent describes actually browsing,
-the fetch-mode model is in trouble and Part 3 needs rewriting.
+fetch session. In `research/transcripts/P02.md` the prediction was recorded that a respondent
+describing *actual browsing* would put that model in trouble. **P03 did not.** Their two described
+purchases are a decided adapter and an urgent sipper — single-item, product known before the app
+opened. Two respondents now self-describe as "regular" while describing pure fetch behaviour, so
+frequent-and-narrow — the segment definition in `docs/00-foundation.md` — reads as the better
+explanation than a contradiction. Nobody has yet described browsing, and the standing prediction is
+unchanged: one respondent who does overturns this.
 
-### Status
+**Price's role — genuinely unsettled at n=3.** P02 named price third, after urgency and absence of
+alternatives; P03's last order was triggered by price alone, with no urgency, following deliberate
+cross-platform comparison. The honest reading is that price can be either trigger or confirmer, and
+three interviews cannot say which is typical.
 
-3 of the target 5–6 interviews remain outstanding. The transcripts are committed as they arrive and
-this section is updated with them; the confirm/challenge matrix in
-`docs/03-problem-definition.md` §6 is rebuilt at each addition.
+### 8.6 What the async method cost
+
+P03's basket-economics answer is the concrete case. A live interview would have asked *"what do you
+mean the minimum stops you — wouldn't an appliance be over ₹200 anyway?"* and settled the mechanism
+in one exchange. Async text could not, so the most novel finding in the study is recorded with its
+mechanism ambiguous. That is the tradeoff named at the top of this section, priced.
+
+### 8.7 Status
+
+**3 of the target 5–6 interviews are complete.** Transcripts are committed as they arrive and this
+section is updated with them; the confirm/challenge matrix in `docs/03-problem-definition.md` §6 is
+rebuilt at each addition.
+
+Recruitment confound, stated plainly: all three respondents are non-parents, and two describe
+single-person households. The repeated "category is irrelevant" result may partly reflect who was
+available to ask. Three interviews do not resolve that. What they do establish is that the
+**taxonomy is incomplete**, which does not require a representative sample to demonstrate — one
+respondent whose answer has no valid code is sufficient, and there are three.
 
 ---
 

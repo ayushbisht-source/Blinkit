@@ -91,6 +91,33 @@ This matters because it dictates what will and won't work. Interventions that ad
 variables that are already non-zero. Only interventions that raise *evaluation speed* touch the
 constraint.
 
+### One interview suggests a constraint upstream of this one
+
+P03 gave a reason for never buying a category that is not an evaluation problem at all:
+
+> *"we need to buy atleast minimum rs product like 150 or 200 rs of products for not to charge
+> delivery fees too so I never bought home appliance"*
+
+Read as **basket-shape mismatch** — the user has internalised what this app is *for*, assembling
+₹150–200 of small top-up items, and a category outside that shape never enters consideration — this
+sits *before* the ability constraint rather than inside it. P03 isn't failing to evaluate the home
+appliance quickly enough; they never open the question.
+
+Three qualifications, all load-bearing:
+
+1. **n=1.** No other respondent raised it.
+2. **The mechanism as stated doesn't parse literally** — a minimum-order threshold should push a
+   basket up, and an appliance clears ₹200 easily. Basket-shape mismatch is the analyst's reading,
+   not the respondent's words (`research/transcripts/P03.md` §2).
+3. **Async text couldn't probe it.** A live interview would have resolved this in one follow-up.
+
+It is recorded here rather than in a footnote because if it holds, it bounds this section's claim:
+the Fogg analysis would explain why users skip categories they *consider*, and say nothing about
+categories that never reach consideration. **The MVP is not changed by it either way** — a single
+cross-category suggestion at cart review is, if anything, helped by a threshold the user is trying
+to clear. But the root cause above would be one of two, not the only one, and that is worth knowing
+before treating it as settled.
+
 ---
 
 ## 3. Existing workarounds
@@ -195,9 +222,11 @@ insights. Honest reporting of that comparison, including its limits:
 | **Confirmed by survey** | `[pending engine]` — filled once theme prevalences are computed. |
 | **Challenged by survey** | `[pending engine]` |
 | **Structural limit of the survey** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
-| **Confirmed by interview** (n=2) | Fetch-mode arrival and event-triggered crossover both held in both interviews, in the respondents' own words: *"I shop when I needed the products"* (P01), *"urgent for me and no shop around me that time"* (P02). Both named **quality and price** as the information they'd need before trying a new category — unprompted, and matching F3. Neither mentioned delivery speed, returns, or brand. |
-| **Challenged by interview** (n=2) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** Both respondents named a never-bought category (baby care) and both explained it as irrelevance, not obstruction — *"I don't have kids"* — and neither named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked. Forced onto the survey's closed list, both would have been recorded as blocked, overstating addressable demand. See `docs/02-user-research.md` §8. |
-| **Also challenged** (n=2, weaker) | Both respondents' reason for opening the app was **absence of an alternative** — *"only Blinkit is available there"* (P01), *"late night… no shop around me"* (P02). No `HabitDriver` value covers access-of-last-resort; all six describe choosing between available options. Recorded as a hypothesis to check against extraction output, not a finding. |
+| **Confirmed by interview** (n=3) | **3 of 3 on event-triggered crossover**, with the three different triggers §5 predicts: ran out (P01, refined oil), urgent need with no alternative (P02, liquid detergent), and a life event creating a need that did not exist before (P03 — *"i joined gym and i don't have sipper so i bought urgently"*). **3 of 3 arrived knowing the item.** **3 of 3 named quality unprompted** as the precondition for trying a new category, matching F3; none mentioned delivery speed, returns, or brand. |
+| **Challenged by interview** (n=3) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** All three named a never-bought category and explained it as irrelevance, not obstruction — *"I don't have kids and pets"* (P01), *"I don't have kids"* (P02), *"I live alone and I live in full furnished so nothing to do with it"* (P03) — and none named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked. Forced onto the survey's closed list, all three would have been recorded as blocked, overstating addressable demand. See `docs/02-user-research.md` §8.1. |
+| **Challenged by interview, with corpus evidence** | **A barrier that is neither informational nor in the schema: basket economics.** P03 — *"we need to buy atleast minimum rs product like 150 or 200 rs of products for not to charge delivery fees too so I never bought home appliance."* Unlike the other gaps this one leaves text, so it is checkable: **133 of 3,372 documents** use minimum-order / delivery-fee / threshold language (`research/check_basket_economics.py`). The gate rejected 64 of them as delivery or support complaints; the **39** threshold-specific ones it kept will reach extraction and find no `barrier[]` value that fits — `price_risk` means *"unsure if the price is fair"*, and these users know exactly what the fee is. The engine collected the signal at scale and has nowhere to store it. See `docs/02-user-research.md` §8.3. |
+| **Also challenged** (n=2 of 3, weaker) | P01 and P02 opened the app because of the **absence of an alternative** — *"only Blinkit is available there"*, *"late night… no shop around me"*. No `HabitDriver` value covers access-of-last-resort; all six describe choosing between available options. P03 does not replicate it. Recorded as a hypothesis to check against extraction output, not a finding. |
+| **Unsettled by interview** | **Whether price triggers a crossover or merely confirms one.** P02 named it third, after urgency and absence of alternatives; P03's last order was triggered by price alone with no urgency, after deliberate cross-platform comparison (*"200 rs discount apart from other platforms"*). Three interviews cannot say which is typical, and this is left open rather than resolved in whichever direction suits the MVP. |
 | **Challenged by testing AI output against data** | **A synthetic-persona hypothesis was falsified.** Personas generated from the survey claimed category breadth reflects order consolidation, predicting that infrequent users would show *more* categories. Computed against the real rows: r = **+0.25**, the opposite direction. One of five generated hypotheses was testable; it was wrong. See `docs/02-user-research.md` §7. |
 
 **Read the persona row and the interview rows together — that pairing is the methodological finding
@@ -209,15 +238,30 @@ not be tested with the available instruments and the fifth was falsified. A pers
 survey data cannot contain information the survey did not capture: it can rephrase, it cannot
 surprise.
 
-Two real conversations then produced something none of the three AI-driven or instrument-driven
-methods could reach — a barrier category that does not exist in the engine's vocabulary, because
-absence of need generates no reviews to mine and no box to tick. The engine scaled; it could not
-find its own blind spot. The interviews did not scale; they found it on the second respondent.
+Three real conversations then produced three things none of the AI-driven or instrument-driven
+methods could reach, and the three fail in two distinct ways worth separating:
+
+- **Irrelevance** and **access-of-last-resort** are invisible to the engine *by construction*.
+  Nobody writes a review about a product they have no reason to buy. Absence of need generates no
+  text, so no amount of additional collection would have surfaced them. More scale does not help.
+- **Basket economics** is the opposite case and the more damaging one. The engine collected **133
+  documents** of it. The relevance gate binned 64 as delivery complaints; the 39 threshold-specific
+  survivors will hit an extraction schema with no field for what they say. Here the data was
+  present, at scale, and the **taxonomy** threw it away.
+
+The second failure is the one worth generalising from. A vocabulary written before anyone asked a
+user an open question will silently discard whatever it has no name for, and it will do so while
+reporting high coverage — 3,372 documents processed, thousands of labels assigned, and a whole class
+of barrier reduced to `price_risk` or `delivery`. Scale makes that worse, not better, because it
+buries the residue.
 
 That is the concrete demonstration of the brief's own premise that *"AI-generated insights are only
 a starting point."* Not asserted — observed, on this project's own data, and reported as a
 limitation of this project's own method rather than a general claim about AI.
 
-**What is not claimed:** n=2 cannot establish how common this is. The finding is that the taxonomy
-is incomplete, which two respondents are enough to show; the prevalence question needs the remaining
-interviews and a survey instrument that offers the option.
+**What is not claimed:** n=3 cannot establish how common any of this is, and all three respondents
+are non-parents with two in single-person households — a recruitment confound stated in
+`docs/02-user-research.md` §8.7. The finding is that the **taxonomy is incomplete**, which does not
+require a representative sample: one respondent whose answer has no valid code is sufficient, and
+there are three. Prevalence needs the remaining interviews and a survey instrument that offers the
+missing options.

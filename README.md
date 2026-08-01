@@ -60,13 +60,21 @@ collect ──► normalize ──► relevance gate ──► extract ──►
 |---|---|
 | Documents collected | **3,372** across Blinkit, Zepto, Instamart, BigBasket, JioMart |
 | Sources | Play Store (3,033) · App Store (339) |
-| Gated so far | 2,200 |
-| Judged relevant | **608** (27.6%) |
-| Filtered as noise | delivery 599 · support 421 · contentless 306 · technical 148 · unrelated 49 |
+| Gated | **3,372 — complete** |
+| Judged relevant | **971** (28.8%) |
+| Filtered as noise | delivery 941 · support 550 · contentless 527 · technical 252 · unrelated 132 |
 
-The gate removing ~72% of the corpus is the point, not a problem: most app-store reviews are about
+The gate removing ~71% of the corpus is the point, not a problem: most app-store reviews are about
 delivery times and refunds, which say nothing about *what* people choose to buy. Extraction only
 pays for documents that survive.
+
+**One caveat on that filter, found by interview.** P03 described organising their basket around a
+free-delivery threshold — a genuine constraint on *what gets bought*, expressed as a fee complaint.
+Re-checking the corpus, 133 documents use that language and the gate rejected 64 of them as
+`delivery` or `support` (`research/check_basket_economics.py`). The filter's premise — that fee and
+delivery talk is logistics noise — is right most of the time and wrong in a specific, identifiable
+way. It is documented in `docs/02-user-research.md` §8.3 rather than quietly retuned, because the
+gate's error rate is part of what the discovery engine's output means.
 
 ### Design decisions worth knowing
 
@@ -159,16 +167,19 @@ first and refuses to publish if any check fails.
 
 Stated up front rather than discovered by a reader.
 
-1. **2 depth interviews against a target of 5–6.** Real, async over text, verbatim in
+1. **3 depth interviews against a target of 5–6.** Real, async over text, verbatim in
    `research/transcripts/`. Short of the brief, and the quantitative findings rest on the survey
-   alone. Interview evidence is labelled n=2 everywhere it appears
-   (`docs/02-user-research.md` §8).
+   alone. Interview evidence is labelled n=3 everywhere it appears
+   (`docs/02-user-research.md` §8). All three respondents are non-parents and two live alone — a
+   recruitment confound that is stated, not resolved.
 2. **The survey shares the engine's vocabulary by design**, so the two datasets compare directly —
    at the cost of being structurally poor at *challenging* the engine. It can confirm a hypothesised
-   barrier; it cannot surface one nobody thought to ask about. Both interviews then did exactly
-   that: they named a barrier — *"this category does not apply to me"* — that exists in neither the
-   engine's `barrier[]` enum nor the survey's options, and that reviews cannot contain because
-   absence of need generates no text.
+   barrier; it cannot surface one nobody thought to ask about. Three interviews then found three
+   barriers it has no name for: *"this category does not apply to me"* (3 of 3), using the app
+   because nothing else was open (2 of 3), and organising the basket around a free-delivery
+   threshold (1 of 3). The first two leave no text for the engine to mine. The third leaves
+   plenty — **133 of the 3,372 collected documents** — and the schema has nowhere to put any of it
+   (`research/check_basket_economics.py`).
 3. **AI-synthesized personas were generated and are excluded from the evidence base**
    (`docs/02-user-research.md` §6). They are retained as a labelled method artifact. A persona
    generated *from* survey data cannot contain what the survey did not capture — it can rephrase,
