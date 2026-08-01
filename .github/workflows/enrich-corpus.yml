@@ -58,7 +58,12 @@ jobs:
             echo "::error::No API key. Add GEMINI_API_KEY (free: aistudio.google.com/apikey) or ANTHROPIC_API_KEY as a repository secret."
             exit 1
           fi
-          echo "Credential present."
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "Provider will be: ANTHROPIC (paid, fast)"
+          else
+            echo "::warning::ANTHROPIC_API_KEY not set — falling back to GEMINI free tier. Expect this run to be 5-10x slower."
+            echo "Provider will be: GEMINI (free tier)"
+          fi
 
       # Metadata call only — no generation quota spent. Run this first whenever the model
       # situation is unclear rather than burning generation attempts to find out by guessing.

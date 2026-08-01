@@ -108,9 +108,18 @@ class LLMClient:
 
         self._resolved_model: dict[str, str] = {}
         self._exhausted_models: dict[str, set[str]] = {}
+        # Models that reject thinking_config outright. Whether a model supports the field is a
+        # fixed property, so discovering it once and remembering is the difference between one
+        # wasted call and one per batch — which on a per-day request quota halves throughput.
+        self._no_thinking_config: set[str] = set()
         self._last_call_lock = threading.Lock()
         self._last_call_at: dict[str, float] = {}
-        log.info("LLM provider: %s", self.provider)
+        # Loud, because a run silently falling back to the free tier looks identical to a healthy
+        # one except for taking an order of magnitude longer — which is exactly how it was missed.
+        if self.provider == "gemini" and os.getenv("ANTHROPIC_API_KEY") is not None:
+            log.warning("ANTHROPIC_API_KEY is set but EMPTY — falling back to Gemini free tier")
+        log.info("LLM provider: %s  (models: fast=%s strong=%s)",
+                 self.provider, self.model("fast"), self.model("strong"))
 
     def _pace_gemini(self, model: str | None = None) -> None:
         """Block until GEMINI_MIN_INTERVAL_SECONDS has passed since the last call TO THIS MODEL.
@@ -364,7 +373,9 @@ class LLMClient:
                 )
 
             exhausted = self._exhausted_models.setdefault(tier, set())
-            thinking_off, tokens = True, max_tokens
+            # Skip the attempt entirely on models already known to reject the field.
+            thinking_off = self.model(tier) not in self._no_thinking_config
+            tokens = max_tokens if thinking_off else max(max_tokens, 1024)
             last_exc: Exception | None = None
 
             # Bounded loop, not a single fallback: the next candidate model can be just as dead
@@ -395,10 +406,14 @@ class LLMClient:
                         thinking_off, tokens = True, max_tokens
                         continue
                     if "INVALID_ARGUMENT" in msg or "400" in msg:
-                        # This model rejects thinking_config outright. Retry it without one, with
-                        # room for the invisible thinking budget so it doesn't eat the whole
-                        # response the way it did before this fallback existed.
-                        log.warning("Gemini rejected thinking_config, retrying without it: %s", msg)
+                        # This model rejects thinking_config. Record it so every subsequent batch
+                        # skips the doomed attempt instead of repeating it, then retry without the
+                        # field — with room for the invisible thinking budget, since it can no
+                        # longer be disabled.
+                        failing = self.model(tier)
+                        if failing not in self._no_thinking_config:
+                            self._no_thinking_config.add(failing)
+                            log.warning("%s rejects thinking_config — disabling it for this model", failing)
                         thinking_off, tokens = False, max(tokens, 1024)
                         continue
                     # Includes per-MINUTE RESOURCE_EXHAUSTED, which the outer @retry on
