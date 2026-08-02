@@ -261,21 +261,70 @@ def main() -> None:
     A("")
     A("## How well each question is answered")
     A("")
-    A("| # | Question | Answerable from this corpus? |")
-    A("|---|---|---|")
-    A("| 1 | Why repeat the same categories | **Well** — habit language is explicit in reviews |")
-    A("| 2 | What prevents exploring | **Well** — the corpus's strongest signal |")
-    A("| 3 | How they discover today | **Partially** — only when volunteered; shares are a floor |")
-    A("| 4 | Role of habit | **Well** — measured on an ordinal scale |")
-    A("| 5 | Information needed | **Well** — and directly actionable for the MVP |")
-    A("| 6 | Recurring frustrations | **Well** — though skewed toward complaint-shaped feedback |")
-    A("| 7 | Which segments experiment more | **Poorly** — needs a rate; reviews are cross-sectional. Survey answers this better |")
-    A("| 8 | Unmet needs | **Well** — via clustered pain statements |")
+    A("Graded by **evidence coverage**: the share of usable extractions that actually carry the")
+    A("field the question depends on. These grades were previously written by hand, before the")
+    A("corpus existed, and six of the eight said \"Well\" — while real coverage turns out to run")
+    A("from 2.9% to 74%. They are now computed, so the engine cannot flatter itself.")
     A("")
-    A("**The corpus over-represents anger.** People write reviews when annoyed, so barriers and")
-    A("frustrations are richly evidenced while quiet non-adoption — \"I just never thought to\" — is")
-    A("structurally under-captured. That asymmetry is the single most important thing to hold in")
-    A("mind when reading the numbers above, and it is the reason primary research is not optional.")
+    A("| Grade | Rule |")
+    A("|---|---|")
+    A("| **Well** | ≥50% of extractions carry the field |")
+    A("| **Moderately** | 20–50% |")
+    A("| **Poorly** | <20%, or the question needs something reviews structurally cannot supply |")
+    A("")
+
+    def grade(covered: int, total: int, structural: str = "") -> tuple[str, str]:
+        pct = (covered / total * 100) if total else 0.0
+        if structural:
+            return "**Poorly**", f"{covered}/{total} ({pct:.1f}%) — {structural}"
+        label = "**Well**" if pct >= 50 else ("**Moderately**" if pct >= 20 else "**Poorly**")
+        return label, f"{covered}/{total} ({pct:.1f}%) carry the field"
+
+    coded = {f: sum(1 for e in ex if e.get(f)) for f in
+             ("habit_driver", "barrier", "discovery_channel", "information_gap", "segment_signal")}
+    habitual = sum(1 for e in ex if (e.get("habit_signal") or 0) > 0)
+    themed = themes.get("n_statements", 0) if themes else 0
+
+    q = [
+        ("1", "Why repeat the same categories", *grade(coded["habit_driver"], n)),
+        ("2", "What prevents exploring", *grade(coded["barrier"], n)),
+        ("3", "How they discover today", *grade(
+            coded["discovery_channel"], n,
+            "reviews record outcomes, not journeys; nobody writes down how they found a product")),
+        ("4", "Role of habit", *grade(habitual, n,
+            "an ordinal signal fires on a minority; habit is the unremarkable case people do not write about")),
+        ("5", "Information needed", *grade(coded["information_gap"], n)),
+        ("6", "Recurring frustrations", *grade(themed, n)),
+        ("7", "Which segments experiment more", *grade(
+            coded["segment_signal"], n,
+            "\"more likely\" needs a rate per user over time; reviews are cross-sectional")),
+        ("8", "Unmet needs", *grade(themed, n)),
+    ]
+    A("| # | Question | Grade | Evidence |")
+    A("|---|---|---|---|")
+    for num, question, label, basis in q:
+        A(f"| {num} | {question} | {label} | {basis} |")
+    A("")
+
+    A("### The grades are not eight independent scores")
+    A("")
+    A("Read the table by which questions score well and which do not, because the split is not")
+    A("random.")
+    A("")
+    A("**What the corpus answers well — Q2, Q5, Q6, Q8 — is every question about a purchase that")
+    A("went wrong.** Barriers, missing information, frustrations, unmet needs: all are things a")
+    A("person writes down *after* a bad transaction.")
+    A("")
+    A("**What it answers badly — Q3, Q4, Q7 — is every question about behaviour before or across")
+    A("purchases.** How you found the product, what your routine is, whether you experiment more")
+    A("than someone else. Nobody writes a review about a habit, because a habit is the")
+    A("unremarkable case, and nobody writes a review about a product they never bought.")
+    A("")
+    A("So this is one limitation appearing three times, not three separate weaknesses: **a review")
+    A("corpus contains only people who completed a transaction, writing about the transaction.**")
+    A("Scaling collection past 3,372 documents would sharpen the left column and do nothing for")
+    A("the right one. That is the structural case for primary research, and it is why the survey")
+    A("(`docs/02-user-research.md` §1–§4) carries Q3 and Q7 while the engine carries Q2, Q5, Q6.")
     A("")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
