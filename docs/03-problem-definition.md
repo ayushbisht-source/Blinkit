@@ -1,10 +1,9 @@
 # Part 3 — Problem Definition
 
 > **Status of evidence.** Everything below rests on the 40-response survey (real), the discovery
-> engine's corpus of 3,372 documents, and 2 depth interviews (real, async text — target is 5–6, see
-> `docs/02-user-research.md` §5 and §8). Where a claim depends on engine output still being
-> processed, it is marked `[pending engine]` rather than asserted. Interview evidence is labelled
-> n=2 wherever it appears and never carries a claim on its own.
+> engine's corpus of 3,372 documents, and 3 depth interviews (real, async text — fieldwork closed
+> at 3 against a target of 5–6, see `docs/02-user-research.md` §5 and §8.7). Interview evidence is
+> labelled n=3 wherever it appears and never carries a quantitative claim on its own.
 
 ---
 
@@ -219,8 +218,8 @@ insights. Honest reporting of that comparison, including its limits:
 
 | | |
 |---|---|
-| **Confirmed by survey** | `[pending engine]` — filled once theme prevalences are computed. |
-| **Challenged by survey** | `[pending engine]` |
+| **Confirmed by survey** | **The ranking of barriers matches.** Engine, across 24 themes weighted by size (537 statements): `trust_quality` **66.5%**, `price_risk` **21.6%**, `awareness` **10.1%**. Survey, n=40: quality/taste uncertainty is the top blocker (14) with brand distrust close behind (12); price second (8 "priced higher than usual" + 7 "price feels risky"); and *nobody's* leading answer is "I didn't know they sold it." Two independently-collected datasets, one mined and one asked, put the same three barriers in the same order. |
+| **Challenged by survey** | **The engine almost cannot see the survey's second-biggest blocker.** "Took too long to explore/compare" is 13/40 — 32.5%, rank 2. The corresponding engine code, `choice_overload`, is **1.9%**. That is not a small discrepancy, and the explanation is structural: reviews are written *after* a transaction, by people motivated by an outcome. Nobody writes a review saying "I considered pet food, found comparing too slow, and bought nothing." The non-purchase leaves no text. See below. |
 | **Structural limit of the survey** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
 | **Confirmed by interview** (n=3) | **3 of 3 on event-triggered crossover**, with the three different triggers §5 predicts: ran out (P01, refined oil), urgent need with no alternative (P02, liquid detergent), and a life event creating a need that did not exist before (P03 — *"i joined gym and i don't have sipper so i bought urgently"*). **3 of 3 arrived knowing the item.** **3 of 3 named quality unprompted** as the precondition for trying a new category, matching F3; none mentioned delivery speed, returns, or brand. |
 | **Challenged by interview** (n=3) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** All three named a never-bought category and explained it as irrelevance, not obstruction — *"I don't have kids and pets"* (P01), *"I don't have kids"* (P02), *"I live alone and I live in full furnished so nothing to do with it"* (P03) — and none named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked. Forced onto the survey's closed list, all three would have been recorded as blocked, overstating addressable demand. See `docs/02-user-research.md` §8.1. |
@@ -228,6 +227,37 @@ insights. Honest reporting of that comparison, including its limits:
 | **Also challenged** (n=2 of 3, weaker) | P01 and P02 opened the app because of the **absence of an alternative** — *"only Blinkit is available there"*, *"late night… no shop around me"*. No `HabitDriver` value covers access-of-last-resort; all six describe choosing between available options. P03 does not replicate it. Recorded as a hypothesis to check against extraction output, not a finding. |
 | **Unsettled by interview** | **Whether price triggers a crossover or merely confirms one.** P02 named it third, after urgency and absence of alternatives; P03's last order was triggered by price alone with no urgency, after deliberate cross-platform comparison (*"200 rs discount apart from other platforms"*). Three interviews cannot say which is typical, and this is left open rather than resolved in whichever direction suits the MVP. |
 | **Challenged by testing AI output against data** | **A synthetic-persona hypothesis was falsified.** Personas generated from the survey claimed category breadth reflects order consolidation, predicting that infrequent users would show *more* categories. Computed against the real rows: r = **+0.25**, the opposite direction. One of five generated hypotheses was testable; it was wrong. See `docs/02-user-research.md` §7. |
+
+### The single structural blind spot behind every challenge above
+
+The three challenges are not three separate weaknesses. They are one, showing up three times.
+
+**A corpus of reviews contains only people who completed a transaction.** Every barrier that stops
+someone *before* they buy is invisible to it, not because the collection was too small but because
+the behaviour generates no text at all.
+
+| What was missed | Found by | Why the corpus cannot hold it |
+|---|---|---|
+| "Comparing took too long, so I bought nothing" | Survey, 13/40 | The user didn't buy, so there is nothing to review |
+| "This category doesn't apply to me" | Interviews, 3/3 | No need means no purchase means no review |
+| "I organise my basket around the free-delivery threshold" | Interview + 133 corpus docs | Present in the text, but the gate read it as a delivery complaint and the schema has no code for it |
+
+The first two are invisible by construction. The third is the more instructive one, because it shows
+the same blindness arising a second way: the data *was* collected, at scale, and the vocabulary
+discarded it.
+
+Note what this does to the engine's own numbers. Its top information gap is `returnability` at
+**34.5%** — a post-purchase concern, from people writing about an order that went wrong. The survey's
+top concerns are pre-purchase: fitness-for-need (14), wanting reviews first (14). **Neither
+instrument is wrong. They sample different moments**, and only reading them together shows the
+shape of the problem: the corpus is rich about what disappoints buyers and nearly silent about what
+prevents purchases, which is the exact thing this project was commissioned to change.
+
+That asymmetry is why Part 2's primary research is load-bearing rather than decorative, and it is
+the concrete answer to why an AI discovery engine at 3,372 documents does not remove the need to
+talk to three people.
+
+---
 
 **Read the persona row and the interview rows together — that pairing is the methodological finding
 of this project.**
