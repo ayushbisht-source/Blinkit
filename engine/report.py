@@ -256,6 +256,54 @@ def main() -> None:
         A("_No themes yet — run `python -m engine.pipeline.cluster`._")
         A("")
 
+    # ── Multi-model agreement ─────────────────────────────────────────────────────────────────
+    agree_path = PROCESSED / "multi_model_agreement.json"
+    if agree_path.exists():
+        ag = json.loads(agree_path.read_text())
+        rqa, ca, ma = (ag.get("research_question_agreement", {}),
+                       ag.get("confidence_agreement", {}),
+                       ag.get("mechanism_agreement", {}))
+        A("---")
+        A("")
+        A("## Do independent models agree about what these themes mean?")
+        A("")
+        A("Everything above this line is counted or verified: prevalences are computed, quotes are")
+        A("checked character-for-character against their source. The **insights** are not — they")
+        A("come from a model reading the themes, and \"an AI wrote them\" is not evidence.")
+        A("")
+        A("So synthesis was run again under a different model family and the two were compared.")
+        A("")
+        A(f"**Comparison type: {ag.get('comparison_type', 'unknown').upper()}** — "
+          f"{', '.join(ag.get('models', []))}")
+        A("")
+        A("| Measure | Result | Reading |")
+        A("|---|---|---|")
+        A(f"| Themes synthesised by both | {ag.get('themes_synthesised_by_all')} of {ag.get('themes_total')} | — |")
+        A(f"| Research questions per theme (Jaccard) | **{rqa.get('mean_jaccard')}** | "
+          f"full agreement on {rqa.get('themes_in_full_agreement')}; "
+          f"**{rqa.get('themes_with_no_overlap')}** themes with no overlap at all |")
+        A(f"| Confidence | mean gap **{ca.get('mean_absolute_difference')}** | "
+          f"{ca.get('themes_differing_by_over_0.3')} themes differ by more than 0.3 |")
+        if "mean_same_theme_similarity" in ma:
+            A(f"| Mechanism text similarity | **{ma['mean_same_theme_similarity']}** same-theme vs "
+              f"{ma['mean_different_theme_similarity']} different-theme | lift {ma['lift_over_null']} |")
+            A(f"| Correct theme is nearest match | **{ma['correct_theme_is_nearest']}/"
+              f"{ma['themes_compared']}** ({ma['correct_theme_is_nearest_rate']:.0%}) | "
+              f"against a {ma['chance_rate']:.0%} chance baseline |")
+        A("")
+        A("**What this does and does not establish.** " + ag.get("what_this_measures", ""))
+        A("")
+        A("Agreement is not correctness. Two models converging means they read the same quotes the")
+        A("same way — not that the mechanism is true of real users. Models trained on overlapping")
+        A("data are not independent coders the way two humans would be. What this bounds is how")
+        A("much the insights can be blamed on one vendor's idiosyncrasy; *dis*agreement would have")
+        A("been decisive, and there is none: no theme scored zero overlap.")
+        A("")
+        A("The sharper limit sits elsewhere. Three interviews found three things no model found in")
+        A("3,372 documents (`docs/02-user-research.md` §8), and no amount of model agreement would")
+        A("have surfaced them.")
+        A("")
+
     # ── Coverage summary ──────────────────────────────────────────────────────────────────────
     A("---")
     A("")

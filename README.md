@@ -53,6 +53,7 @@ collect ──► normalize ──► relevance gate ──► extract ──►
 | Cluster | `engine/pipeline/cluster.py` | TF-IDF → LSA → agglomerative, then centroid merge |
 | Synthesize | `engine/pipeline/synthesize.py` | Themes → insights with computed contradicting evidence |
 | Validate | `engine/validation/checks.py` | Five checks, no API key required |
+| Cross-check | `engine/validation/multi_model.py` | Re-runs synthesis on a second model family and measures agreement |
 
 ### Corpus
 
@@ -91,7 +92,15 @@ labels disagree with that theme's dominant barrier.
 
 **Every quote is verifiable.** Extraction must return a verbatim substring of the source document,
 and validation asserts it character-for-character. That check is what licenses quoting the corpus at
-all.
+all. Measured fabrication rate: **4 in 924** (0.4%), and clustering filters unverifiable quotes out
+before any of them can be shown.
+
+**The insights are cross-checked against a second model family.** Everything else in the engine is
+counted or verified; the mechanism prose is not, so synthesis was re-run on Llama 3.3 70B and
+compared with the Gemini output. Across all 25 themes: research-question agreement 0.66 Jaccard with
+**no theme scoring zero overlap**, mean confidence gap 0.10, and mechanism text matching its own
+counterpart **12/25 against a 4% chance baseline**. Agreement is not correctness — it bounds how much
+the insights can be blamed on one vendor, nothing more (`engine/validation/multi_model.py`).
 
 ---
 

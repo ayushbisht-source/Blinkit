@@ -198,6 +198,38 @@ artifacts of that platform's review culture than genuine user needs.
 
 ---
 
+## Do independent models agree about what these themes mean?
+
+Everything above this line is counted or verified: prevalences are computed, quotes are
+checked character-for-character against their source. The **insights** are not — they
+come from a model reading the themes, and "an AI wrote them" is not evidence.
+
+So synthesis was run again under a different model family and the two were compared.
+
+**Comparison type: CROSS-FAMILY** — baseline(committed), groq:llama-3.3-70b-versatile
+
+| Measure | Result | Reading |
+|---|---|---|
+| Themes synthesised by both | 25 of 25 | — |
+| Research questions per theme (Jaccard) | **0.6613** | full agreement on 7; **0** themes with no overlap at all |
+| Confidence | mean gap **0.1** | 3 themes differ by more than 0.3 |
+| Mechanism text similarity | **0.1577** same-theme vs 0.0909 different-theme | lift 0.0669 |
+| Correct theme is nearest match | **12/25** (48%) | against a 4% chance baseline |
+
+**What this does and does not establish.** Different model families, so agreement is evidence the insights are not one vendor's idiosyncrasy.
+
+Agreement is not correctness. Two models converging means they read the same quotes the
+same way — not that the mechanism is true of real users. Models trained on overlapping
+data are not independent coders the way two humans would be. What this bounds is how
+much the insights can be blamed on one vendor's idiosyncrasy; *dis*agreement would have
+been decisive, and there is none: no theme scored zero overlap.
+
+The sharper limit sits elsewhere. Three interviews found three things no model found in
+3,372 documents (`docs/02-user-research.md` §8), and no amount of model agreement would
+have surfaced them.
+
+---
+
 ## How well each question is answered
 
 Graded by **evidence coverage**: the share of usable extractions that actually carry the
