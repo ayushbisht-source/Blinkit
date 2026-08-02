@@ -6,30 +6,30 @@
   "comparison_type": "cross-family",
   "what_this_measures": "Different model families, so agreement is evidence the insights are not one vendor's idiosyncrasy.",
   "themes_total": 25,
-  "themes_synthesised_by_all": 3,
+  "themes_synthesised_by_all": 25,
   "research_question_agreement": {
-    "mean_jaccard": 0.4444,
-    "themes_in_full_agreement": 0,
+    "mean_jaccard": 0.6613,
+    "themes_in_full_agreement": 7,
     "themes_with_no_overlap": 0
   },
   "confidence_agreement": {
-    "mean_absolute_difference": 0.2667,
-    "themes_differing_by_over_0.3": 1
+    "mean_absolute_difference": 0.1,
+    "themes_differing_by_over_0.3": 3
   },
   "mechanism_agreement": {
     "models_compared": [
       "baseline(committed)",
       "groq:llama-3.3-70b-versatile"
     ],
-    "themes_compared": 3,
+    "themes_compared": 25,
     "method": "char_wb(3,5) TF-IDF cosine; lexical, so it understates paraphrased agreement",
-    "mean_same_theme_similarity": 0.1371,
-    "mean_different_theme_similarity": 0.1269,
-    "lift_over_null": 0.0101,
-    "correct_theme_is_nearest": 1,
-    "correct_theme_is_nearest_rate": 0.3333,
-    "chance_rate": 0.3333,
-    "lift_over_chance": 0.0
+    "mean_same_theme_similarity": 0.1577,
+    "mean_different_theme_similarity": 0.0909,
+    "lift_over_null": 0.0669,
+    "correct_theme_is_nearest": 12,
+    "correct_theme_is_nearest_rate": 0.48,
+    "chance_rate": 0.04,
+    "lift_over_chance": 0.44
   },
   "per_theme": [
     {
@@ -41,77 +41,174 @@
     },
     {
       "theme_id": "THM-02",
-      "rq_jaccard": 0.333,
-      "confidence_gap": 0.2,
+      "rq_jaccard": 0.6,
+      "confidence_gap": 0.1,
       "baseline(committed)_confidence": 0.7,
-      "groq:llama-3.3-70b-versatile_confidence": 0.9
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
     },
     {
       "theme_id": "THM-03",
-      "rq_jaccard": 0.4,
-      "confidence_gap": 0.55,
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.45,
       "baseline(committed)_confidence": 0.35,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-04",
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.8,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-05",
+      "rq_jaccard": 0.2,
+      "confidence_gap": 0.15,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.7
+    },
+    {
+      "theme_id": "THM-06",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
       "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-07",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.35,
+      "baseline(committed)_confidence": 0.45,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-08",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-09",
+      "rq_jaccard": 0.5,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.9,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-10",
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-11",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.9,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-12",
+      "rq_jaccard": 0.4,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.85
+    },
+    {
+      "theme_id": "THM-13",
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.75,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-14",
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-15",
+      "rq_jaccard": 0.667,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.9,
+      "groq:llama-3.3-70b-versatile_confidence": 0.85
+    },
+    {
+      "theme_id": "THM-16",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.8,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-17",
+      "rq_jaccard": 0.333,
+      "confidence_gap": 0.15,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.7
+    },
+    {
+      "theme_id": "THM-18",
+      "rq_jaccard": 0.5,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-19",
+      "rq_jaccard": 0.5,
+      "confidence_gap": 0.5,
+      "baseline(committed)_confidence": 0.3,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-20",
+      "rq_jaccard": 0.4,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
+    },
+    {
+      "theme_id": "THM-21",
+      "rq_jaccard": 0.167,
+      "confidence_gap": 0.15,
+      "baseline(committed)_confidence": 0.55,
+      "groq:llama-3.3-70b-versatile_confidence": 0.7
+    },
+    {
+      "theme_id": "THM-22",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.85,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
+    },
+    {
+      "theme_id": "THM-23",
+      "rq_jaccard": 0.75,
+      "confidence_gap": 0.1,
+      "baseline(committed)_confidence": 0.8,
+      "groq:llama-3.3-70b-versatile_confidence": 0.7
+    },
+    {
+      "theme_id": "THM-24",
+      "rq_jaccard": 0.167,
+      "confidence_gap": 0.05,
+      "baseline(committed)_confidence": 0.55,
+      "groq:llama-3.3-70b-versatile_confidence": 0.6
+    },
+    {
+      "theme_id": "THM-25",
+      "rq_jaccard": 1.0,
+      "confidence_gap": 0.0,
+      "baseline(committed)_confidence": 0.8,
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
     }
   ],
-  "batch_failures": [
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 2,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFogn95yqeGjTGxdsnc'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 3,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoh8ibdKssD7jHPibE'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 4,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFohbVvXLN7EnZLh39e'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 5,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoi4nEysfTyHA33eZm'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 6,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoiULZwQQmr9N59gU1'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 7,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoitdx2xLqmshKR6Em'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 8,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFojHhJfZSPhzteDb2X'}"
-    },
-    {
-      "spec": "groq:llama-3.3-70b-versatile",
-      "batch": 9,
-      "kind": "exception",
-      "exception_type": "BadRequestError",
-      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFojpwkGMXXbwSUHvYN'}"
-    }
-  ],
-  "batch_failure_count": 8,
+  "batch_failures": [],
+  "batch_failure_count": 0,
   "caveat": "Agreement is not correctness. Models trained on overlapping corpora are not independent coders, so high agreement bounds how much the single-model insights can be blamed on one model's idiosyncrasy \u2014 it says nothing about whether the mechanism is true of real users. Disagreement, by contrast, is decisive."
 }

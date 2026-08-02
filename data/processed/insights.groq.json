@@ -3,9 +3,9 @@
   "insights": [
     {
       "theme_id": "THM-01",
-      "statement": "Users who buy dairy products online are blocked by the inability to assess the freshness and expiry dates of the products, leading to frequent instances of receiving spoiled or curdled milk. This issue is exacerbated by the lack of effective return and refund policies.",
-      "mechanism": "The mechanism behind this behavior is the lack of transparency and trust in the quality control process of the online grocery platform, coupled with the inability to physically inspect the products before purchase. Users are trying to mitigate the risk of receiving spoiled products but lack the necessary information to make informed decisions.",
-      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. Surfacing more detailed product information, such as expiry dates and quality control measures, could help alleviate these concerns.",
+      "statement": "Users who buy dairy products online are blocked by the inability to assess the freshness and expiry dates of the products, leading to frequent instances of receiving spoiled or curdled milk. This issue is exacerbated by the lack of clear return policies and size guidance.",
+      "mechanism": "The mechanism behind this behavior is the lack of transparency and trust in the quality of the products being sold online. Users are unable to evaluate the freshness and expiry dates of the products, which leads to anxiety about the quality of the products and the potential for returns.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this issue, the product needs to provide clear and transparent information about the freshness and expiry dates of the products, as well as a clear and hassle-free return policy.",
       "research_questions_answered": [
         1,
         2,
@@ -13,13 +13,173 @@
         6
       ],
       "confidence": 0.8,
-      "caveat": "The evidence is based on user quotes and may not be representative of all users who buy dairy products online."
+      "caveat": "The evidence for this insight is based on a limited number of quotes, and it is possible that the issue is not as widespread as it seems."
     },
     {
       "theme_id": "THM-02",
-      "statement": "Users who purchase products online are frequently dissatisfied with the quality of the items received, which undermines their trust in the platform and discourages them from exploring new categories. The primary concerns are the poor quality of the products and the difficulty in returning or exchanging them.",
-      "mechanism": "The mechanism driving this behavior is the perceived risk of receiving low-quality products, which is heightened by the lack of effective quality control measures and return policies. Users are satisficing by sticking to familiar categories and products to minimize the risk of disappointment.",
-      "so_what": "Improving quality control and return policies is crucial to building trust with users and encouraging them to explore new categories. Simply increasing product offerings or promotions may not be enough to overcome the trust barrier.",
+      "statement": "Users who buy products online are blocked by the poor quality of the products and the lack of clear return policies, leading to a lack of trust in the platform. This issue is exacerbated by the lack of price benchmarks and the perceived risk of buying online.",
+      "mechanism": "The mechanism behind this behavior is the lack of trust in the quality of the products being sold online, combined with the lack of clear return policies and price benchmarks. Users are unable to evaluate the quality of the products and are anxious about the potential for returns, which leads to a lack of trust in the platform.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this issue, the product needs to provide clear and transparent information about the quality of the products, as well as a clear and hassle-free return policy and price benchmarks.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The evidence for this insight is based on a limited number of quotes, and it is possible that the issue is not as widespread as it seems."
+    },
+    {
+      "theme_id": "THM-03",
+      "statement": "Users who buy food products online are blocked by the lack of trust in the quality and safety of the products, leading to a lack of trust in the platform. This issue is exacerbated by the lack of clear information about the products, including freshness and expiry dates, and the perceived risk of buying online.",
+      "mechanism": "The mechanism behind this behavior is the lack of trust in the quality and safety of the products being sold online, combined with the lack of clear information about the products. Users are unable to evaluate the quality and safety of the products, which leads to anxiety about the potential for contaminated or expired products, and a lack of trust in the platform.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this issue, the product needs to provide clear and transparent information about the quality and safety of the products, as well as a clear and hassle-free return policy and price benchmarks.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The evidence for this insight is based on a limited number of quotes, and it is possible that the issue is not as widespread as it seems."
+    },
+    {
+      "theme_id": "THM-04",
+      "statement": "Users are hesitant to try new categories due to uncertainty about prices and perceived high costs, leading to a reliance on familiar categories. They compare prices across platforms and find the current platform's prices to be higher.",
+      "mechanism": "The lack of a clear price benchmark and the presence of price risk lead users to rely on familiar categories where they have a better understanding of prices, rather than exploring new categories with uncertain price points.",
+      "so_what": "This is a price certainty problem, not an awareness problem, so simply promoting new categories will not increase exploration. Price transparency and comparison tools could help alleviate this issue.",
+      "research_questions_answered": [
+        1,
+        2,
+        5
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes primarily focus on price comparisons and do not provide direct evidence of how users decide to stick with familiar categories due to price uncertainty."
+    },
+    {
+      "theme_id": "THM-05",
+      "statement": "Users are deterred by the minimum order value required for free delivery, feeling it is too high and should be lower. This affects their willingness to explore new categories or make purchases.",
+      "mechanism": "The threshold for free delivery acts as a barrier because it influences users' perception of the overall cost and value of their purchase, potentially leading them to avoid exploring new categories to minimize costs.",
+      "so_what": "Adjusting the free delivery threshold could impact user behavior, but it may not directly encourage exploration of new categories unless the adjustment is significant enough to alter the user's cost-benefit analysis.",
+      "research_questions_answered": [
+        2,
+        5
+      ],
+      "confidence": 0.7,
+      "caveat": "The quotes are centered around the free delivery threshold and do not explicitly link this to category exploration, which might be an indirect effect."
+    },
+    {
+      "theme_id": "THM-06",
+      "statement": "Users feel that additional charges such as delivery and packaging fees make their purchases too expensive, which might limit their willingness to try new categories.",
+      "mechanism": "The presence of extra charges introduces uncertainty and increases the perceived cost of trying new categories, leading users to stick with familiar categories where they better understand the total cost.",
+      "so_what": "Transparent pricing that includes all potential fees upfront could reduce the perceived risk and cost of exploring new categories, potentially increasing user willingness to try new things.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "The quotes directly address the issue of additional charges affecting purchase decisions, providing strong evidence for the mechanism proposed."
+    },
+    {
+      "theme_id": "THM-07",
+      "statement": "Users are unable to purchase products due to stock unavailability, and the app does not provide sufficient information about product availability, leading to frustration and mistrust. Users are blocked by the lack of transparency about stock levels and delivery capabilities.",
+      "mechanism": "The mechanism behind this behavior is the lack of clear communication about product availability and delivery capabilities, causing users to question the reliability of the app and leading to a breakdown of trust.",
+      "so_what": "This is a trust and reliability problem, not just an awareness issue, so simply increasing product visibility will not solve the problem.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The evidence is based on user quotes, but it is unclear whether the stock unavailability is a result of the app's logistics or the suppliers' inventory management."
+    },
+    {
+      "theme_id": "THM-08",
+      "statement": "Users are hesitant to try new products due to concerns about receiving incorrect or low-quality items, and the app's return and refund policies are unclear, leading to anxiety and mistrust. Users are blocked by the lack of clear information about return and refund processes.",
+      "mechanism": "The mechanism behind this behavior is the perceived risk of receiving incorrect or low-quality products, combined with the uncertainty about the return and refund processes, causing users to avoid trying new products.",
+      "so_what": "This is a trust and risk-perception problem, so simply offering more products will not increase user engagement.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "The evidence is based on user quotes, but it is unclear whether the return and refund policies are actually unclear or if users are simply not aware of them."
+    },
+    {
+      "theme_id": "THM-09",
+      "statement": "Users are hesitant to purchase fresh produce due to concerns about quality and freshness, and the app does not provide sufficient information about product freshness and quality, leading to mistrust. Users are blocked by the lack of clear information about product freshness and quality.",
+      "mechanism": "The mechanism behind this behavior is the perceived risk of receiving low-quality or spoiled products, combined with the uncertainty about product freshness and quality, causing users to avoid purchasing fresh produce.",
+      "so_what": "This is a quality and freshness perception problem, so simply increasing product visibility will not increase user engagement.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "The evidence is based on user quotes, but it is unclear whether the quality and freshness concerns are specific to the app or a general concern about online grocery shopping."
+    },
+    {
+      "theme_id": "THM-10",
+      "statement": "Users who rely on quick-commerce for daily groceries are blocked by frequent unavailability of essential items, leading to disruption in their household routines. This unavailability forces them to consider alternative platforms or physical stores.",
+      "mechanism": "The mechanism behind this behavior is the lack of reliable inventory management and communication from the platform, causing users to lose trust in the service's ability to meet their daily needs. Users are trying to maintain their household routines but are hindered by the uncertainty of product availability.",
+      "so_what": "This is a trust and reliability problem, not just an awareness or pricing issue. Improving inventory management and communication about availability is crucial to retaining users.",
+      "research_questions_answered": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The evidence is based on quotes from users who have experienced disruptions, but it does not provide insight into the platform's inventory management practices or potential solutions."
+    },
+    {
+      "theme_id": "THM-11",
+      "statement": "Users attempting to purchase groceries online are blocked by uncertainty over product quantities and freshness, leading to dissatisfaction with their purchases. This uncertainty makes it difficult for users to trust the quality of the products they receive.",
+      "mechanism": "The mechanism behind this dissatisfaction is the lack of clear information about product sizes and freshness, causing users to question the value and quality of their purchases. Users are trying to make informed purchasing decisions but are hindered by insufficient product details.",
+      "so_what": "This is an information gap problem, specifically related to product details. Providing clear and accurate information about product quantities and freshness is essential to building trust with users.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "The quotes primarily focus on the negative experiences related to quantity and freshness, but do not offer direct feedback on potential solutions or improvements."
+    },
+    {
+      "theme_id": "THM-12",
+      "statement": "Users who experience issues with their orders, such as missing items or incorrect products, are blocked by the lack of effective resolution processes and transparent communication from the platform. This leads to a loss of trust and consideration of competitor services.",
+      "mechanism": "The mechanism behind this behavior is the perceived lack of accountability and poor customer service, causing users to question the platform's reliability and trustworthiness. Users are seeking resolution to their issues but are met with unresponsiveness or ineffective solutions.",
+      "so_what": "This is a customer service and trust problem, highlighting the need for more effective and transparent issue resolution processes. Improving communication and accountability is crucial to retaining user trust and loyalty.",
+      "research_questions_answered": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "confidence": 0.85,
+      "caveat": "While the quotes indicate significant frustration with the platform's handling of issues, they do not provide a comprehensive view of the platform's customer service practices or potential areas for improvement."
+    },
+    {
+      "theme_id": "THM-13",
+      "statement": "Users are hesitant to try new categories due to uncertainty about prices and offers, which leads to a lack of trust in the quality of products. They are blocked by the inability to compare prices and offers across different platforms.",
+      "mechanism": "Users are trying to evaluate the value of products by comparing prices and offers, but they lack the necessary information to make an informed decision, leading to a reliance on familiar categories and products.",
+      "so_what": "This is a trust and price transparency issue, not just a matter of surfacing new categories more prominently. Improving price benchmarking and offer transparency could increase user willingness to try new categories.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes primarily focus on issues with existing offers and prices, rather than explicitly stating a desire to try new categories."
+    },
+    {
+      "theme_id": "THM-14",
+      "statement": "Users are deterred from exploring new categories due to perceived unfair delivery charges, which leads to a lack of price certainty. They are blocked by the inability to predict and compare delivery costs.",
+      "mechanism": "Users are trying to minimize costs and maximize value, but the lack of transparency and consistency in delivery charges creates uncertainty and mistrust, leading to a preference for familiar categories and platforms with more predictable pricing.",
+      "so_what": "This is a price certainty issue, not just a matter of adjusting delivery charges. Providing more transparent and consistent pricing information could increase user willingness to try new categories.",
       "research_questions_answered": [
         1,
         2,
@@ -27,21 +187,155 @@
         6
       ],
       "confidence": 0.9,
-      "caveat": "The quotes primarily focus on the negative experiences, which might not fully capture the complexities of user behavior and decision-making processes."
+      "caveat": "The quotes primarily focus on issues with delivery charges, rather than explicitly stating a desire to try new categories."
     },
     {
-      "theme_id": "THM-03",
-      "statement": "Users who have experienced food safety issues or received expired products are unlikely to continue using the platform, as these incidents severely undermine trust. The lack of transparent quality control measures and effective complaint resolution processes exacerbates the problem.",
-      "mechanism": "The underlying mechanism is the violation of the basic trust expectation that food products will be safe for consumption. When this trust is broken, users are highly unlikely to give the platform another chance, especially if they feel their complaints are not taken seriously.",
-      "so_what": "Ensuring rigorous quality control, implementing transparent food safety measures, and establishing a responsive and effective complaint resolution process are critical to maintaining user trust and loyalty. Merely offering discounts or promotions may not suffice to regain trust once it is lost.",
+      "theme_id": "THM-15",
+      "statement": "Users are hesitant to try new categories, especially electronics, due to concerns about quality, returnability, and exchange options. They are blocked by the lack of information about return and exchange policies.",
+      "mechanism": "Users are trying to mitigate risk and uncertainty when purchasing products, especially electronics, but the lack of clear information about return and exchange policies creates anxiety and mistrust, leading to a reliance on familiar categories and products.",
+      "so_what": "This is a trust and risk mitigation issue, not just a matter of improving product quality. Providing more transparent and customer-friendly return and exchange policies could increase user willingness to try new categories.",
       "research_questions_answered": [
+        1,
         2,
         3,
         5,
         6
       ],
+      "confidence": 0.85,
+      "caveat": "The quotes primarily focus on issues with return and exchange policies, rather than explicitly stating a desire to try new categories."
+    },
+    {
+      "theme_id": "THM-16",
+      "statement": "Users experience frequent order cancellations, which erodes trust and leads to a negative experience. This is particularly frustrating for working professionals who value time and reliability.",
+      "mechanism": "The lack of transparency and control over order fulfillment leads to mistrust, as users are not informed about the availability of products before ordering, resulting in cancelled orders and wasted time.",
+      "so_what": "This is a trust and reliability problem, not just a matter of improving the user interface. To address this, the platform needs to provide more accurate and timely information about product availability and order status.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes primarily reflect the experiences of working professionals, so it's unclear whether these issues are equally prevalent among other user segments."
+    },
+    {
+      "theme_id": "THM-17",
+      "statement": "Users are often unable to find specific brands or products they want, leading to frustration and a negative experience. This is particularly true for users in tier 1 metro areas who may have higher expectations for product availability.",
+      "mechanism": "The platform's limited product offerings and lack of transparency about product availability lead to user frustration, as they are unable to find the specific products they are looking for, and are sometimes substituted with lower-quality alternatives.",
+      "so_what": "This is a product discovery and availability problem, not just a matter of improving the search function. To address this, the platform needs to expand its product offerings and provide more accurate and detailed product information.",
+      "research_questions_answered": [
+        2,
+        3,
+        5
+      ],
+      "confidence": 0.7,
+      "caveat": "The quotes suggest that users are looking for specific brands and products, but it's unclear whether this is due to a lack of awareness about available alternatives or a genuine preference for specific brands."
+    },
+    {
+      "theme_id": "THM-18",
+      "statement": "Users experience problems with perishable products, such as ice cream, being delivered in a melted or expired state, leading to a negative experience and erosion of trust.",
+      "mechanism": "The lack of proper handling and storage of perishable products during delivery leads to user dissatisfaction, as these products are often received in a melted or expired state, highlighting a need for improved logistics and quality control.",
+      "so_what": "This is a logistics and quality control problem, not just a matter of improving the user interface. To address this, the platform needs to invest in better packaging, storage, and delivery systems to ensure that perishable products are handled and delivered properly.",
+      "research_questions_answered": [
+        2,
+        6
+      ],
       "confidence": 0.9,
-      "caveat": "While the quotes strongly support the importance of trust and quality control, the generalizability of these findings to all users and categories needs further investigation."
+      "caveat": "The quotes primarily reflect issues with ice cream delivery, so it's unclear whether these problems are equally prevalent with other perishable products."
+    },
+    {
+      "theme_id": "THM-19",
+      "statement": "Users are hesitant to try new categories due to concerns about product authenticity and payment security, which is exacerbated by experiences with duplicate products and difficulties with returns. This lack of trust is a significant barrier to exploration.",
+      "mechanism": "The mechanism behind this behavior is the perceived risk of receiving low-quality or counterfeit products, which outweighs the potential benefits of trying new categories. Users are risk-averse and prioritize trust and quality over novelty.",
+      "so_what": "This is a trust problem, not an awareness problem, so simply promoting new categories will not be effective. Building trust through guarantees, reviews, and transparent return policies is essential.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The evidence is based on negative experiences, which might not be representative of all users. However, the consistency of the complaints suggests a significant issue."
+    },
+    {
+      "theme_id": "THM-20",
+      "statement": "Users are frustrated when they do not receive all the items they ordered, which leads to a loss of trust and a reluctance to try new categories. This experience is compounded by difficulties in getting refunds.",
+      "mechanism": "The mechanism here is the failure to meet basic expectations of order fulfillment, leading to a breakdown in trust. Users expect to receive what they paid for, and when this does not happen, they become wary of the platform as a whole.",
+      "so_what": "This is a fulfillment reliability problem, not a product discovery issue. Improving logistics and customer service to ensure complete and timely delivery of orders is crucial.",
+      "research_questions_answered": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "The quotes primarily focus on the negative experience of missing items, which might not capture the full range of reasons for not trying new categories."
+    },
+    {
+      "theme_id": "THM-21",
+      "statement": "Users, especially in tier 1 metro areas, are under time pressure and are attracted to promises of quick delivery, but their experience is often marred by delays and high prices, leading to dissatisfaction and a reluctance to explore beyond familiar categories.",
+      "mechanism": "The mechanism at play is the mismatch between the promised delivery time and the actual experience, combined with the perception of high prices. This mismatch erodes trust and increases time pressure, making users less likely to venture out of their comfort zones.",
+      "so_what": "This is a delivery time expectation problem, coupled with a price perception issue. Managing expectations around delivery times and offering competitive pricing strategies could alleviate some of these concerns.",
+      "research_questions_answered": [
+        1,
+        2,
+        3,
+        7
+      ],
+      "confidence": 0.7,
+      "caveat": "The segment signals suggest this might be more relevant to tier 1 metro areas, but it's unclear how universal this experience is across different user segments."
+    },
+    {
+      "theme_id": "THM-22",
+      "statement": "Users who experience repeated delivery failures or receive incomplete orders are blocked from trusting the app, leading to a decrease in their willingness to try new categories. The lack of trust is exacerbated by the absence of clear information on returnability and freshness expiry.",
+      "mechanism": "The mechanism behind this behavior is the erosion of trust due to unfulfilled expectations and lack of transparency about product quality and return policies. Users are unable to evaluate the reliability of the app and its products, leading to a decrease in their willingness to explore new categories.",
+      "so_what": "This is a trust-building problem, not an awareness problem, so simply promoting new categories will not increase user engagement. The app needs to address the root causes of trust erosion, such as improving delivery reliability and providing clear information on returnability and product quality.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes primarily focus on delivery issues, but it is unclear whether other factors, such as product quality or customer service, also contribute to the erosion of trust."
+    },
+    {
+      "theme_id": "THM-23",
+      "statement": "Users who receive damaged or low-quality products are blocked from trying new categories due to concerns about packaging and product quality. The lack of information on freshness expiry and returnability further exacerbates these concerns.",
+      "mechanism": "The mechanism behind this behavior is the perceived risk of receiving low-quality or damaged products, which is amplified by the lack of clear information on freshness expiry and returnability. Users are unable to evaluate the quality of products and the reliability of the app, leading to a decrease in their willingness to explore new categories.",
+      "so_what": "This is a quality-control problem, not an awareness problem, so simply promoting new categories will not increase user engagement. The app needs to address the root causes of quality concerns, such as improving packaging and providing clear information on product quality and return policies.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.7,
+      "caveat": "The quotes primarily focus on packaging and product quality issues, but it is unclear whether other factors, such as pricing or customer service, also contribute to user concerns."
+    },
+    {
+      "theme_id": "THM-24",
+      "statement": "Users who are unable to find desired products or experience limited availability are blocked from trying new categories due to concerns about product availability and pricing. The lack of information on price benchmarks and size guidance further exacerbates these concerns.",
+      "mechanism": "The mechanism behind this behavior is the perceived risk of not finding desired products or experiencing limited availability, which is amplified by the lack of clear information on price benchmarks and size guidance. Users are unable to evaluate the value proposition of the app and its products, leading to a decrease in their willingness to explore new categories.",
+      "so_what": "This is an availability and pricing problem, not an awareness problem, so simply promoting new categories will not increase user engagement. The app needs to address the root causes of availability and pricing concerns, such as improving product assortment and providing clear information on pricing and product sizes.",
+      "research_questions_answered": [
+        2,
+        3,
+        5
+      ],
+      "confidence": 0.6,
+      "caveat": "The quotes primarily focus on availability and pricing issues, but it is unclear whether other factors, such as user habits or preferences, also contribute to user concerns."
+    },
+    {
+      "theme_id": "THM-25",
+      "statement": "Users are hesitant to buy non-grocery items due to uncertainty around returnability and quality, leading to a preference for grocery purchases. This hesitation is further exacerbated by past experiences with returns and refunds.",
+      "mechanism": "The lack of clear information about returnability and the quality of non-grocery items creates anxiety and mistrust among users, causing them to stick to familiar categories like grocery where they perceive less risk.",
+      "so_what": "Improving transparency about return policies and product quality is crucial to encouraging users to explore beyond their usual categories. Simply increasing the visibility of other categories will not suffice without addressing these underlying concerns.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes primarily reflect issues with return policies and quality, but do not provide a comprehensive view of all factors influencing category choice, such as pricing, brand loyalty, or discovery features."
     }
   ]
 }
