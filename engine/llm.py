@@ -69,12 +69,32 @@ def _extract_json(text: str) -> Any:
         text = fenced.group(1).strip()
     try:
         return json.loads(text)
-    except json.JSONDecodeError:
-        # Last resort: first balanced object/array in the string.
+    except json.JSONDecodeError as exc:
+        # Before anything else: is this good JSON that simply ran out of tokens mid-object?
+        #
+        # That is a completely different fault from "the model wrote prose instead of JSON", and it
+        # has a different fix (raise max_tokens, not fix the prompt). The raw decoder message —
+        # "Expecting value: line 1 column 1" — suggests neither, and the old fallback regex made it
+        # worse: `[\{\[].*[\}\]]` needs a closing bracket, so a truncated response failed to match
+        # and was reported as "No JSON found", which reads like the model ignored the schema.
+        #
+        # Synthesis hit exactly this on every batch and logged it as an unremarkable warning, so the
+        # stage wrote 25 placeholders and exited 0.
+        unclosed = max(text.count("{") - text.count("}"), text.count("[") - text.count("]"))
+        if unclosed > 0:
+            raise LLMError(
+                f"Response is truncated JSON — {unclosed} unclosed bracket(s) after {len(text)} "
+                f"chars. Raise max_tokens for this call. Tail: ...{text[-160:]}"
+            ) from exc
+
+        # Otherwise: first balanced object/array in the string, in case it is wrapped in prose.
         match = re.search(r"[\{\[].*[\}\]]", text, re.S)
         if not match:
-            raise LLMError(f"No JSON found in response: {text[:200]}")
-        return json.loads(match.group(0))
+            raise LLMError(f"No JSON found in response: {text[:200]}") from exc
+        try:
+            return json.loads(match.group(0))
+        except json.JSONDecodeError as inner:
+            raise LLMError(f"Malformed JSON in response: {inner}. Head: {text[:200]}") from inner
 
 
 def _anthropic_text(resp) -> str:

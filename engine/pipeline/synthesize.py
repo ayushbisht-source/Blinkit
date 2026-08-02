@@ -40,7 +40,19 @@ THEMES = PROCESSED / "themes.json"
 EXTRACTIONS = INTERIM / "extractions.jsonl"
 INSIGHTS = PROCESSED / "insights.json"
 
-SYNTH_BATCH = 4  # a few themes per call; enough context each, few enough calls to be quota-cheap
+SYNTH_BATCH = 3  # a few themes per call; enough context each, few enough calls to be quota-cheap
+
+# Output budget per theme. Was 700, which silently broke this whole stage.
+#
+# Extraction asks the same model (strong tier) for 400 tokens per document and works. Synthesis
+# looked comparable but is not: an extraction row is a handful of enum labels, while an insight is
+# five prose fields — statement, mechanism, so_what, caveat, evidence. On top of that the model
+# spends part of max_tokens on extended thinking before writing anything, so a 3,600-token ceiling
+# for four rich insights truncated the JSON mid-object every single time.
+#
+# 2,500 with a 2,000 base and three themes per call gives 9,500 — comparable headroom to the 7,000
+# extraction runs on 15 documents, for output that is far longer per item.
+TOKENS_PER_THEME = 2500
 
 
 def _load_extractions() -> dict[str, dict]:
@@ -115,6 +127,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-prevalence", type=float, default=0.0,
                     help="skip themes below this share of statements")
+    ap.add_argument("--allow-placeholders", action="store_true",
+                    help="write deterministic placeholders even if every LLM batch failed. Off by "
+                         "default: placeholders read like insights and are not ones.")
     args = ap.parse_args()
 
     if not THEMES.exists():
@@ -134,18 +149,49 @@ def main() -> None:
     system = (PROMPTS / "synthesize.txt").read_text()
     written: dict[str, dict] = {}
 
+    failures: list[str] = []
     if client:
         for i in range(0, len(themes), SYNTH_BATCH):
             batch = themes[i : i + SYNTH_BATCH]
             user = json.dumps([_theme_payload(t) for t in batch], indent=2)
             try:
-                result = client.structured(system, user, tier="strong", max_tokens=len(batch) * 700 + 800)
+                result = client.structured(
+                    system, user, tier="strong", max_tokens=len(batch) * TOKENS_PER_THEME + 2000
+                )
                 for r in result:
                     if isinstance(r, dict) and r.get("theme_id"):
                         written[r["theme_id"]] = r
                 log.info("  themes %d-%d synthesised", i + 1, i + len(batch))
             except Exception as exc:  # noqa: BLE001
-                log.warning("  batch %d failed: %s", i // SYNTH_BATCH + 1, exc)
+                # Type as well as message. "Expecting value: line 1 column 1" is a truncated
+                # response; an LLMError naming block types is a budget spent entirely on thinking.
+                # The bare message alone told us neither.
+                detail = f"{type(exc).__name__}: {exc}"
+                failures.append(detail)
+                log.warning("  batch %d failed — %s", i // SYNTH_BATCH + 1, detail)
+
+    # The whole point of this stage is the LLM pass. If a client was available and *nothing* came
+    # back, the placeholders below are not a graceful degradation — they are 25 restatements of
+    # theme labels with confidence 0.0, and every one of them would flow into the case study
+    # looking like an insight.
+    #
+    # This is exactly how it failed: every batch died on a truncated response, each failure logged
+    # as a warning, the process exited 0, the workflow went green, and insights.json was committed
+    # full of "Cluster of 72 statements characterised by: receives / expiry / spoiled / milk."
+    #
+    # `enrich.py` already learned this lesson and has TooManyFailures. This stage had no equivalent.
+    if client and not written and not args.allow_placeholders:
+        raise SystemExit(
+            f"Synthesis produced nothing from {len(themes)} themes — every one of "
+            f"{len(failures)} batches failed, so insights.json would contain only placeholders.\n"
+            f"First failure: {failures[0] if failures else '(none recorded)'}\n"
+            f"Run with --allow-placeholders to write them anyway."
+        )
+    if client and failures:
+        log.warning(
+            "%d of %d batches failed; %d themes carry placeholders rather than synthesis",
+            len(failures), (len(themes) + SYNTH_BATCH - 1) // SYNTH_BATCH, len(themes) - len(written),
+        )
 
     insights = []
     for n, theme in enumerate(themes, 1):
