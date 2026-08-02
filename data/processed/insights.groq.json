@@ -3,9 +3,9 @@
   "insights": [
     {
       "theme_id": "THM-01",
-      "statement": "Users who buy dairy products online are blocked by the uncertainty of product freshness and expiry, leading to frequent instances of receiving spoiled or curdled milk.",
-      "mechanism": "The lack of clear information about product freshness and expiry dates makes it difficult for users to trust the quality of the products, causing them to hesitate in exploring new categories or making repeat purchases.",
-      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy, so simply providing a more lenient return policy will not address the root issue.",
+      "statement": "Users who buy dairy products online are blocked by the inability to assess the freshness and quality of the products, leading to frequent instances of receiving spoiled or curdled milk. This issue is exacerbated by the lack of clear return and refund policies.",
+      "mechanism": "The mechanism behind this behavior is the lack of trust in the quality of the products and the uncertainty surrounding the return process, which prevents users from exploring new categories and leads to dissatisfaction with their purchases.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this, the platform needs to implement robust quality control measures and provide clear information about the products, including their freshness and return policies.",
       "research_questions_answered": [
         1,
         2,
@@ -17,31 +17,31 @@
     },
     {
       "theme_id": "THM-02",
-      "statement": "Users who buy products online are blocked by the uncertainty of product quality, leading to frequent instances of receiving poor quality items.",
-      "mechanism": "The lack of clear information about product quality and the absence of a clear return policy makes it difficult for users to trust the quality of the products, causing them to hesitate in exploring new categories or making repeat purchases.",
-      "so_what": "This is a quality control and trust problem, not just a matter of providing more product information, so simply adding more product details will not address the root issue.",
+      "statement": "Users who buy products online are blocked by the poor quality of the items and the lack of clear return and refund policies, leading to a lack of trust in the platform. This issue is further complicated by the uncertainty surrounding the prices of the products.",
+      "mechanism": "The mechanism behind this behavior is the lack of trust in the quality of the products and the uncertainty surrounding the return and refund processes, which prevents users from exploring new categories and leads to dissatisfaction with their purchases.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this, the platform needs to implement robust quality control measures and provide clear information about the products, including their quality, return policies, and prices.",
       "research_questions_answered": [
         1,
         2,
         5,
         6
       ],
-      "confidence": 0.7,
-      "caveat": "The evidence is based on quotes from users who have had negative experiences with product quality, which may not be representative of all users."
+      "confidence": 0.8,
+      "caveat": "The evidence is based on quotes from users who have had negative experiences with the platform, which may not be representative of all users."
     },
     {
       "theme_id": "THM-03",
-      "statement": "Users who buy food products online are blocked by the uncertainty of product quality and safety, leading to frequent instances of receiving contaminated or expired food.",
-      "mechanism": "The lack of clear information about product quality, safety, and expiry dates makes it difficult for users to trust the quality of the products, causing them to hesitate in exploring new categories or making repeat purchases.",
-      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy, so simply providing a more lenient return policy will not address the root issue.",
+      "statement": "Users who buy food products online are blocked by the lack of trust in the quality and safety of the items, leading to a lack of confidence in the platform. This issue is further complicated by the uncertainty surrounding the prices and return policies of the products.",
+      "mechanism": "The mechanism behind this behavior is the lack of trust in the quality and safety of the products, which prevents users from exploring new categories and leads to dissatisfaction with their purchases. This lack of trust is exacerbated by the uncertainty surrounding the prices and return policies of the products.",
+      "so_what": "This is a trust and quality control problem, not just a matter of improving the return policy. To address this, the platform needs to implement robust quality control measures and provide clear information about the products, including their quality, safety, return policies, and prices.",
       "research_questions_answered": [
         1,
         2,
         5,
         6
       ],
-      "confidence": 0.9,
-      "caveat": "The evidence is based on quotes from users who have had negative experiences with food products, which may not be representative of all users."
+      "confidence": 0.8,
+      "caveat": "The evidence is based on quotes from users who have had negative experiences with the platform, which may not be representative of all users."
     }
   ]
 }

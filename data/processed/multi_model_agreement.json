@@ -23,13 +23,13 @@
     ],
     "themes_compared": 3,
     "method": "char_wb(3,5) TF-IDF cosine; lexical, so it understates paraphrased agreement",
-    "mean_same_theme_similarity": 0.1599,
-    "mean_different_theme_similarity": 0.1323,
-    "lift_over_null": 0.0277,
-    "correct_theme_is_nearest": 2,
-    "correct_theme_is_nearest_rate": 0.6667,
+    "mean_same_theme_similarity": 0.1418,
+    "mean_different_theme_similarity": 0.1467,
+    "lift_over_null": -0.0049,
+    "correct_theme_is_nearest": 1,
+    "correct_theme_is_nearest_rate": 0.3333,
     "chance_rate": 0.3333,
-    "lift_over_chance": 0.3333
+    "lift_over_chance": 0.0
   },
   "per_theme": [
     {
@@ -42,16 +42,16 @@
     {
       "theme_id": "THM-02",
       "rq_jaccard": 0.6,
-      "confidence_gap": 0.0,
+      "confidence_gap": 0.1,
       "baseline(committed)_confidence": 0.7,
-      "groq:llama-3.3-70b-versatile_confidence": 0.7
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
     },
     {
       "theme_id": "THM-03",
       "rq_jaccard": 0.75,
-      "confidence_gap": 0.55,
+      "confidence_gap": 0.45,
       "baseline(committed)_confidence": 0.35,
-      "groq:llama-3.3-70b-versatile_confidence": 0.9
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
     }
   ],
   "caveat": "Agreement is not correctness. Models trained on overlapping corpora are not independent coders, so high agreement bounds how much the single-model insights can be blamed on one model's idiosyncrasy \u2014 it says nothing about whether the mechanism is true of real users. Disagreement, by contrast, is decisive."
