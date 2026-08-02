@@ -8,12 +8,12 @@
   "themes_total": 25,
   "themes_synthesised_by_all": 3,
   "research_question_agreement": {
-    "mean_jaccard": 0.65,
+    "mean_jaccard": 0.4444,
     "themes_in_full_agreement": 0,
     "themes_with_no_overlap": 0
   },
   "confidence_agreement": {
-    "mean_absolute_difference": 0.2,
+    "mean_absolute_difference": 0.2667,
     "themes_differing_by_over_0.3": 1
   },
   "mechanism_agreement": {
@@ -23,9 +23,9 @@
     ],
     "themes_compared": 3,
     "method": "char_wb(3,5) TF-IDF cosine; lexical, so it understates paraphrased agreement",
-    "mean_same_theme_similarity": 0.1418,
-    "mean_different_theme_similarity": 0.1467,
-    "lift_over_null": -0.0049,
+    "mean_same_theme_similarity": 0.1371,
+    "mean_different_theme_similarity": 0.1269,
+    "lift_over_null": 0.0101,
     "correct_theme_is_nearest": 1,
     "correct_theme_is_nearest_rate": 0.3333,
     "chance_rate": 0.3333,
@@ -41,18 +41,77 @@
     },
     {
       "theme_id": "THM-02",
-      "rq_jaccard": 0.6,
-      "confidence_gap": 0.1,
+      "rq_jaccard": 0.333,
+      "confidence_gap": 0.2,
       "baseline(committed)_confidence": 0.7,
-      "groq:llama-3.3-70b-versatile_confidence": 0.8
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
     },
     {
       "theme_id": "THM-03",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.45,
+      "rq_jaccard": 0.4,
+      "confidence_gap": 0.55,
       "baseline(committed)_confidence": 0.35,
-      "groq:llama-3.3-70b-versatile_confidence": 0.8
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
     }
   ],
+  "batch_failures": [
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 2,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFogn95yqeGjTGxdsnc'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 3,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoh8ibdKssD7jHPibE'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 4,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFohbVvXLN7EnZLh39e'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 5,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoi4nEysfTyHA33eZm'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 6,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoiULZwQQmr9N59gU1'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 7,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFoitdx2xLqmshKR6Em'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 8,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFojHhJfZSPhzteDb2X'}"
+    },
+    {
+      "spec": "groq:llama-3.3-70b-versatile",
+      "batch": 9,
+      "kind": "exception",
+      "exception_type": "BadRequestError",
+      "message": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CddFojpwkGMXXbwSUHvYN'}"
+    }
+  ],
+  "batch_failure_count": 8,
   "caveat": "Agreement is not correctness. Models trained on overlapping corpora are not independent coders, so high agreement bounds how much the single-model insights can be blamed on one model's idiosyncrasy \u2014 it says nothing about whether the mechanism is true of real users. Disagreement, by contrast, is decisive."
 }
