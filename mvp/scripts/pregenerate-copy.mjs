@@ -1,6 +1,8 @@
 // Pre-generate the LLM-written card copy at build time.
 //
 //   ANTHROPIC_API_KEY=... node mvp/scripts/pregenerate-copy.mjs
+//   GROQ_API_KEY=...      node mvp/scripts/pregenerate-copy.mjs
+//   GEMINI_API_KEY=...    node mvp/scripts/pregenerate-copy.mjs
 //
 // Why this exists. The deployed MVP is a static site, so it cannot hold an API key — which meant
 // the live demo only ever showed the deterministic fallback copy. That understates what the agent
@@ -19,8 +21,68 @@ import { USERS, CATALOGUE, PRODUCTS_BY_ID } from '../data/seed.js';
 import { decideMode, priceAnchor, trialPack, mostReordered, categoryHistory } from '../agent/eligibility.js';
 import { candidateCategories } from '../agent/suggest.js';
 
-const KEY = process.env.ANTHROPIC_API_KEY;
-const MODEL = process.env.ANTHROPIC_MODEL_STRONG ?? 'claude-sonnet-5';
+// Provider-agnostic, for the same reason engine/llm.py is: this script was hardcoded to Anthropic
+// and would have silently produced deterministic-only copy on the next redeploy, because that
+// balance is empty. The site would still work — the fallback is real — but the demo would quietly
+// stop showing what the agent can actually write, which is the whole point of this step.
+//
+// First key present wins. Free providers are listed first deliberately: a project that can be
+// reproduced without a paid account is worth more here than a marginally better sentence.
+const PROVIDERS = [
+  {
+    name: 'groq',
+    key: process.env.GROQ_API_KEY,
+    model: process.env.GROQ_MODEL_STRONG ?? 'llama-3.3-70b-versatile',
+    url: 'https://api.groq.com/openai/v1/chat/completions',
+    headers: (k) => ({ 'content-type': 'application/json', authorization: `Bearer ${k}` }),
+    body: (model, system, user) => ({
+      model,
+      max_tokens: 300,
+      temperature: 0,
+      response_format: { type: 'json_object' },
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+    }),
+    text: (b) => b.choices?.[0]?.message?.content ?? '',
+  },
+  {
+    name: 'gemini',
+    key: process.env.GEMINI_API_KEY,
+    model: process.env.GEMINI_MODEL_STRONG ?? 'gemini-flash-latest',
+    url: null, // built per call, key goes in the query string
+    headers: () => ({ 'content-type': 'application/json' }),
+    body: (model, system, user) => ({
+      system_instruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: user }] }],
+      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: 800 },
+    }),
+    text: (b) => b.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '',
+  },
+  {
+    name: 'anthropic',
+    key: process.env.ANTHROPIC_API_KEY,
+    model: process.env.ANTHROPIC_MODEL_STRONG ?? 'claude-sonnet-5',
+    url: 'https://api.anthropic.com/v1/messages',
+    headers: (k) => ({
+      'content-type': 'application/json',
+      'x-api-key': k,
+      'anthropic-version': '2023-06-01',
+    }),
+    body: (model, system, user) => ({
+      model,
+      max_tokens: 300,
+      // The system prompt is identical across every user, so caching it is close to free.
+      system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
+      messages: [{ role: 'user', content: user }],
+    }),
+    // First TEXT block, not block 0. When a model returns extended thinking, block 0 has no
+    // `.text` — the same defect that broke extraction on the Python side for a full run.
+    text: (b) => (b.content ?? []).find((x) => x.type === 'text' && x.text)?.text ?? '',
+  },
+];
+
+const PROVIDER = PROVIDERS.find((p) => p.key);
+const KEY = PROVIDER?.key;
+const MODEL = PROVIDER ? `${PROVIDER.name}:${PROVIDER.model}` : null;
 const OUT = new URL('../data/llm-copy.json', import.meta.url);
 
 const SYSTEM = `You write one-line copy for a single product suggestion card in an Indian
@@ -76,25 +138,19 @@ function promptFor(user, f) {
   return lines.join('\n');
 }
 
-async function callAnthropic(user, f) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+async function generate(user, f) {
+  const url =
+    PROVIDER.name === 'gemini'
+      ? `https://generativelanguage.googleapis.com/v1beta/models/${PROVIDER.model}:generateContent?key=${KEY}`
+      : PROVIDER.url;
+
+  const res = await fetch(url, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 300,
-      // The system prompt is identical across every user, so caching it is close to free.
-      system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
-      messages: [{ role: 'user', content: promptFor(user, f) }],
-    }),
+    headers: PROVIDER.headers(KEY),
+    body: JSON.stringify(PROVIDER.body(PROVIDER.model, SYSTEM, promptFor(user, f))),
   });
   if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 200)}`);
-  const body = await res.json();
-  const text = body.content?.[0]?.text ?? '';
+  const text = PROVIDER.text(await res.json());
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) throw new Error(`no JSON in response: ${text.slice(0, 120)}`);
   return JSON.parse(match[0]);
@@ -103,6 +159,8 @@ async function callAnthropic(user, f) {
 const out = {};
 let ok = 0;
 let failed = 0;
+
+if (PROVIDER) console.log(`Generating card copy with ${MODEL}`);
 
 for (const user of USERS) {
   const f = factsFor(user);
@@ -115,7 +173,7 @@ for (const user of USERS) {
     continue;
   }
   try {
-    const copy = await callAnthropic(user, f);
+    const copy = await generate(user, f);
     if (copy?.reason && copy?.trust) {
       out[user.id] = {
         category: f.category,
@@ -138,7 +196,10 @@ mkdirSync(new URL('../data/', import.meta.url), { recursive: true });
 writeFileSync(OUT, JSON.stringify(out, null, 2));
 
 if (!KEY) {
-  console.log('\nNo ANTHROPIC_API_KEY — wrote an empty file. The site falls back to deterministic copy.');
+  console.log(
+    '\nNo GROQ_API_KEY, GEMINI_API_KEY or ANTHROPIC_API_KEY — wrote an empty file. ' +
+      'The site falls back to deterministic copy.'
+  );
 } else {
   console.log(`\n${ok} generated, ${failed} failed -> mvp/data/llm-copy.json`);
 }

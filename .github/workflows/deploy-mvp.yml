@@ -37,8 +37,14 @@ jobs:
       # LLM writes the card copy here, in CI, where the key is a secret. The published site is
       # static and cannot hold a key, so without this step the demo would only ever show the
       # deterministic fallback and understate what the agent actually does.
+      # All three keys, first available wins (free providers first). Previously only Anthropic was
+      # passed, so once that balance emptied every redeploy would have silently shipped
+      # deterministic-only copy — the site would still work, but the demo would stop showing what
+      # the agent actually writes, which is the entire reason this step exists.
       - name: Pre-generate LLM card copy
         env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node mvp/scripts/pregenerate-copy.mjs
 
