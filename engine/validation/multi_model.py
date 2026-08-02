@@ -67,7 +67,13 @@ DEFAULT_SPECS = [
 def _run_one(spec: str, themes: list[dict], system: str) -> dict[str, dict]:
     """Synthesise every theme under one provider:model. Returns {theme_id: insight}."""
     from engine.llm import LLMClient
-    from engine.pipeline.synthesize import SYNTH_BATCH, TOKENS_PER_THEME, _collect, _theme_payload
+    from engine.pipeline.synthesize import (
+        SYNTH_BATCH,
+        TOKENS_PER_THEME,
+        _collect,
+        _theme_payload,
+        format_hint,
+    )
 
     provider, _, model = spec.partition(":")
     if not os.getenv(f"{provider.upper()}_API_KEY"):
@@ -83,6 +89,10 @@ def _run_one(spec: str, themes: list[dict], system: str) -> dict[str, dict]:
 
     importlib.reload(llm_module)  # constants are read at import time
     client = llm_module.LLMClient(provider=provider)
+
+    # Plumbing only — the analytical instructions stay identical across providers, or the
+    # comparison would not be measuring the same task.
+    system = system + format_hint(provider)
 
     out: dict[str, dict] = {}
     for i in range(0, len(themes), SYNTH_BATCH):

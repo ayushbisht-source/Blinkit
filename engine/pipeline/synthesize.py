@@ -121,6 +121,19 @@ def _collect(result, batch: list[dict]) -> tuple[dict[str, dict], str]:
     Returns (insights_by_theme_id, reason_if_empty).
     """
     if isinstance(result, dict):
+        wanted_ids = {t["theme_id"] for t in batch}
+        # A dict keyed by theme_id: {"THM-04": {...}, "THM-05": {...}}.
+        #
+        # This shape shows up when a provider's JSON mode requires a top-level *object* while the
+        # prompt asks for an array — the model reconciles the two by keying on the id. Groq did
+        # exactly this and produced 3 of 25 themes, because the previous unwrapper only looked for
+        # a nested list and reported "empty array" for everything else.
+        if wanted_ids & set(result):
+            return (
+                {k: {**v, "theme_id": k} for k, v in result.items()
+                 if k in wanted_ids and isinstance(v, dict)},
+                "",
+            )
         # A wrapper object: take the first value that is a list of dicts.
         for value in result.values():
             if isinstance(value, list) and any(isinstance(v, dict) for v in value):
@@ -156,6 +169,26 @@ def _collect(result, batch: list[dict]) -> tuple[dict[str, dict], str]:
         f"{len(objects)} object(s) but none carried a theme_id from this batch "
         f"(got {[r.get('theme_id') for r in objects]}, wanted {sorted(wanted)})"
     )
+
+
+def format_hint(provider: str) -> str:
+    """Provider-specific output-shape instruction, appended to the shared system prompt.
+
+    Groq (and any OpenAI-compatible JSON mode) requires the top-level response to be an *object*,
+    which directly contradicts the shared prompt's "return ONLY a JSON array". Left unresolved the
+    model improvises a shape per batch, and 22 of 25 themes were lost to that rather than to
+    anything about the analysis.
+
+    This adds plumbing instructions only. It does not touch the analytical instructions, so the
+    models are still being compared on the same task — which is the whole point of the exercise.
+    """
+    if provider == "groq":
+        return (
+            "\n\nOUTPUT FORMAT: return a single JSON object of the form "
+            '{"insights": [ ... ]}, where the array holds one object per theme, each including '
+            "its \"theme_id\". Do not return a bare array."
+        )
+    return ""
 
 
 def fallback_insight(theme: dict) -> dict:
@@ -201,6 +234,8 @@ def main() -> None:
         client = None
 
     system = (PROMPTS / "synthesize.txt").read_text()
+    if client:
+        system += format_hint(client.provider)
     written: dict[str, dict] = {}
 
     failures: list[str] = []
