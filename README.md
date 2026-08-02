@@ -168,10 +168,14 @@ first and refuses to publish if any check fails.
 Stated up front rather than discovered by a reader.
 
 1. **3 depth interviews against a target of 5–6.** Real, async over text, verbatim in
-   `research/transcripts/`. Short of the brief, and the quantitative findings rest on the survey
-   alone. Interview evidence is labelled n=3 everywhere it appears
-   (`docs/02-user-research.md` §8). All three respondents are non-parents and two live alone — a
-   recruitment confound that is stated, not resolved.
+   `research/transcripts/`. Fieldwork closed at three, for time. The quantitative findings rest on
+   the survey alone and interview evidence is labelled n=3 everywhere it appears. All three
+   respondents are non-parents and two live alone — a recruitment confound that is stated, not
+   resolved, and a parent or pet owner would have tested whether "the category is irrelevant to me"
+   is a property of these respondents or of the question. `docs/02-user-research.md` §8.7 sets out
+   which claims survive n=3: the taxonomy gaps do, because one uncodeable answer is enough to show
+   a vocabulary is incomplete; anything of the form "X% of users" does not, and none is made.
+   No interview was fabricated and no synthetic persona is counted toward the total.
 2. **The survey shares the engine's vocabulary by design**, so the two datasets compare directly —
    at the cost of being structurally poor at *challenging* the engine. It can confirm a hypothesised
    barrier; it cannot surface one nobody thought to ask about. Three interviews then found three

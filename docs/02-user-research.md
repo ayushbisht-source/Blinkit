@@ -5,7 +5,7 @@
 | Instrument | n | Status |
 |---|---|---|
 | Screener-matched survey (Google Forms) | **40** | Collected 28–29 Jul 2026. Real respondents. |
-| Depth interviews (async, text) | **3** | Collected 1 Aug 2026. Real respondents. Target is 5–6 — see §5 and §8. |
+| Depth interviews (async, text) | **3** | Collected 1 Aug 2026. Real respondents. Fieldwork closed at 3 against a target of 5–6 — see §5 and §8.7. |
 | AI-synthesized personas | 5 | Generated from survey rows. **Not interviews.** See §6. |
 
 Everything in §1–§4 is derived from the 40 real survey responses. Nothing there is reconstructed,
@@ -13,9 +13,10 @@ voiced, or inferred dialogue.
 
 > ### On the interviews
 >
-> The brief asks for 5–6 depth interviews. **Three** have been conducted at the time of writing, all
-> real, all async over text, all recorded verbatim in `research/transcripts/`. That is short of the
-> brief and this document does not present it as anything else.
+> The brief asks for 5–6 depth interviews. **Three** were conducted — all real, all async over
+> text, all recorded verbatim in `research/transcripts/`. Fieldwork closed there for time. That is
+> short of the brief and this document does not present it as anything else; §8.7 sets out exactly
+> which claims survive the shortfall and which do not.
 >
 > Two things follow, and they point in opposite directions.
 >
@@ -402,17 +403,38 @@ mean the minimum stops you — wouldn't an appliance be over ₹200 anyway?"* an
 in one exchange. Async text could not, so the most novel finding in the study is recorded with its
 mechanism ambiguous. That is the tradeoff named at the top of this section, priced.
 
-### 8.7 Status
+### 8.7 Why this stops at three, and what that costs
 
-**3 of the target 5–6 interviews are complete.** Transcripts are committed as they arrive and this
-section is updated with them; the confirm/challenge matrix in `docs/03-problem-definition.md` §6 is
-rebuilt at each addition.
+**Three interviews were conducted against a target of 5–6. Fieldwork closed there, for time.** That
+is a shortfall, not a design choice, and the honest question is which claims survive it.
 
-Recruitment confound, stated plainly: all three respondents are non-parents, and two describe
-single-person households. The repeated "category is irrelevant" result may partly reflect who was
-available to ask. Three interviews do not resolve that. What they do establish is that the
-**taxonomy is incomplete**, which does not require a representative sample to demonstrate — one
-respondent whose answer has no valid code is sufficient, and there are three.
+**What n=3 does support.** The central finding is that the engine's `barrier[]` enum has no code for
+"this category does not apply to me." That is a claim about the *instrument*, not about the
+population, and it does not need a representative sample: a single respondent whose honest answer
+has no valid code is sufficient to show the vocabulary is incomplete. There are three, independently,
+across two apps. The same holds for the basket-economics gap (§8.3), which additionally has 133
+corpus documents behind it.
+
+**What n=3 does not support.** Any statement of the form "X% of users" or "this is the main reason."
+Nothing in §8 is written that way, and nothing downstream depends on it. The prevalence question —
+*how many* users have no latent demand in a category they've never bought — is genuinely open, and
+answering it needs a survey instrument that offers the missing option, not more interviews.
+
+**The recruitment confound, stated plainly.** All three respondents are non-parents; two describe
+single-person households. Two of the three named the same category (baby care). That pattern may
+reflect who was available to ask rather than anything about the user base, and three interviews
+cannot separate those. A fourth and fifth respondent — specifically a parent and a pet owner — would
+have tested whether "the category is irrelevant" is a property of these respondents or of the
+question. That test was not run.
+
+**What was deliberately not done.** Interviews were not fabricated, and no synthetic persona is
+counted toward the interview total. §6 and §7 exist precisely because generating plausible
+respondents from the survey was the obvious shortcut, and testing that shortcut is what produced
+this project's clearest methodological result: of five persona-generated hypotheses, one was
+testable and it was wrong. Adding invented transcripts to a document making that argument would
+have destroyed the argument along with the evidence base. Three real respondents who said
+surprising things are worth more here than five convincing ones who said nothing that was not
+already in the input.
 
 ---
 
