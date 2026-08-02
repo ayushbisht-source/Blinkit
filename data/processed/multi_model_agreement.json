@@ -1,209 +1,57 @@
 {
   "models": [
     "baseline(committed)",
-    "gemini:gemini-flash-latest"
+    "groq:llama-3.3-70b-versatile"
   ],
+  "comparison_type": "cross-family",
+  "what_this_measures": "Different model families, so agreement is evidence the insights are not one vendor's idiosyncrasy.",
   "themes_total": 25,
-  "themes_synthesised_by_all": 25,
+  "themes_synthesised_by_all": 3,
   "research_question_agreement": {
-    "mean_jaccard": 0.7487,
-    "themes_in_full_agreement": 7,
+    "mean_jaccard": 0.65,
+    "themes_in_full_agreement": 0,
     "themes_with_no_overlap": 0
   },
   "confidence_agreement": {
-    "mean_absolute_difference": 0.08,
+    "mean_absolute_difference": 0.2,
     "themes_differing_by_over_0.3": 1
   },
   "mechanism_agreement": {
     "models_compared": [
       "baseline(committed)",
-      "gemini:gemini-flash-latest"
+      "groq:llama-3.3-70b-versatile"
     ],
-    "themes_compared": 25,
+    "themes_compared": 3,
     "method": "char_wb(3,5) TF-IDF cosine; lexical, so it understates paraphrased agreement",
-    "mean_same_theme_similarity": 0.2837,
-    "mean_different_theme_similarity": 0.1091,
-    "lift_over_null": 0.1745,
-    "correct_theme_is_nearest": 20,
-    "correct_theme_is_nearest_rate": 0.8,
-    "chance_rate": 0.04,
-    "lift_over_chance": 0.76
+    "mean_same_theme_similarity": 0.1599,
+    "mean_different_theme_similarity": 0.1323,
+    "lift_over_null": 0.0277,
+    "correct_theme_is_nearest": 2,
+    "correct_theme_is_nearest_rate": 0.6667,
+    "chance_rate": 0.3333,
+    "lift_over_chance": 0.3333
   },
   "per_theme": [
     {
       "theme_id": "THM-01",
       "rq_jaccard": 0.6,
-      "confidence_gap": 0.1,
+      "confidence_gap": 0.05,
       "baseline(committed)_confidence": 0.75,
-      "gemini:gemini-flash-latest_confidence": 0.85
+      "groq:llama-3.3-70b-versatile_confidence": 0.8
     },
     {
       "theme_id": "THM-02",
       "rq_jaccard": 0.6,
-      "confidence_gap": 0.1,
+      "confidence_gap": 0.0,
       "baseline(committed)_confidence": 0.7,
-      "gemini:gemini-flash-latest_confidence": 0.8
+      "groq:llama-3.3-70b-versatile_confidence": 0.7
     },
     {
       "theme_id": "THM-03",
       "rq_jaccard": 0.75,
-      "confidence_gap": 0.4,
+      "confidence_gap": 0.55,
       "baseline(committed)_confidence": 0.35,
-      "gemini:gemini-flash-latest_confidence": 0.75
-    },
-    {
-      "theme_id": "THM-04",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.1,
-      "baseline(committed)_confidence": 0.8,
-      "gemini:gemini-flash-latest_confidence": 0.7
-    },
-    {
-      "theme_id": "THM-05",
-      "rq_jaccard": 0.6,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-06",
-      "rq_jaccard": 0.5,
-      "confidence_gap": 0.1,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.75
-    },
-    {
-      "theme_id": "THM-07",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.25,
-      "baseline(committed)_confidence": 0.45,
-      "gemini:gemini-flash-latest_confidence": 0.7
-    },
-    {
-      "theme_id": "THM-08",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-09",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.9,
-      "gemini:gemini-flash-latest_confidence": 0.9
-    },
-    {
-      "theme_id": "THM-10",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.1,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.75
-    },
-    {
-      "theme_id": "THM-11",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.9,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-12",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.8
-    },
-    {
-      "theme_id": "THM-13",
-      "rq_jaccard": 0.5,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.75,
-      "gemini:gemini-flash-latest_confidence": 0.7
-    },
-    {
-      "theme_id": "THM-14",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-15",
-      "rq_jaccard": 0.8,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.9,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-16",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.8,
-      "gemini:gemini-flash-latest_confidence": 0.75
-    },
-    {
-      "theme_id": "THM-17",
-      "rq_jaccard": 0.8,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.8
-    },
-    {
-      "theme_id": "THM-18",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-19",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.3,
-      "gemini:gemini-flash-latest_confidence": 0.35
-    },
-    {
-      "theme_id": "THM-20",
-      "rq_jaccard": 0.4,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-21",
-      "rq_jaccard": 0.667,
-      "confidence_gap": 0.2,
-      "baseline(committed)_confidence": 0.55,
-      "gemini:gemini-flash-latest_confidence": 0.35
-    },
-    {
-      "theme_id": "THM-22",
-      "rq_jaccard": 1.0,
-      "confidence_gap": 0.0,
-      "baseline(committed)_confidence": 0.85,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-23",
-      "rq_jaccard": 0.75,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.8,
-      "gemini:gemini-flash-latest_confidence": 0.85
-    },
-    {
-      "theme_id": "THM-24",
-      "rq_jaccard": 0.5,
-      "confidence_gap": 0.2,
-      "baseline(committed)_confidence": 0.55,
-      "gemini:gemini-flash-latest_confidence": 0.35
-    },
-    {
-      "theme_id": "THM-25",
-      "rq_jaccard": 0.5,
-      "confidence_gap": 0.05,
-      "baseline(committed)_confidence": 0.8,
-      "gemini:gemini-flash-latest_confidence": 0.85
+      "groq:llama-3.3-70b-versatile_confidence": 0.9
     }
   ],
   "caveat": "Agreement is not correctness. Models trained on overlapping corpora are not independent coders, so high agreement bounds how much the single-model insights can be blamed on one model's idiosyncrasy \u2014 it says nothing about whether the mechanism is true of real users. Disagreement, by contrast, is decisive."
