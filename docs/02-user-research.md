@@ -341,10 +341,26 @@ complaints," and a fee complaint reads like one:
 > *"the app is good but there is one problem that it is not free delivery tell me not at the items
 > still 199 but there should be rs 100 that would be more suitable"* — rejected as `delivery`
 
-**(b) The 39 it kept have nowhere to land.** No `barrier[]` value describes basket economics.
-`price_risk` means *"unsure if the price is fair"* — a different claim; these users know exactly
-what the fee is and are organising their basket around it. Extraction will either force them into
-`price_risk`, misdescribing them, or lose the signal. The clearest instance the gate correctly kept:
+**(b) The ones it kept have nowhere to land — and this was checked, not assumed.** No `barrier[]`
+value describes basket economics. `price_risk` means *"unsure if the price is fair"* — a different
+claim; these users know exactly what the fee is and are organising their basket around it.
+
+The prediction written into `research/transcripts/P03.md` before extraction finished was that the
+signal would be forced into `price_risk` or lost. **Extraction has since completed on all 971
+relevant documents, and it did both.** The threshold statements formed a theme of their own —
+**THM-05, 34 statements, 5.4%**, labelled `free / minimum / threshold / value` — whose dominant
+barrier code is `price_risk`. Its representative quotes leave no doubt what these users are actually
+describing:
+
+> *"Before it serves free delivery on 100₹ , And now 😡😡 400₹"* ·
+> *"sudden increase in free delivery from ₹99 to ₹399 is unreasonable"* ·
+> *"delivery charge threshold should be at 100 rs not 130"*
+
+Nobody there is unsure whether a price is fair. They are re-planning a basket around a line that
+moved. The engine found the theme and then mislabelled it, because the label it needed does not
+exist — a prediction from one interview, tested against 631 machine-extracted statements, and held.
+
+The clearest instance the gate correctly kept:
 
 > *"this scammer app.. when I adding 20/- item showing free delivery on above 150rs when I adding
 > 180/- more item it's showing free delivery above 299/- and showing fake line"*

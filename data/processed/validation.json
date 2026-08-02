@@ -2,12 +2,12 @@
   "checks": [
     {
       "name": "quote grounding",
-      "checked": 805,
-      "exact": 800,
+      "checked": 924,
+      "exact": 917,
       "whitespace_normalised": 3,
-      "hallucinated": 2,
-      "hallucination_rate": 0.0025,
-      "quotes_used_in_themes": 119,
+      "hallucinated": 4,
+      "hallucination_rate": 0.0043,
+      "quotes_used_in_themes": 125,
       "unverifiable_quotes_used": 0,
       "pass": true,
       "examples": [
@@ -18,165 +18,138 @@
         {
           "doc_id": "pl_c786fe7a440b0f3e",
           "quote": "she said that the milk seems to fine, anyone else looking would find that the milk water is separated"
+        },
+        {
+          "doc_id": "pl_7f53bcaa18e2f4b2",
+          "quote": "they are closing the conversation"
+        },
+        {
+          "doc_id": "pl_2b0100055557961f",
+          "quote": "delivery time will be 15 min but its 30min and also you take extra charges for fast dilvery but not dilvery in time"
         }
       ]
     },
     {
       "name": "theme saturation",
-      "n_documents": 818,
+      "n_documents": 937,
       "distinct_labels": 15.0,
-      "share_found_by_halfway": 0.9633,
-      "new_labels_per_doc_final_decile": 0.00122,
+      "share_found_by_halfway": 0.9533,
+      "new_labels_per_doc_final_decile": 0.00319,
       "pass": true,
       "curve_sample": [
-        13.0,
-        14.05,
+        13.1,
+        14.1,
+        14.3,
         14.45,
-        14.65,
         15.0
       ]
     },
     {
       "name": "hold-out generalisation",
       "method": "re-fit vectoriser+LSA+clustering on train only; assign unseen statements to nearest centroid; compare against size-matched random-assignment null",
-      "n_train": 430,
-      "n_holdout": 107,
+      "n_train": 505,
+      "n_holdout": 126,
       "holdout_statements_with_no_known_vocabulary": 0,
-      "themes_refit": 25,
-      "median_similarity_train_to_own_centroid": 0.4762,
-      "median_similarity_holdout_to_nearest": 0.4669,
-      "null_median": 0.3518,
-      "null_sd": 0.0066,
-      "z_vs_null": 17.43,
+      "themes_refit": 24,
+      "median_similarity_train_to_own_centroid": 0.4622,
+      "median_similarity_holdout_to_nearest": 0.4602,
+      "null_median": 0.3414,
+      "null_sd": 0.0104,
+      "z_vs_null": 11.42,
       "pass": true
     },
     {
       "name": "source spread",
-      "themes": 24,
+      "themes": 25,
       "sources_in_corpus": {
-        "play_store": 526,
-        "app_store": 11
+        "play_store": 600,
+        "app_store": 31
       },
-      "minority_source_share": 0.0205,
-      "single_source_themes": 16,
-      "single_source_share": 0.6667,
-      "expected_single_source_by_chance": 16.4,
+      "minority_source_share": 0.0491,
+      "single_source_themes": 11,
+      "single_source_share": 0.44,
+      "expected_single_source_by_chance": 8.6,
       "flagged": [
         {
-          "theme_id": "THM-02",
-          "label": "food / expiry / freshness / trust",
+          "theme_id": "THM-01",
+          "label": "receives / expiry / spoiled / milk",
           "sources": {
-            "play_store": 43
+            "play_store": 72
           }
         },
         {
-          "theme_id": "THM-06",
-          "label": "available / actually / limiting / range",
+          "theme_id": "THM-05",
+          "label": "free / minimum / threshold / value",
           "sources": {
-            "play_store": 32
+            "play_store": 34
           }
         },
         {
-          "theme_id": "THM-08",
-          "label": "routine / unavailable / grocery / milk",
+          "theme_id": "THM-07",
+          "label": "available / stock / actually / range",
           "sources": {
-            "play_store": 22
+            "play_store": 31
           }
         },
         {
-          "theme_id": "THM-09",
-          "label": "charge / feels / extra / 30",
+          "theme_id": "THM-10",
+          "label": "unavailable / routine / daily / disrupting",
           "sources": {
-            "play_store": 18
+            "play_store": 26
           }
         },
         {
           "theme_id": "THM-11",
-          "label": "quantity / expected / matches / weight",
+          "label": "quantity / matches / expected / freshness",
           "sources": {
-            "play_store": 17
+            "play_store": 25
           }
         },
         {
           "theme_id": "THM-14",
-          "label": "ice cream / ice / cream / melted",
+          "label": "charge / feels / 30 / unfair",
           "sources": {
-            "play_store": 12
+            "play_store": 20
           }
         },
         {
           "theme_id": "THM-15",
-          "label": "brand / specific / substituted / trust exact",
+          "label": "leaving / recourse / exchange / electronics",
           "sources": {
-            "play_store": 12
+            "play_store": 19
           }
         },
         {
           "theme_id": "THM-16",
-          "label": "switching / competitor / switch / pushing switch",
+          "label": "cancelled / time / wasting / breaking trust",
           "sources": {
-            "play_store": 10
-          }
-        },
-        {
-          "theme_id": "THM-17",
-          "label": "non / slow / non returnable / returnable",
-          "sources": {
-            "play_store": 10
-          }
-        },
-        {
-          "theme_id": "THM-18",
-          "label": "missing / arrive missing / cheaper / refunded",
-          "sources": {
-            "play_store": 8
+            "play_store": 16
           }
         },
         {
           "theme_id": "THM-19",
-          "label": "offers / cashback / justify / promotional",
+          "label": "genuine / payment / store / duplicate",
           "sources": {
-            "play_store": 8
-          }
-        },
-        {
-          "theme_id": "THM-20",
-          "label": "proof / processed / refunds / photo",
-          "sources": {
-            "play_store": 7
-          }
-        },
-        {
-          "theme_id": "THM-21",
-          "label": "serve / 10 / minute / 10 minute",
-          "sources": {
-            "play_store": 7
-          }
-        },
-        {
-          "theme_id": "THM-22",
-          "label": "use / daily / repeat use / habit",
-          "sources": {
-            "play_store": 7
+            "play_store": 14
           }
         },
         {
           "theme_id": "THM-23",
-          "label": "genuine / duplicate / counterfeit / goods",
+          "label": "packaging / refuses / competitors / bad",
           "sources": {
-            "play_store": 6
+            "play_store": 10
           }
         },
         {
           "theme_id": "THM-24",
-          "label": "coupons / shops / coupons removed / removed",
+          "label": "limiting / available limiting / available / late night",
           "sources": {
-            "play_store": 4
+            "play_store": 9
           }
         }
       ],
       "pass": null,
-      "note": "Corpus is 98.0% a single source. At that mix 16 of 24 themes would be single-source by chance, so this check cannot distinguish a platform artifact from a finding. It needs a corpus with a genuinely mixed source base \u2014 see the collection limitation in the case study."
+      "note": "Corpus is 95.1% a single source. At that mix 9 of 25 themes would be single-source by chance, so this check cannot distinguish a platform artifact from a finding. It needs a corpus with a genuinely mixed source base \u2014 see the collection limitation in the case study."
     },
     {
       "name": "relevance gate audit",
