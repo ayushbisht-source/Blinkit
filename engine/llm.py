@@ -130,7 +130,16 @@ def _is_provider_dead(exc: Exception) -> str:
     failed": switch providers if another key exists.
     """
     text = str(exc).lower()
-    if "credit balance is too low" in text or "billing" in text and "upgrade" in text:
+
+    # Rate limits win, and are checked first. Groq's throttle message invites you to "upgrade" to a
+    # paid tier, which the old billing/upgrade heuristic read as a dead account — so a transient
+    # 429 on Groq was classified fatal and triggered a failover onto an Anthropic key with no
+    # credit. Every subsequent batch then failed with an Anthropic billing error on a run that had
+    # explicitly asked for Groq.
+    if any(marker.lower() in text for marker in _RATE_LIMIT_MARKERS):
+        return ""
+
+    if "credit balance is too low" in text or "insufficient_quota" in text:
         return "credit balance exhausted"
     if "invalid x-api-key" in text or "authentication_error" in text:
         return "invalid API key"
@@ -145,6 +154,7 @@ class LLMClient:
     """One method that matters: `structured()`."""
 
     def __init__(self, provider: str | None = None) -> None:
+        explicit = provider is not None or bool(os.getenv("LLM_PROVIDER", "").strip())
         self.provider = provider or self._autodetect()
 
         if self.provider == "anthropic":
@@ -176,9 +186,11 @@ class LLMClient:
 
         self._resolved_model: dict[str, str] = {}
         self._exhausted_models: dict[str, set[str]] = {}
-        # Preserved across the in-place rebuild in `structured()` so failover happens at most once
-        # and a dead-on-both-providers run raises instead of ping-ponging.
-        self._failed_over = getattr(self, "_failed_over", False)
+        # Preserved across the in-place rebuild in `structured()`: providers already found dead are
+        # never retried, so a run whose every provider is dead raises instead of ping-ponging.
+        self._dead_providers: set[str] = getattr(self, "_dead_providers", set())
+        # Whether the caller named this provider. Failover is disabled when they did.
+        self._provider_was_explicit = explicit
         # Models that reject thinking_config outright. Whether a model supports the field is a
         # fixed property, so discovering it once and remembering is the difference between one
         # wasted call and one per batch — which on a per-day request quota halves throughput.
@@ -429,15 +441,30 @@ class LLMClient:
             return self._structured_once(system, user, tier, max_tokens)
         except Exception as exc:  # noqa: BLE001
             reason = _is_provider_dead(exc)
-            other = "gemini" if self.provider == "anthropic" else "anthropic"
-            if not reason or self._failed_over or not os.getenv(f"{other.upper()}_API_KEY"):
+
+            # Never fail over when the caller named a provider. multi_model.py asks for a specific
+            # model to compare against another, and silently substituting a different vendor's
+            # output under that label does not degrade the experiment — it invalidates it. An
+            # explicit request is a request, not a preference.
+            if self._provider_was_explicit:
                 raise
+
+            candidates = [
+                p for p in ("anthropic", "gemini", "groq")
+                if p != self.provider
+                and p not in self._dead_providers
+                and os.getenv(f"{p.upper()}_API_KEY")
+            ]
+            if not reason or not candidates:
+                raise
+            other = candidates[0]
             log.warning(
                 "%s unusable (%s) — failing over to %s for the rest of this run",
                 self.provider, reason, other,
             )
+            dead = self._dead_providers | {self.provider}
             self.__init__(provider=other)  # noqa: PLC2801  rebuild in place; callers hold this object
-            self._failed_over = True
+            self._dead_providers = dead
             return self._structured_once(system, user, tier, max_tokens)
 
     def _structured_once(
