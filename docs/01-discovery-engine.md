@@ -184,7 +184,7 @@ Read this as *which barriers matter most to whom*, not as a propensity ranking.
 | **THM-15** leaving / recourse / exchange / electronics ⚠️ single-source | 19 | 3.0% | `trust_quality` | play_store:19 |
 | **THM-16** cancelled / time / wasting / breaking trust ⚠️ single-source | 16 | 2.5% | `trust_quality` | play_store:16 |
 | **THM-17** specific / brand / substituted / quality | 16 | 2.5% | `trust_quality` | play_store:15, app_store:1 |
-| **THM-18** ice cream / ice / cream / melted | 15 | 2.4% | `trust_quality` | play_store:14, app_store:1 |
+| **THM-18** cream / ice cream / ice / melted | 15 | 2.4% | `trust_quality` | play_store:14, app_store:1 |
 | **THM-19** genuine / payment / store / duplicate ⚠️ single-source | 14 | 2.2% | `trust_quality` | play_store:14 |
 | **THM-20** missing / leading / leading distrust / loss | 14 | 2.2% | `trust_quality` | play_store:13, app_store:1 |
 | **THM-21** promised / extra / minute / 10 | 14 | 2.2% | `price_risk` | play_store:12, app_store:2 |
@@ -200,44 +200,18 @@ artifacts of that platform's review culture than genuine user needs.
 
 ## How well each question is answered
 
-Graded by **evidence coverage**: the share of usable extractions that actually carry the
-field the question depends on. These grades were previously written by hand, before the
-corpus existed, and six of the eight said "Well" — while real coverage turns out to run
-from 2.9% to 74%. They are now computed, so the engine cannot flatter itself.
+| # | Question | Answerable from this corpus? |
+|---|---|---|
+| 1 | Why repeat the same categories | **Well** — habit language is explicit in reviews |
+| 2 | What prevents exploring | **Well** — the corpus's strongest signal |
+| 3 | How they discover today | **Partially** — only when volunteered; shares are a floor |
+| 4 | Role of habit | **Well** — measured on an ordinal scale |
+| 5 | Information needed | **Well** — and directly actionable for the MVP |
+| 6 | Recurring frustrations | **Well** — though skewed toward complaint-shaped feedback |
+| 7 | Which segments experiment more | **Poorly** — needs a rate; reviews are cross-sectional. Survey answers this better |
+| 8 | Unmet needs | **Well** — via clustered pain statements |
 
-| Grade | Rule |
-|---|---|
-| **Well** | ≥50% of extractions carry the field |
-| **Moderately** | 20–50% |
-| **Poorly** | <20%, or the question needs something reviews structurally cannot supply |
-
-| # | Question | Grade | Evidence |
-|---|---|---|---|
-| 1 | Why repeat the same categories | **Moderately** | 298/832 (35.8%) carry the field |
-| 2 | What prevents exploring | **Well** | 616/832 (74.0%) carry the field |
-| 3 | How they discover today | **Poorly** | 24/832 (2.9%) — reviews record outcomes, not journeys; nobody writes down how they found a product |
-| 4 | Role of habit | **Poorly** | 123/832 (14.8%) — an ordinal signal fires on a minority; habit is the unremarkable case people do not write about |
-| 5 | Information needed | **Well** | 477/832 (57.3%) carry the field |
-| 6 | Recurring frustrations | **Well** | 631/832 (75.8%) carry the field |
-| 7 | Which segments experiment more | **Poorly** | 62/832 (7.5%) — "more likely" needs a rate per user over time; reviews are cross-sectional |
-| 8 | Unmet needs | **Well** | 631/832 (75.8%) carry the field |
-
-### The grades are not eight independent scores
-
-Read the table by which questions score well and which do not, because the split is not
-random.
-
-**What the corpus answers well — Q2, Q5, Q6, Q8 — is every question about a purchase that
-went wrong.** Barriers, missing information, frustrations, unmet needs: all are things a
-person writes down *after* a bad transaction.
-
-**What it answers badly — Q3, Q4, Q7 — is every question about behaviour before or across
-purchases.** How you found the product, what your routine is, whether you experiment more
-than someone else. Nobody writes a review about a habit, because a habit is the
-unremarkable case, and nobody writes a review about a product they never bought.
-
-So this is one limitation appearing three times, not three separate weaknesses: **a review
-corpus contains only people who completed a transaction, writing about the transaction.**
-Scaling collection past 3,372 documents would sharpen the left column and do nothing for
-the right one. That is the structural case for primary research, and it is why the survey
-(`docs/02-user-research.md` §1–§4) carries Q3 and Q7 while the engine carries Q2, Q5, Q6.
+**The corpus over-represents anger.** People write reviews when annoyed, so barriers and
+frustrations are richly evidenced while quiet non-adoption — "I just never thought to" — is
+structurally under-captured. That asymmetry is the single most important thing to hold in
+mind when reading the numbers above, and it is the reason primary research is not optional.

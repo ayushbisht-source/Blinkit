@@ -1,0 +1,884 @@
+{
+  "n_insights": 25,
+  "research_questions_covered": [
+    1,
+    2,
+    5,
+    6,
+    8
+  ],
+  "research_questions_uncovered": [
+    3,
+    4,
+    7
+  ],
+  "insights": [
+    {
+      "insight_id": "INS-01",
+      "theme_id": "THM-01",
+      "statement": "Cluster of 72 statements characterised by: receives / expiry / spoiled / milk.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "prevalence": 0.1141,
+      "n": 72,
+      "source_spread": {
+        "play_store": 72
+      },
+      "single_source": true,
+      "segment_skew": [
+        "parent_young_child",
+        "working_professional",
+        "cooks_daily"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_c49085f9ad958bea",
+        "pl_9ecbe0d6ee9a8805",
+        "pl_408b18b4a3885dc8",
+        "pl_491d5ed8b5b1293b",
+        "pl_a00be6ec1e7e88e8"
+      ],
+      "evidence_quotes": [
+        "send me spoiled vegetables or curdled milk when I am raising the issue with prove",
+        "Received milk that curdled immediately on heating.",
+        "I didn't get any help when I received the spoiled vegetable and fungus wala jaggery"
+      ],
+      "contradicting_evidence": [
+        "pl_6b46be511c5f8229"
+      ],
+      "contradiction_rate": 0.0139,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-02",
+      "theme_id": "THM-02",
+      "statement": "Cluster of 51 statements characterised by: quality / poor / poor quality / return.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0808,
+      "n": 51,
+      "source_spread": {
+        "play_store": 49,
+        "app_store": 2
+      },
+      "single_source": false,
+      "segment_skew": [
+        "cooks_daily",
+        "tier2_plus",
+        "lives_alone"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_52ccc1dcb976912e",
+        "pl_fb5d9b2063f9211a",
+        "pl_d01f19c5e2a4ae10",
+        "pl_36e27df25a6b8348",
+        "pl_5587982a75108f0f"
+      ],
+      "evidence_quotes": [
+        "very worst experience ever in a bread packet s",
+        "product are supply on instamart was poor quality and it has not return policy",
+        "Very bad quality of item delivered...no quality check on fresh vegetables and fruits delivery."
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-03",
+      "theme_id": "THM-03",
+      "statement": "Cluster of 50 statements characterised by: food / trust / undermining / undermining trust.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, price_risk, return_anxiety. Requires synthesis before use.",
+      "prevalence": 0.0792,
+      "n": 50,
+      "source_spread": {
+        "play_store": 43,
+        "app_store": 7
+      },
+      "single_source": false,
+      "segment_skew": [
+        "pet_owner",
+        "parent_young_child",
+        "working_professional"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_e1b535beefba7212",
+        "pl_2b3c0a8c0bdeadbb",
+        "pl_0f63aa0656385416",
+        "pl_c9573e6a3c331707",
+        "pl_3c8923ee62ac5cd0"
+      ],
+      "evidence_quotes": [
+        "I got some bad food it's like someone has eated already mint juice it's also and like burger",
+        "Swiggy's \u20b949 offer feels highly deceptive and misleading.",
+        "I have found cockroach leg in my food"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-04",
+      "theme_id": "THM-04",
+      "statement": "Cluster of 42 statements characterised by: prices / fair / unsure / price.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "prevalence": 0.0666,
+      "n": 42,
+      "source_spread": {
+        "play_store": 41,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [
+        "working_professional"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_dfa48f64e3b8ed2e",
+        "pl_1d8a7d4cae2f03a3",
+        "pl_e3e054098cbbd5bd",
+        "pl_0393b7259ae25c61",
+        "pl_559d3ae627cd9e66"
+      ],
+      "evidence_quotes": [
+        "price some time difference and high to like zepto blinkit",
+        "compare to other platforms, rates are very high and delivery and others charges higly mention",
+        "too much prices compare to market"
+      ],
+      "contradicting_evidence": [
+        "pl_ff27e0cb33af3571"
+      ],
+      "contradiction_rate": 0.0238,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-05",
+      "theme_id": "THM-05",
+      "statement": "Cluster of 34 statements characterised by: free / minimum / threshold / value.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "prevalence": 0.0539,
+      "n": 34,
+      "source_spread": {
+        "play_store": 34
+      },
+      "single_source": true,
+      "segment_skew": [
+        "tier1_metro"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_78b6c7e4ba5baace",
+        "pl_e723614399bf8496",
+        "pl_294be4f86456260a",
+        "pl_fb0f5d5b26b3f4d8",
+        "pl_745007f00fa117fd"
+      ],
+      "evidence_quotes": [
+        "399 ka lene par free delivery hai isko 99 rs par free delivery karna chahiye",
+        "Before it serves free delivery on 100\u20b9 , And now \ud83d\ude21\ud83d\ude21 400\u20b9",
+        "delivery charge threshold should be at 100 rs not 130"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-06",
+      "theme_id": "THM-06",
+      "statement": "Cluster of 33 statements characterised by: making / feel / charges / cost.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality, choice_overload. Requires synthesis before use.",
+      "prevalence": 0.0523,
+      "n": 33,
+      "source_spread": {
+        "play_store": 29,
+        "app_store": 4
+      },
+      "single_source": false,
+      "segment_skew": [
+        "working_professional",
+        "tier1_metro"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "ap_4fc12250446766a2",
+        "ap_b334db85efac75db",
+        "pl_b2b186d8897d1f5c",
+        "pl_d082d41ab531ee7a",
+        "pl_0ca5c49a38c3cb07"
+      ],
+      "evidence_quotes": [
+        "The excessive markups and added charges have made ordering too expensive",
+        "Delivery and gst charges is much expensive",
+        "delivery charges or paking charge is high"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-07",
+      "theme_id": "THM-07",
+      "statement": "Cluster of 31 statements characterised by: available / stock / actually / range.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): awareness, trust_quality, no_trigger. Requires synthesis before use.",
+      "prevalence": 0.0491,
+      "n": 31,
+      "source_spread": {
+        "play_store": 31
+      },
+      "single_source": true,
+      "segment_skew": [
+        "tier2_plus"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_b9d616eb8527e6d1",
+        "pl_08ad8ee3c3bd5ba3",
+        "pl_d715c123713f804b",
+        "pl_3a213df9af280092",
+        "pl_a002f765106715bf"
+      ],
+      "evidence_quotes": [
+        "diet Coke is not always available",
+        "orders get cancelled, delay in supplies, most of the products, vegetables out of stock even if the product is available in app portal",
+        "they're not reachable in Tarn Taran so I'm not able to buy wonderful items"
+      ],
+      "contradicting_evidence": [
+        "pl_49ead069873a155b",
+        "pl_e7e7572f2be42a0e"
+      ],
+      "contradiction_rate": 0.0645,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-08",
+      "theme_id": "THM-08",
+      "statement": "Cluster of 30 statements characterised by: replacement / wrong / refund / offered.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "prevalence": 0.0475,
+      "n": 30,
+      "source_spread": {
+        "play_store": 27,
+        "app_store": 3
+      },
+      "single_source": false,
+      "segment_skew": [
+        "cooks_daily"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_2d4f4bc9e581dc21",
+        "pl_56a38da76eee6a9e",
+        "pl_826c7d9ba1121975",
+        "pl_b1d20f9a826840d6",
+        "pl_cadc8f7425685072"
+      ],
+      "evidence_quotes": [
+        "this app sends u wrong product after this that product never be returned and they will never give u refund",
+        "wrong item Dete Hain hai or fir 120 ke order de 84 ka refund dete hai",
+        "no replacement policy don't buy. seller can reject any time company have no responsibility"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-09",
+      "theme_id": "THM-09",
+      "statement": "Cluster of 26 statements characterised by: fresh / trust / arrive / trust vegetables.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0412,
+      "n": 26,
+      "source_spread": {
+        "play_store": 25,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [
+        "cooks_daily",
+        "pet_owner"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_6d67ad4b1e796638",
+        "pl_cbab499f486a3039",
+        "pl_d89f307a86e4cf46",
+        "pl_d0ca2730fd68b236",
+        "pl_638d5afd75bdf61f"
+      ],
+      "evidence_quotes": [
+        "potatoes were green tomatoes were rotten like maine green color kr diya",
+        "the bananas are too cold",
+        "Even the potatoes were spoiled after a day."
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-10",
+      "theme_id": "THM-10",
+      "statement": "Cluster of 26 statements characterised by: unavailable / routine / daily / disrupting.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): awareness, price_risk, trust_quality. Requires synthesis before use.",
+      "prevalence": 0.0412,
+      "n": 26,
+      "source_spread": {
+        "play_store": 26
+      },
+      "single_source": true,
+      "segment_skew": [
+        "cooks_daily",
+        "tier2_plus",
+        "working_professional"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_70e1a5806a525231",
+        "pl_705b7465bdc88b0c",
+        "pl_c6c326ecd053c0f8",
+        "pl_9dbe76de4fb8be2e",
+        "pl_c8484e66f718e2d8"
+      ],
+      "evidence_quotes": [
+        "many times regular groceries are unavailable in my location",
+        "when bb daily and bb normal both merged the experience got pathetic where I have been using bb daily app for 3 years smoothly with any single issue",
+        "Now it shows only Electronics and Fashion no grocery!"
+      ],
+      "contradicting_evidence": [
+        "pl_c4545c721e7972f6",
+        "pl_7dd386a929a5c8d3",
+        "pl_753f4d0a222a07c4"
+      ],
+      "contradiction_rate": 0.1154,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-11",
+      "theme_id": "THM-11",
+      "statement": "Cluster of 25 statements characterised by: quantity / matches / expected / freshness.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, size_uncertainty, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0396,
+      "n": 25,
+      "source_spread": {
+        "play_store": 25
+      },
+      "single_source": true,
+      "segment_skew": [
+        "cooks_daily"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_ecf7cc3698c1b4b3",
+        "pl_0ec55552b62f5d16",
+        "pl_b8eb71ae9f68f4b9",
+        "pl_e673cd81335c06ad",
+        "pl_fa917ee474229f85"
+      ],
+      "evidence_quotes": [
+        "makhana from MOM so less quantity not right",
+        "imli weight quantity is less but good thanks you",
+        "I ordered 1 litre kadhai paneer but it was in the container of 500ml with 1 litre sticker on it."
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-12",
+      "theme_id": "THM-12",
+      "statement": "Cluster of 22 statements characterised by: instead / pushing / resolving / competitor.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, channel_loyalty, return_anxiety. Requires synthesis before use.",
+      "prevalence": 0.0349,
+      "n": 22,
+      "source_spread": {
+        "play_store": 18,
+        "app_store": 4
+      },
+      "single_source": false,
+      "segment_skew": [
+        "tier2_plus"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_91ee53a840d32105",
+        "pl_8337ba52bb99694f",
+        "pl_10175538f834c6d6",
+        "pl_8e5e91351455816e",
+        "pl_9ac173effbcf137f"
+      ],
+      "evidence_quotes": [
+        "Items are often missing or differnet and lower MRP than ordered item",
+        "instead of giving longer wait time the order it self is disabled",
+        "holding or deactivating account with nonsense reasons"
+      ],
+      "contradicting_evidence": [
+        "pl_ad7b17481440a596",
+        "pl_8337ba52bb99694f"
+      ],
+      "contradiction_rate": 0.0909,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-13",
+      "theme_id": "THM-13",
+      "statement": "Cluster of 21 statements characterised by: offers / advertised / discount / checkout.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "prevalence": 0.0333,
+      "n": 21,
+      "source_spread": {
+        "play_store": 20,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_18539a9f13cd9bcc",
+        "pl_1d57d9f828bb2531",
+        "pl_5a8fd6316dc74d40",
+        "pl_c110ada4a2f38bb2",
+        "pl_32ea81c51cd3742f"
+      ],
+      "evidence_quotes": [
+        "The same offer existed in the external market stores as well. while delivering they sent only 1 bottle with the delivery boy.",
+        "good app but previous offers removed please continue old offers",
+        "1rs item are not giving properly"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-14",
+      "theme_id": "THM-14",
+      "statement": "Cluster of 20 statements characterised by: charge / feels / 30 / unfair.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality. Requires synthesis before use.",
+      "prevalence": 0.0317,
+      "n": 20,
+      "source_spread": {
+        "play_store": 20
+      },
+      "single_source": true,
+      "segment_skew": [
+        "tier2_plus",
+        "working_professional"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_7fa88ab06c9ed113",
+        "pl_5ba9b4518e411260",
+        "pl_d2f9ac998dbfef69",
+        "pl_2e07b7c7506205ef",
+        "pl_863797123daed8a7"
+      ],
+      "evidence_quotes": [
+        "dont ask 30 Rs delivery charge extra instamart is not asking delivery charges",
+        "a flat charge of \u20b930 applies to everyone, which does not seem right",
+        "alag se charge nahi hona chahiye 5 se 10 tak ka hi hona chahiue"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-15",
+      "theme_id": "THM-15",
+      "statement": "Cluster of 19 statements characterised by: leaving / recourse / exchange / electronics.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "prevalence": 0.0301,
+      "n": 19,
+      "source_spread": {
+        "play_store": 19
+      },
+      "single_source": true,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_9a257ae78e8aa89a",
+        "pl_86e26d52e27d6f6f",
+        "pl_f0c8aaabd76ee53c",
+        "pl_98a207e22c1bcf3e",
+        "pl_d33d95d4db74257c"
+      ],
+      "evidence_quotes": [
+        "I requested a return\u2014even offering to exchange them for a more expensive model\u2014but their service was so bad that they flatly refused the return.",
+        "first they send an incorrect item which shows return is possible after delivery they denied that return or exchange is not possible",
+        "the quality was the worst that no human can eat. When I tried to refund or exchange for the product, the zepto refused to for both refund and exchange"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-16",
+      "theme_id": "THM-16",
+      "statement": "Cluster of 16 statements characterised by: cancelled / time / wasting / breaking trust.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0254,
+      "n": 16,
+      "source_spread": {
+        "play_store": 16
+      },
+      "single_source": true,
+      "segment_skew": [
+        "working_professional"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_fb0f6e2cdf033914",
+        "pl_c5bfb451535debfb",
+        "pl_6a8586a1fdb1216f",
+        "pl_610c5a8025cb8c7f",
+        "pl_fb7a1bd4e24a9b7b"
+      ],
+      "evidence_quotes": [
+        "apni marzi se order cancl kr dety hai or dubara order kro fir yhi kety hai",
+        "every single order was cancelled instead of being delivered",
+        "they will call you that item is not available canceled the order"
+      ],
+      "contradicting_evidence": [
+        "pl_6a8586a1fdb1216f",
+        "pl_495e89523c56c1a7"
+      ],
+      "contradiction_rate": 0.125,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-17",
+      "theme_id": "THM-17",
+      "statement": "Cluster of 16 statements characterised by: specific / brand / substituted / quality.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, awareness, return_anxiety. Requires synthesis before use.",
+      "prevalence": 0.0254,
+      "n": 16,
+      "source_spread": {
+        "play_store": 15,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [
+        "tier1_metro"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_faf3bc5f36e5d151",
+        "pl_a4d727adee5cc67a",
+        "pl_6a7a6677b0977d15",
+        "pl_204c86596325c75e",
+        "pl_7da78b3a557383a7"
+      ],
+      "evidence_quotes": [
+        "why don't you guys keep American club NY cool cigerattes",
+        "they sent me a wrong product and its low quality one after complaining they replaced it but again sending same product",
+        "blinkit mai nutrujona fash wash kafi cheej nhi milti hai istamart mai 12 baje ke bad kuch nhi milta"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-18",
+      "theme_id": "THM-18",
+      "statement": "Cluster of 15 statements characterised by: cream / ice cream / ice / melted.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0238,
+      "n": 15,
+      "source_spread": {
+        "play_store": 14,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_9917565b34a3951f",
+        "pl_b196d8a4319e4cae",
+        "pl_3dc61d8a31e067f8",
+        "pl_b9071a0fb773a29f",
+        "pl_48be4534bae24f1a"
+      ],
+      "evidence_quotes": [
+        "I asked for ice cream from Zepto, I got it melted",
+        "ice cream pura pighla hua Mila",
+        "every time I ordered icecream it is already melted and when we ask for replacement thay don't answer"
+      ],
+      "contradicting_evidence": [
+        "pl_b9071a0fb773a29f"
+      ],
+      "contradiction_rate": 0.0667,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-19",
+      "theme_id": "THM-19",
+      "statement": "Cluster of 14 statements characterised by: genuine / payment / store / duplicate.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, channel_loyalty. Requires synthesis before use.",
+      "prevalence": 0.0222,
+      "n": 14,
+      "source_spread": {
+        "play_store": 14
+      },
+      "single_source": true,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_ab0d9bcefe7fcb44",
+        "pl_405ed9a5dc7a4985",
+        "pl_42f5562f1a216baa",
+        "pl_addc9f013517d6df",
+        "pl_83be1c1d2ff9ce05"
+      ],
+      "evidence_quotes": [
+        "manager order block kar deta hai",
+        "I found this is providing duplicate products",
+        "sirf sirf duplicate sirf sirf duplicate sirf sirf duplicate all product"
+      ],
+      "contradicting_evidence": [
+        "pl_cea76d49d85eecab"
+      ],
+      "contradiction_rate": 0.0714,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-20",
+      "theme_id": "THM-20",
+      "statement": "Cluster of 14 statements characterised by: missing / leading / leading distrust / loss.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0222,
+      "n": 14,
+      "source_spread": {
+        "play_store": 13,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_9163283bc039c798",
+        "pl_85cb8880ccc2b31e",
+        "pl_7edb48a8b808917a",
+        "pl_2a7997671a6c7348",
+        "pl_be100475a1558579"
+      ],
+      "evidence_quotes": [
+        "item missing. this is a scam app",
+        "pure product nhi bhejata missing rahata hai ab kabhi nhi mangaungi",
+        "worst app did not deliver all items and also they did not refund my money"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-21",
+      "theme_id": "THM-21",
+      "statement": "Cluster of 14 statements characterised by: promised / extra / minute / 10.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): price_risk, trust_quality, awareness. Requires synthesis before use.",
+      "prevalence": 0.0222,
+      "n": 14,
+      "source_spread": {
+        "play_store": 12,
+        "app_store": 2
+      },
+      "single_source": false,
+      "segment_skew": [
+        "tier1_metro"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_45bf68ab14e5f80d",
+        "pl_782e47b7f027168b",
+        "pl_b57a2afee7eb481e",
+        "pl_29eb8d38653182af",
+        "ap_e25675e683d38006"
+      ],
+      "evidence_quotes": [
+        "10 minute bol kar 30 minute me le kar aate hai aur to aur itna zyada price hota hai",
+        "I may get order after 40 to 50 mins then why you mention that 10 mins 16 mins delivery",
+        "Receiving rotten fruits and spoiled bananas repeatedly is just not okay"
+      ],
+      "contradicting_evidence": [
+        "pl_e327b3938a539ece",
+        "pl_c5707d5d86c85bec"
+      ],
+      "contradiction_rate": 0.1429,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-22",
+      "theme_id": "THM-22",
+      "statement": "Cluster of 12 statements characterised by: eroding trust / eroding / trust / claims.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, channel_loyalty. Requires synthesis before use.",
+      "prevalence": 0.019,
+      "n": 12,
+      "source_spread": {
+        "play_store": 11,
+        "app_store": 1
+      },
+      "single_source": false,
+      "segment_skew": [
+        "cooks_daily",
+        "tier2_plus"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_0286515b9d1a2a30",
+        "ap_03dc16b098ada54b",
+        "pl_90cd1e2ec589b19f",
+        "pl_9cf13aed7af61a66",
+        "pl_223cd3f26cec8c7f"
+      ],
+      "evidence_quotes": [
+        "my last 5 oder never delivered",
+        "Not providing what they are writing in their app",
+        "Three times in a row they missed an item from my food order."
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-23",
+      "theme_id": "THM-23",
+      "statement": "Cluster of 10 statements characterised by: packaging / refuses / competitors / bad.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "prevalence": 0.0158,
+      "n": 10,
+      "source_spread": {
+        "play_store": 10
+      },
+      "single_source": true,
+      "segment_skew": [],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_72e551a986ae40e6",
+        "pl_bf3004a131d18db1",
+        "pl_b12e9a892c717e8c",
+        "pl_9299679ecfb134c2",
+        "pl_32bd8da4752da240"
+      ],
+      "evidence_quotes": [
+        "damage ya package k under ka saman kharab nikale tobhi return nahi karte",
+        "Without opening it, how can anyone know the quality of the rice?",
+        "they had once give torn milk package and i didnt accept delivery for the same"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-24",
+      "theme_id": "THM-24",
+      "statement": "Cluster of 9 statements characterised by: limiting / available limiting / available / late night.",
+      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
+      "so_what": "Dominant barrier(s): awareness, price_risk, size_uncertainty. Requires synthesis before use.",
+      "prevalence": 0.0143,
+      "n": 9,
+      "source_spread": {
+        "play_store": 9
+      },
+      "single_source": true,
+      "segment_skew": [
+        "tier1_metro"
+      ],
+      "research_questions_answered": [],
+      "evidence_doc_ids": [
+        "pl_cf0326de7eee076d",
+        "pl_248657c6cdb39fb2",
+        "pl_85f17e6ea45b982e",
+        "pl_701ac07e9b86105e",
+        "pl_be39eb99e2536518"
+      ],
+      "evidence_quotes": [
+        "All products are not available",
+        "some products available some products not available in the app",
+        "u should have do cash on delivery at 1 am so that I can order more for it"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.0,
+      "caveat": "Template output, not analysis. Re-run with an API key present."
+    },
+    {
+      "insight_id": "INS-25",
+      "theme_id": "THM-25",
+      "statement": "Users restrict purchases to grocery on quick-commerce apps (e.g., JioMart) because non-grocery items they tried were non-returnable, defective, or had refunds/cancellations mishandled, and this was not disclosed clearly before purchase.",
+      "mechanism": "Users don't have a way to know upfront whether an item is returnable or how reliable the refund/cancellation process will be; the product page omits or buries this information. After being burned once (stuck with a wrong-size item, no refund after a week, a cancelled order with no return option), users don't treat it as a one-off failure \u2014 they generalize it into a rule ('never buy anything except grocery') and permanently narrow their behaviour to the one category where they've never been burned. The avoidance is a trust-based heuristic substituting for information they can't get at decision time.",
+      "so_what": "This is a trust/risk problem, not a discovery or catalog-breadth problem \u2014 users already know non-grocery categories exist, they've tried them and were penalized. Surfacing new categories more prominently, or improving search/browse, will not undo this; the fix has to attack the risk itself (clear, enforced returnability status pre-purchase, fast refund SLAs) or the behaviour will keep hardening category by category as more users get burned once each.",
+      "prevalence": 0.0143,
+      "n": 9,
+      "source_spread": {
+        "play_store": 7,
+        "app_store": 2
+      },
+      "single_source": false,
+      "segment_skew": [],
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6,
+        8
+      ],
+      "evidence_doc_ids": [
+        "ap_1b53037679f8e508",
+        "pl_0c5b0fd84067ce52",
+        "pl_51a8f6d0a9579cb3",
+        "pl_19f08cc9cec3a2db",
+        "pl_6c3b918516d1d112"
+      ],
+      "evidence_quotes": [
+        "i was not okay with the size so returned the order but I didn\u2019t get my refund amount till now it\u2019s been 1week",
+        "never dare to buy anything except grocery from jio mart because either they don't send at all or its defective and the don't exchange or return",
+        "very bad service and most of the items are non returnable"
+      ],
+      "contradicting_evidence": [],
+      "contradiction_rate": 0.0,
+      "confidence": 0.65,
+      "caveat": "Sample is small (5 quotes) and conflates several distinct failure modes \u2014 refund delay, item defect, seller-side cancellation, and non-disclosure of return policy \u2014 that may have different root causes even though users experience them as one 'non-returnable = don't buy' lesson. Also appears anchored to a single platform (JioMart), so the generalization to quick-commerce broadly is unverified."
+    }
+  ]
+}
