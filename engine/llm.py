@@ -112,6 +112,28 @@ def _anthropic_text(resp) -> str:
     raise LLMError(f"No text block in Anthropic response (blocks: {kinds}, stop={resp.stop_reason})")
 
 
+def _is_provider_dead(exc: Exception) -> str:
+    """Is this error about the *account* rather than the request?
+
+    Returns a short reason, or "" if the error is request-scoped.
+
+    Retrying an exhausted balance on the same key is pointless — it fails in 60ms, nine times in a
+    row, and every stage downstream then falls back to placeholders. These conditions mean "this
+    provider is unusable for the rest of the run", which is a different response from "this call
+    failed": switch providers if another key exists.
+    """
+    text = str(exc).lower()
+    if "credit balance is too low" in text or "billing" in text and "upgrade" in text:
+        return "credit balance exhausted"
+    if "invalid x-api-key" in text or "authentication_error" in text:
+        return "invalid API key"
+    if "api key not valid" in text or "api_key_invalid" in text:
+        return "invalid API key"
+    if "permission_denied" in text and "consumer" in text:
+        return "key lacks access"
+    return ""
+
+
 class LLMClient:
     """One method that matters: `structured()`."""
 
@@ -143,6 +165,9 @@ class LLMClient:
 
         self._resolved_model: dict[str, str] = {}
         self._exhausted_models: dict[str, set[str]] = {}
+        # Preserved across the in-place rebuild in `structured()` so failover happens at most once
+        # and a dead-on-both-providers run raises instead of ping-ponging.
+        self._failed_over = getattr(self, "_failed_over", False)
         # Models that reject thinking_config outright. Whether a model supports the field is a
         # fixed property, so discovering it once and remembering is the difference between one
         # wasted call and one per batch — which on a per-day request quota halves throughput.
@@ -336,6 +361,15 @@ class LLMClient:
 
     @staticmethod
     def _autodetect() -> str:
+        # Explicit override wins. Needed because "a key is present" and "a key works" are different
+        # things: an Anthropic key with an exhausted balance is present, selected, and useless.
+        forced = os.getenv("LLM_PROVIDER", "").strip().lower()
+        if forced:
+            if forced not in ("anthropic", "gemini"):
+                raise LLMError(f"LLM_PROVIDER={forced!r} — expected 'anthropic' or 'gemini'.")
+            if not os.getenv(f"{forced.upper()}_API_KEY"):
+                raise LLMError(f"LLM_PROVIDER={forced} but {forced.upper()}_API_KEY is not set.")
+            return forced
         if os.getenv("ANTHROPIC_API_KEY"):
             return "anthropic"
         if os.getenv("GEMINI_API_KEY"):
@@ -366,7 +400,36 @@ class LLMClient:
         tier: str = "fast",
         max_tokens: int = 2000,
     ) -> Any:
-        """Return parsed JSON. `system` is cached where the provider supports it."""
+        """Return parsed JSON. `system` is cached where the provider supports it.
+
+        Fails over to the other provider once, if the current one turns out to be dead at the
+        account level (see `_is_provider_dead`). Synthesis ran nine batches against an Anthropic key
+        with an exhausted balance, got nine 400s in under a second, and wrote placeholder insights —
+        with a working Gemini key sitting unused in the same environment the whole time. A
+        provider-agnostic client that cannot actually change provider is not much of one.
+        """
+        try:
+            return self._structured_once(system, user, tier, max_tokens)
+        except Exception as exc:  # noqa: BLE001
+            reason = _is_provider_dead(exc)
+            other = "gemini" if self.provider == "anthropic" else "anthropic"
+            if not reason or self._failed_over or not os.getenv(f"{other.upper()}_API_KEY"):
+                raise
+            log.warning(
+                "%s unusable (%s) — failing over to %s for the rest of this run",
+                self.provider, reason, other,
+            )
+            self.__init__(provider=other)  # noqa: PLC2801  rebuild in place; callers hold this object
+            self._failed_over = True
+            return self._structured_once(system, user, tier, max_tokens)
+
+    def _structured_once(
+        self,
+        system: str,
+        user: str,
+        tier: str = "fast",
+        max_tokens: int = 2000,
+    ) -> Any:
         if self.provider == "anthropic":
             resp = self._client.messages.create(
                 model=self.model(tier),

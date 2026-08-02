@@ -24,6 +24,10 @@ on:
         description: "true: skip the one LLM stage and run the deterministic pipeline only"
         required: false
         default: "false"
+      provider:
+        description: "anthropic | gemini | (blank = auto, Anthropic first with failover to Gemini)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -87,6 +91,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_PROVIDER: ${{ github.event.inputs.provider }}
         run: |
           echo "### Synthesis" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
