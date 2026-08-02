@@ -14,6 +14,7 @@ on:
     branches: [claude/category-exploration-discovery-q5hqgb]
     paths:
       - "mvp/**"
+      - "deck/**"
       - ".github/workflows/deploy-mvp.yml"
 
 permissions:
@@ -50,8 +51,9 @@ jobs:
 
       - name: Stage site
         run: |
-          mkdir -p _site
+          mkdir -p _site/deck
           cp -r mvp/index.html mvp/main.js mvp/agent mvp/data _site/
+          cp deck/index.html _site/deck/index.html
           ls -la _site/data/llm-copy.json || echo 'no llm-copy.json — site will use deterministic copy'
           # Pages serves 404.html for unknown paths; point it at the app so deep links work.
           cp mvp/index.html _site/404.html

@@ -1,0 +1,416 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blinkit — Category Exploration &amp; Discovery</title>
+
+<style>
+  :root {
+    --bg: #ffffff; --fg: #16181d; --muted: #5c6370; --line: #e3e6ea;
+    --accent: #0f7b46; --warn: #a8410a; --card: #f7f8fa;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#101215; --fg:#e8eaed; --muted:#98a0ac; --line:#282c33;
+            --accent:#4ade80; --warn:#fb923c; --card:#181b20; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 6vh 7vw; border-bottom: 1px solid var(--line); position: relative;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .num { position: absolute; top: 3vh; right: 7vw; font: 12px var(--mono); color: var(--muted); }
+  .kicker { font: 600 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 1.1rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.08; margin: 0 0 1rem; letter-spacing: -.02em; }
+  h2 { font-size: clamp(1.5rem, 3.4vw, 2.3rem); line-height: 1.15; margin: 0 0 1.2rem; letter-spacing: -.015em; }
+  h3 { font-size: 1.05rem; margin: 1.6rem 0 .5rem; }
+  p { margin: 0 0 .9rem; max-width: 62ch; }
+  .lede { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+  strong { font-weight: 650; }
+  code { font: .9em var(--mono); background: var(--card); padding: .12em .35em; border-radius: 3px; }
+  ul { margin: 0 0 1rem; padding-left: 1.1rem; max-width: 62ch; }
+  li { margin-bottom: .45rem; }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); margin: 1.2rem 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.1rem; }
+  .stat b { display: block; font-size: 1.9rem; line-height: 1.1; letter-spacing: -.02em; }
+  .stat span { font-size: .82rem; color: var(--muted); }
+  .quote { border-left: 3px solid var(--accent); padding: .3rem 0 .3rem 1rem;
+           margin: 1rem 0; color: var(--fg); font-style: italic; max-width: 60ch; }
+  .quote cite { display: block; font-style: normal; font-size: .82rem; color: var(--muted); margin-top: .35rem; }
+  .tbl { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .93rem; }
+  .tbl th, .tbl td { text-align: left; padding: .55rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tbl th { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+  .tbl td.n { text-align: right; font-family: var(--mono); white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  .flag { color: var(--warn); font-weight: 600; }
+  .ok { color: var(--accent); font-weight: 600; }
+  .note { font-size: .87rem; color: var(--muted); border-top: 1px solid var(--line);
+          padding-top: .8rem; margin-top: 1.4rem; max-width: 66ch; }
+  .pipeline { font: .82rem/1.9 var(--mono); background: var(--card); border: 1px solid var(--line);
+              border-radius: 8px; padding: 1rem; overflow-x: auto; white-space: pre; }
+  a { color: var(--accent); }
+  @media print {
+    .slide { min-height: auto; page-break-after: always; border: 0; padding: 5% 6%; }
+    body { font-size: 12px; }
+  }
+</style>
+
+<section class="slide">
+  <div class="num">01</div>
+  <div class="kicker">Product Manager case study</div>
+  <h1>Getting people to buy<br>something new</h1>
+  <p class="lede">Increasing the share of Monthly Active Customers who purchase from at least one
+  new category each month — in Indian quick commerce.</p>
+  <div class="note">
+    Evidence base: 3,372 public reviews · 40 survey responses · 3 depth interviews · a deployed MVP.
+    Every number in this deck is computed from committed data and reproducible from the repository.
+  </div>
+</section>
+
+<section class="slide">
+  <div class="num">02</div>
+  <div class="kicker">The finding, first</div>
+  <h2>Users already want to explore.<br>They cannot afford to.</h2>
+  <div class="grid">
+    <div class="stat"><b>39/40</b><span>have wanted to try a new category and didn't</span></div>
+    <div class="stat"><b>38/40</b><span>arrive already knowing what they want</span></div>
+    <div class="stat"><b>20/20</b><span>split on having crossed over in 3 months</span></div>
+  </div>
+  <p>Motivation is not the constraint. Awareness is not the constraint. Trust in the platform is not
+  the constraint — these people order several times a month.</p>
+  <p><strong>The app shows an unfamiliar category exactly what it shows a familiar one: a price.</strong>
+  For something you already buy, that's enough — you hold the reference point in your head. For
+  something you never have, a price with no reference point is uninterpretable. Evaluating it costs
+  time a two-minute fetch session hasn't budgeted, so skipping is correct.</p>
+  <p>Every skip is individually rational. The aggregate is a user who has bought the same things for
+  two years.</p>
+</section>
+
+<section class="slide">
+  <div class="num">03</div>
+  <div class="kicker">Method</div>
+  <h2>Four instruments, deliberately disagreeing</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Instrument</th><th>Scale</th><th>Good at</th><th>Blind to</th></tr>
+    <tr><td>Discovery engine</td><td class="n">3,372 docs</td><td>What disappoints buyers, at volume</td><td>Anyone who didn't buy</td></tr>
+    <tr><td>Survey</td><td class="n">n=40</td><td>Prevalence across a known frame</td><td>Anything not on the form</td></tr>
+    <tr><td>Depth interviews</td><td class="n">n=3</td><td>Barriers nobody thought to ask about</td><td>Prevalence</td></tr>
+    <tr><td>AI personas</td><td class="n">5</td><td>Generating hypotheses fast</td><td>Anything outside their input</td></tr>
+  </table></div>
+  <p>They were built to be compared, not averaged. Where they agree, the finding is solid. Where
+  they disagree — and they do, sharply — the disagreement is the finding.</p>
+</section>
+
+<section class="slide">
+  <div class="num">04</div>
+  <div class="kicker">Part 1 · The engine</div>
+  <h2>A pipeline, not a prompt</h2>
+  <div class="pipeline">collect ──► normalize ──► relevance gate ──► extract ──► cluster ──► synthesize
+                                                                    │
+                                                                validate</div>
+  <div class="grid">
+    <div class="stat"><b>3,372</b><span>documents, 5 apps</span></div>
+    <div class="stat"><b>971</b><span>judged relevant (28.8%)</span></div>
+    <div class="stat"><b>937</b><span>extracted (96.5% of relevant)</span></div>
+    <div class="stat"><b>25</b><span>themes over 631 pain statements</span></div>
+  </div>
+  <p>Three design rules did the heavy lifting:</p>
+  <ul>
+    <li><strong>The schema is the source of truth.</strong> Every enum traces to one of the brief's
+    eight questions, so coverage is checkable rather than asserted.</li>
+    <li><strong>Numbers never come from the model.</strong> Prevalence and counts are computed and
+    carried through untouched — the LLM is never shown a statistic it could inflate.</li>
+    <li><strong>Contradicting evidence is computed, not requested.</strong> Ask a model to argue
+    against itself and it finds nothing; counting label disagreement inside a cluster does.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="num">05</div>
+  <div class="kicker">Part 1 · What it found</div>
+  <h2>Three barriers, in the same order the survey found them</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Barrier</th><th class="n">Engine (n=832)</th><th>Survey (n=40)</th></tr>
+    <tr><td><code>trust_quality</code></td><td class="n">45.3%</td><td>Top blocker — quality uncertainty (14), brand distrust (12)</td></tr>
+    <tr><td><code>price_risk</code></td><td class="n">22.7%</td><td>Second — priced higher (8) + price feels risky (7)</td></tr>
+    <tr><td><code>return_anxiety</code></td><td class="n">18.4%</td><td class="flag">Barely probed — the engine caught what the survey missed</td></tr>
+    <tr><td><code>awareness</code></td><td class="n">4.8%</td><td>Nobody's leading answer</td></tr>
+  </table></div>
+  <p>Two datasets — one mined from public reviews, one asked directly — independently rank the same
+  three barriers the same way. And the corpus corrects the survey once: <code>return_anxiety</code>
+  is the engine's third-largest barrier and neither the survey nor any interview surfaced it.</p>
+  <p class="note">Top information gaps, which is what the MVP had to close:
+  <code>freshness_expiry</code> (198) · <code>returnability</code> (164) ·
+  <code>price_benchmark</code> (161).</p>
+</section>
+
+<section class="slide">
+  <div class="num">06</div>
+  <div class="kicker">Part 1 · Validation</div>
+  <h2>Five checks, and two that say NOT RUN</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Check</th><th>Result</th><th>What it establishes</th></tr>
+    <tr><td>Quote grounding</td><td class="ok">PASS</td><td>4 fabrications in 924; all filtered before display, none quotable</td></tr>
+    <tr><td>Theme saturation</td><td class="ok">PASS</td><td>95% of labels found by halfway; more documents would not move it</td></tr>
+    <tr><td>Hold-out generalisation</td><td class="ok">PASS</td><td>Re-fit on 80%, unseen fifth scores <strong>z = 11.4</strong> vs a permutation null</td></tr>
+    <tr><td>Relevance gate audit</td><td class="ok">PASS</td><td>0 false negatives in a 40-doc sample of rejects</td></tr>
+    <tr><td>Source spread</td><td class="flag">NOT RUN</td><td>Corpus is 95% one platform — the check has no power, so it reports none</td></tr>
+    <tr><td>Human agreement (κ)</td><td class="flag">NOT RUN</td><td>No hand-labelled gold set exists</td></tr>
+  </table></div>
+  <p>The two NOT RUNs matter more than the four passes. A green tick on source spread would have
+  certified "these themes aren't a platform artifact" when the data cannot say either way — the most
+  misleading output the suite could produce.</p>
+</section>
+
+<section class="slide">
+  <div class="num">07</div>
+  <div class="kicker">Part 1 · Validation</div>
+  <h2>The insights were checked against a second model family</h2>
+  <p>Everything else in the engine is counted or verified. The <em>mechanism</em> behind each theme
+  is not — it comes from a model, and "an AI wrote it" is not evidence. So synthesis was re-run on
+  <strong>Llama 3.3 70B</strong> and compared with the Gemini output.</p>
+  <div class="grid">
+    <div class="stat"><b>25/25</b><span>themes synthesised by both</span></div>
+    <div class="stat"><b>0.66</b><span>research-question agreement (Jaccard)</span></div>
+    <div class="stat"><b>0</b><span>themes with zero overlap</span></div>
+    <div class="stat"><b>12×</b><span>mechanism matching vs chance (12/25 at 4% baseline)</span></div>
+  </div>
+  <p><strong>Agreement is not correctness.</strong> Two models converging means they read the same
+  quotes the same way. Models trained on overlapping data are not independent coders. What this
+  bounds is how much the insights can be blamed on one vendor — nothing more. Disagreement would
+  have been decisive, and there is none.</p>
+</section>
+
+<section class="slide">
+  <div class="num">08</div>
+  <div class="kicker">Part 1 · The limit</div>
+  <h2>What 3,372 documents structurally cannot tell you</h2>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Question</th><th class="n">Coverage</th><th>Grade</th></tr>
+    <tr><td>Q2 What prevents exploring</td><td class="n">74.0%</td><td class="ok">Well</td></tr>
+    <tr><td>Q6 Recurring frustrations</td><td class="n">75.8%</td><td class="ok">Well</td></tr>
+    <tr><td>Q5 Information needed</td><td class="n">57.3%</td><td class="ok">Well</td></tr>
+    <tr><td>Q1 Why repeat categories</td><td class="n">35.8%</td><td>Moderately</td></tr>
+    <tr><td>Q4 Role of habit</td><td class="n">14.8%</td><td class="flag">Poorly</td></tr>
+    <tr><td>Q7 Which segments experiment</td><td class="n">7.5%</td><td class="flag">Poorly</td></tr>
+    <tr><td>Q3 How they discover</td><td class="n">2.9%</td><td class="flag">Poorly</td></tr>
+  </table></div>
+  <p>The split is not random. Everything it answers well is about <strong>a purchase that went
+  wrong</strong>. Everything it answers badly is about <strong>behaviour before or across
+  purchases</strong>.</p>
+  <p><strong>A review corpus contains only people who completed a transaction.</strong> Nobody
+  reviews a habit — a habit is the unremarkable case. Nobody reviews a product they never bought.
+  Collecting 10,000 more documents would sharpen the top of that table and do nothing for the
+  bottom.</p>
+</section>
+
+<section class="slide">
+  <div class="num">09</div>
+  <div class="kicker">Part 2 · Survey</div>
+  <h2>Four findings that constrained the build</h2>
+  <ul>
+    <li><strong>F1 — Willingness isn't the constraint.</strong> 39/40 have felt the pull and not
+    acted. Anything premised on creating desire solves a problem the data says doesn't exist.</li>
+    <li><strong>F2 — 38/40 arrive knowing what they want.</strong> Two people browse. This kills the
+    obvious solution: a better discovery surface has almost no audience.</li>
+    <li><strong>F3 — Blockers are information gaps at the moment of consideration.</strong> Not
+    awareness. They know it's sold; they can't <em>evaluate</em> it fast enough to justify the risk.</li>
+    <li><strong>F4 — The consideration set is already the app.</strong> Blinkit 16 / Zepto 12 /
+    Instamart 8 vs Amazon 3. Intent already lands here; it just doesn't complete.</li>
+  </ul>
+  <p class="note">In Fogg terms: motivation present, prompt present, <strong>ability is the binding
+  constraint</strong> — not affordability, but whether they can decide fast enough. That dictates
+  what works: discounts and banners push variables already non-zero.</p>
+</section>
+
+<section class="slide">
+  <div class="num">10</div>
+  <div class="kicker">Part 2 · Interviews (n=3)</div>
+  <h2>Three conversations found three things the vocabulary can't express</h2>
+  <p>All three respondents, unprompted, on two different apps, named a never-bought category and
+  explained it as <strong>irrelevance, not obstruction</strong>.</p>
+  <div class="quote">"Pet supplies, baby care never bought. I don't have kids and pets."<cite>P01</cite></div>
+  <div class="quote">"Baby care never bought because I don't have kids."<cite>P02</cite></div>
+  <div class="quote">"Home appliance, because I live alone and I live in full furnished so nothing to do with it."<cite>P03</cite></div>
+  <p>None answered "where do you buy it instead?" — because nobody is buying it anywhere. All eight
+  values in the engine's <code>barrier[]</code> enum presume latent demand being blocked. Forced onto
+  the survey's closed list, all three would have been recorded as <em>blocked</em>, overstating
+  addressable demand.</p>
+  <p class="note">The other two gaps: <strong>access of last resort</strong> (2 of 3 opened the app
+  only because nothing else was available) and <strong>basket economics</strong> — see next slide.</p>
+</section>
+
+<section class="slide">
+  <div class="num">11</div>
+  <div class="kicker">Part 2 · The sharpest result</div>
+  <h2>One interview predicted the engine's own failure</h2>
+  <div class="quote">"we need to buy atleast minimum rs product like 150 or 200 rs of products for not
+  to charge delivery fees too so I never bought home appliance"<cite>P03</cite></div>
+  <p>Unlike the other two gaps, this one <em>leaves text</em> — so it was checkable. Before extraction
+  finished, the prediction written down was: the engine will either force this into
+  <code>price_risk</code> or lose it.</p>
+  <p><strong>It did both.</strong> 133 of 3,372 documents use threshold language. The relevance gate
+  binned 64 as delivery complaints. The survivors clustered into a theme of their own —
+  <strong>THM-05, 34 statements</strong>, labelled <code>free / minimum / threshold / value</code> —
+  which the pipeline then coded <code>price_risk</code>, meaning <em>"unsure whether the price is
+  fair"</em>.</p>
+  <div class="quote">"Before it serves free delivery on 100₹ , And now 400₹"<br>
+  "sudden increase in free delivery from ₹99 to ₹399 is unreasonable"<cite>Two of THM-05's own quotes</cite></div>
+  <p>Nobody there is unsure whether a price is fair. They are re-planning a basket around a line that
+  moved. <strong>The engine found the theme and mislabelled it, because the label it needed does not
+  exist.</strong></p>
+</section>
+
+<section class="slide">
+  <div class="num">12</div>
+  <div class="kicker">Part 2 · Method finding</div>
+  <h2>We tested the shortcut, and it failed</h2>
+  <p>Interviews are slow. The obvious substitute is generating personas from survey data — a real,
+  current technique. So five were generated, and then <strong>tested</strong> rather than believed.</p>
+  <div class="grid">
+    <div class="stat"><b>5</b><span>hypotheses generated</span></div>
+    <div class="stat"><b>4</b><span>untestable with the available data</span></div>
+    <div class="stat"><b>1</b><span>testable — and it was <span class="flag">wrong</span></span></div>
+  </div>
+  <p>The testable one predicted a <em>negative</em> relationship between order frequency and category
+  breadth. Computed from the real rows: <strong>r = +0.25</strong> — the opposite direction.</p>
+  <p><strong>A persona generated from survey data cannot contain information the survey did not
+  capture.</strong> It recombines and articulates, fluently enough to feel like insight, but it has
+  no mechanism for being right about anything outside its input.</p>
+  <p class="note">Read against slide 10: the synthetic method produced confident claims that failed
+  under test, while three real conversations produced findings the survey, the personas and 3,372
+  mined documents could not. That is the brief's "AI insights are only a starting point",
+  demonstrated on this project's own data rather than asserted.</p>
+</section>
+
+<section class="slide">
+  <div class="num">13</div>
+  <div class="kicker">Part 3 · The reframe</div>
+  <h2>The goal is a monthly metric. One-off trial doesn't move it.</h2>
+  <p>Half the survey had already crossed into a new category in three months. That looks like success
+  until you check <em>why the crossers still don't try more</em> — their reasons are near-identical to
+  the non-crossers' reasons for never trying at all. Crossing over once did not lower the barrier.</p>
+  <p><strong>So crossover is event-triggered and non-repeating.</strong> Something external forces it,
+  the user buys once, and reverts to their list. All three interviews confirm it, with three
+  different triggers:</p>
+  <ul>
+    <li>P01 — ran out. <em>"I needed that very urgent."</em></li>
+    <li>P02 — urgency plus no nearby shop.</li>
+    <li>P03 — a life event. <em>"i joined gym and i don't have sipper."</em></li>
+  </ul>
+  <p>This changes what to build. The highest-value moment is not first trial at all — it is the
+  window <strong>immediately after a first cross-category purchase, before the user reverts</strong>.
+  That is a moment the platform can detect precisely.</p>
+</section>
+
+<section class="slide">
+  <div class="num">14</div>
+  <div class="kicker">Part 4 · The MVP</div>
+  <h2>"One Thing" — a single card, at cart review</h2>
+  <p>Not a feed, not a rail, not a browse tab. F2 rules those out: almost nobody is browsing. The
+  card fires at cart review, when the task the user came for is already done.</p>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Card element</th><th>Blocker it closes</th><th class="n">Survey</th></tr>
+    <tr><td>Reason drawn from the user's own history</td><td>"not sure it'll suit my need"</td><td class="n">14/40</td></tr>
+    <tr><td><strong>Price anchor</strong> — ₹/week vs their own comparable spend</td><td>"priced higher than usual"</td><td class="n">15/40</td></tr>
+    <tr><td>Trust signal from similar buyers</td><td>"don't trust the brand"</td><td class="n">26/40</td></tr>
+    <tr><td>Exactly one option, no compare view</td><td>"took too long to compare"</td><td class="n">13/40</td></tr>
+    <tr><td>Smallest available pack</td><td>"too expensive"</td><td class="n">20/40</td></tr>
+  </table></div>
+  <p><strong>Mode B is the one that matters.</strong> Mode A is first crossover; Mode B fires when
+  someone tried a category 2–6 weeks ago and hasn't returned. The metric counts monthly recurrence,
+  so Mode A produces the one-off it ignores and Mode B converts it into the repeat it counts.</p>
+</section>
+
+<section class="slide">
+  <div class="num">15</div>
+  <div class="kicker">Part 4 · The hard part</div>
+  <h2>The agent's most important behaviour is refusing</h2>
+  <p>When the data cannot substantiate a reason, the card <strong>is not shown</strong> and the
+  interface says why. A card whose reason is invented is exactly the noise these users already
+  ignore — and slide 10 shows the cost precisely: a baby-care suggestion to someone with no children
+  is a wasted impression, not a conversion opportunity.</p>
+  <ul>
+    <li>Mode, category, product and price anchor are computed <strong>deterministically</strong> —
+    identical with or without an LLM. Only the wording is generated.</li>
+    <li>The LLM writes copy <strong>in CI</strong>, where the key is a secret. The published site is
+    static and holds no key; a quota outage degrades wording, never decisions.</li>
+    <li>Six eval assertions gate deployment. The build refuses to publish if any fail.</li>
+  </ul>
+  <p class="note">Deployed and live via GitHub Pages. Dismissal rate is a pre-registered guardrail —
+  this feature is designed to be killed if it becomes noise.</p>
+</section>
+
+<section class="slide">
+  <div class="num">16</div>
+  <div class="kicker">Measurement</div>
+  <h2>How we'd know it worked</h2>
+  <p><strong>Primary metric — CER (Category Expansion Rate):</strong> share of MAC purchasing from
+  ≥1 new category this month, where "new" means unbought in a 6-month lookback.</p>
+  <p><strong>Why Mode B is the lever:</strong></p>
+  <div class="pipeline">Incremental monthly GMV
+  = MAC
+  × segment_share            (Habitual Narrow Repeaters)
+  × Δ(second-purchase rate)  (the Mode B conversion)
+  × avg_basket_in_category
+  × retention_multiplier</div>
+  <p>Expressed as a formula rather than a fabricated number, so it can be run against real platform
+  data instead of taken on faith.</p>
+  <p><strong>Guardrails, pre-registered:</strong> card dismissal rate, session length (the fix must
+  not make the session longer — 13/40 named comparison time as the blocker), and return/refund rate
+  in newly-tried categories.</p>
+  <p class="note">The strategic case is stronger than the arithmetic: a user buying one category is
+  trivially substitutable — a competitor needs to win one habit. A user buying five has five habits
+  to dislodge. This is a moat investment, not a GMV tactic.</p>
+</section>
+
+<section class="slide">
+  <div class="num">17</div>
+  <div class="kicker">Limitations</div>
+  <h2>Stated up front, not discovered by a reader</h2>
+  <ul>
+    <li><strong>3 depth interviews against a target of 5–6.</strong> All three are non-parents and
+    two live alone. A parent or pet owner would have tested whether "this category is irrelevant to
+    me" is a property of these respondents or of the question. That test was not run.</li>
+    <li><strong>95% of the corpus is one platform.</strong> This is why source spread reports NOT RUN
+    rather than a green tick.</li>
+    <li><strong>Only 2 of the 7 requested source types</strong> were collected. Social APIs are
+    paywalled; that shortfall is real.</li>
+    <li><strong>The MVP runs on synthetic order histories.</strong> It demonstrates the mechanism,
+    not real-world lift.</li>
+    <li><strong>No interview was fabricated</strong> and no synthetic persona is counted toward the
+    interview total — the personas are a labelled method artifact whose failure is itself reported.</li>
+  </ul>
+  <p class="note">One more, in the record deliberately: a results table in the persona analysis was
+  <em>wrong when first written</em> — generated alongside the personas rather than computed. It was
+  caught by writing a script to recompute it, and left visible with the correction, because a project
+  arguing that plausible output is not evidence should show its own validation failing at least once.</p>
+</section>
+
+<section class="slide">
+  <div class="num">18</div>
+  <div class="kicker">What I'd do next</div>
+  <h2>The three things that would change the answer</h2>
+  <ul>
+    <li><strong>Add a "not relevant to me" option</strong> to the barrier taxonomy and re-field the
+    survey. Three of three interviews hit a gap the instrument cannot record; prevalence is genuinely
+    unknown and currently overstated.</li>
+    <li><strong>Add <code>basket_economics</code> to the schema</strong> and re-run extraction. The
+    signal is already collected — 133 documents — and currently mislabelled as price uncertainty,
+    which points at the wrong fix.</li>
+    <li><strong>Ship Mode B behind an experiment</strong> against the pre-registered guardrails. The
+    argument that the post-first-purchase window is the highest-value moment is well-evidenced and
+    still untested against real behaviour.</li>
+  </ul>
+  <div class="note">
+    Repository: <code>github.com/ayushbisht-source/Blinkit</code> ·
+    Live MVP: <code>ayushbisht-source.github.io/Blinkit/</code><br>
+    Everything in this deck regenerates from committed data:
+    <code>python -m engine.report</code> · <code>python -m engine.validation.checks</code> ·
+    <code>node mvp/evals/run.mjs</code>
+  </div>
+</section>
