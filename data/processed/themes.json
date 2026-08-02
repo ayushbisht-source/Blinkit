@@ -1,0 +1,1781 @@
+{
+  "n_statements": 537,
+  "n_themes": 24,
+  "k_selected": 24,
+  "silhouette": 0.0793,
+  "method": "tfidf(1,2)-grams + agglomerative(cosine, average)",
+  "themes": [
+    {
+      "theme_id": "THM-01",
+      "label": "support / receives / return / refund",
+      "doc_count": 122,
+      "prevalence": 0.2272,
+      "source_spread": {
+        "play_store": 119,
+        "app_store": 3
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "returnability",
+        "freshness_expiry",
+        "reviews"
+      ],
+      "dominant_habit_drivers": [
+        "trust",
+        "household_routine"
+      ],
+      "segment_skew": [
+        "cooks_daily",
+        "tier2_plus",
+        "working_professional"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_c49085f9ad958bea",
+          "quote": "send me spoiled vegetables or curdled milk when I am raising the issue with prove"
+        },
+        {
+          "doc_id": "pl_a8a6131f30bb4c55",
+          "quote": "cake which I received is already melt and got rotten the comedy is there is no return or refund for that"
+        },
+        {
+          "doc_id": "pl_fb5d9b2063f9211a",
+          "quote": "product are supply on instamart was poor quality and it has not return policy"
+        },
+        {
+          "doc_id": "pl_756d8efdfffcd8b8",
+          "quote": "i recieved poor Quality chocolates which was expired and there is not even a helpline where you can reach out to"
+        },
+        {
+          "doc_id": "pl_78ed26d5293a24e7",
+          "quote": "wrong product delivery and they will not take return"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_bfe6b894b5addb21",
+        "pl_52ccc1dcb976912e",
+        "pl_49209d42fd334326",
+        "pl_d33d95d4db74257c",
+        "pl_2c29d2dc31452ded",
+        "pl_dcbc36365c4608ee",
+        "pl_fec8271f385cccbd",
+        "pl_c82f12a45fcffe4e",
+        "pl_9a257ae78e8aa89a",
+        "pl_491d5ed8b5b1293b",
+        "pl_7e5d8e74477984a3",
+        "pl_dfdc6ddac6e51d56",
+        "pl_77a9e40a5c251737",
+        "pl_ca324d252f229313",
+        "pl_1c7f7d0b5a89cc10",
+        "pl_942e1c4fee7ff06d",
+        "pl_c51cd79c15ca87de",
+        "pl_36e27df25a6b8348",
+        "pl_d9d298151fcf92a1",
+        "pl_fb3d72d36afc6ed7",
+        "pl_35d4e88d1eabbc14",
+        "pl_95544a80aa2d438a",
+        "pl_85e9f51003e20738",
+        "pl_f0c8aaabd76ee53c",
+        "pl_6dc93a8cdf9aa7c2",
+        "pl_6fc6b4953ebff7c9",
+        "pl_d030996cdffdfab9",
+        "pl_79dcaa747318ebb9",
+        "pl_b12e9a892c717e8c",
+        "pl_b392daf9a9ff2243",
+        "pl_2c7005e8c4014764",
+        "pl_af5f77d4e91025b1",
+        "pl_4f4fadbe13a16547",
+        "pl_78ed26d5293a24e7",
+        "pl_4b7bbe45ef0ed0d9",
+        "pl_1202fd4ee754a452",
+        "pl_a9687a1bad20adbb",
+        "pl_d3f3eea455a2437d",
+        "pl_7247872bb0ad9681",
+        "pl_456be5aedf97d769",
+        "pl_33526fb1df499e8b",
+        "pl_fe0b07de132ae79f",
+        "pl_f7f62c91fa8ca0f3",
+        "pl_66077a61cc079614",
+        "pl_758d1852b546e484",
+        "pl_0cb27c8d08942199",
+        "pl_c786fe7a440b0f3e",
+        "pl_a683b0cac2483ee7",
+        "pl_2fd0b9a10b5b6a10",
+        "pl_414e092bffae18d0",
+        "pl_5a59a2dbb99d06b2",
+        "pl_91ee53a840d32105",
+        "pl_826c7d9ba1121975",
+        "pl_3f76af0d329c00db",
+        "pl_c49085f9ad958bea",
+        "pl_b4daa79d8499057b",
+        "pl_71d0b8fa859f0720",
+        "pl_535ce8b6bd77b6cf",
+        "pl_41acab0a7ce25686",
+        "pl_b16312573ada8d47",
+        "pl_5ca401eac6e5b0db",
+        "pl_d594f5c4e96449de",
+        "pl_008587b81e8bfc0d",
+        "pl_f1c4d1485ab56f6a",
+        "pl_32bd8da4752da240",
+        "pl_499c807e02bc5a2e",
+        "pl_d5051ca45e4ba05d",
+        "pl_fb5d9b2063f9211a",
+        "pl_9ecbe0d6ee9a8805",
+        "pl_d0e17c38391b831f",
+        "pl_bdc0b66127bfb273",
+        "pl_8757e0464e1ecd08",
+        "pl_18c12218722fbfac",
+        "pl_e3e26252c958047c",
+        "pl_56a38da76eee6a9e",
+        "pl_6dc8a62f70a3df8a",
+        "pl_5587982a75108f0f",
+        "pl_f4609d15319d861e",
+        "pl_d01f19c5e2a4ae10",
+        "pl_dcf8e0ddbc135455",
+        "pl_5074fc1b74b0140a",
+        "pl_9feed7b8ad2d0d0f",
+        "pl_c1ae74be551adf26",
+        "pl_d31a6ba55b2171d1",
+        "pl_4d4e05e51e3d53ab",
+        "pl_916062baff714bd7",
+        "pl_72e551a986ae40e6",
+        "pl_537cff03b23de920",
+        "pl_a8a6131f30bb4c55",
+        "pl_006a8076d5287827",
+        "pl_adb3e32fdf76afcb",
+        "pl_c4119afaeacf2692",
+        "pl_7f37e3ab43d324e7",
+        "pl_5863c143867c883c",
+        "pl_bf3004a131d18db1",
+        "pl_0a910d91e185dd18",
+        "pl_9f91326e28c25133",
+        "pl_051fa9ab9115ca5b",
+        "pl_2d4f4bc9e581dc21",
+        "pl_c4ce53b3d9d1822a",
+        "pl_6b46be511c5f8229",
+        "pl_c9f382683968677d",
+        "pl_398ee7bb419e8aa9",
+        "pl_cadc8f7425685072",
+        "pl_16aa3035e0bd2cee",
+        "pl_9ac173effbcf137f",
+        "pl_02a559ace8bd18bf",
+        "pl_756d8efdfffcd8b8",
+        "pl_534772be2c117f01",
+        "pl_1d4a44f091cddea9",
+        "pl_c42b6727fd908164",
+        "pl_ea01ea943c2e81d4",
+        "pl_e06912706da09ee7",
+        "pl_df9f78f85fced69f",
+        "pl_eb5a758793ff5b9a",
+        "pl_32e1476c0071c809",
+        "pl_b1d20f9a826840d6",
+        "pl_c257c34ad4f26408",
+        "pl_408b18b4a3885dc8",
+        "ap_baf46d0b8127bc21",
+        "ap_4d4d0e2500ef0a98",
+        "ap_4084b120a120a512"
+      ]
+    },
+    {
+      "theme_id": "THM-02",
+      "label": "food / expiry / freshness / trust",
+      "doc_count": 43,
+      "prevalence": 0.0801,
+      "source_spread": {
+        "play_store": 43
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "price_risk",
+        "return_anxiety"
+      ],
+      "dominant_gaps": [
+        "freshness_expiry",
+        "returnability",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "trust",
+        "household_routine"
+      ],
+      "segment_skew": [
+        "cooks_daily",
+        "parent_young_child",
+        "working_professional"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_0f63aa0656385416",
+          "quote": "I have found cockroach leg in my food"
+        },
+        {
+          "doc_id": "pl_d8e0d553630eed45",
+          "quote": "Spoiled Wheat paratha, Panneer tastes like Artificial"
+        },
+        {
+          "doc_id": "pl_01bce8669cc02fbf",
+          "quote": "I received a food product with no manufacturing or expiry/use-by date printed on the package and damaged producs."
+        },
+        {
+          "doc_id": "pl_e1b535beefba7212",
+          "quote": "I got some bad food it's like someone has eated already mint juice it's also and like burger"
+        },
+        {
+          "doc_id": "pl_f444bb4d357d9b49",
+          "quote": "they are sending expired products"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_fa9ce105e286a95d",
+        "pl_31ccfb2c99860967",
+        "pl_1ba9a706345fe9aa",
+        "pl_f444bb4d357d9b49",
+        "pl_f900d0513ba5e535",
+        "pl_fcd683c8dbebf32f",
+        "pl_a7fb5e8fa2bf526a",
+        "pl_88c1121c583f4553",
+        "pl_481f1ff1b28a26cf",
+        "pl_b35fbfe5281a4ff1",
+        "pl_a0af7a9f37de60b2",
+        "pl_a00be6ec1e7e88e8",
+        "pl_7f97576294e173bc",
+        "pl_8e3d0487a8a86243",
+        "pl_01bce8669cc02fbf",
+        "pl_1560f5c51e1f2c9d",
+        "pl_237d743c8baabef4",
+        "pl_b8d05bdb2f8f9838",
+        "pl_15a9c01b87ec28ca",
+        "pl_ececf3f71e5646a5",
+        "pl_d8e0d553630eed45",
+        "pl_6fc40c839dcfcbda",
+        "pl_cd79514a33bc6b07",
+        "pl_2442e4029c94419b",
+        "pl_0f63aa0656385416",
+        "pl_e1b535beefba7212",
+        "pl_e0123daeeb45a78f",
+        "pl_2b3c0a8c0bdeadbb",
+        "pl_3fb91d7565edd955",
+        "pl_db473fcd922f85f4",
+        "pl_c9573e6a3c331707",
+        "pl_60e9eeae2fba2a52",
+        "pl_06357b15619a0652",
+        "pl_521fe82e94ad624b",
+        "pl_3d8a084eb26080f0",
+        "pl_946e63d562a934b4",
+        "pl_fb9c14a7876136e6",
+        "pl_dd3bc7641e2ac2e8",
+        "pl_a4a16cd7b65bac0d",
+        "pl_3c8923ee62ac5cd0",
+        "pl_4fbe45f286d8d55a",
+        "pl_c1cc74795a555d62",
+        "pl_6e92991cbe12aefd"
+      ]
+    },
+    {
+      "theme_id": "THM-03",
+      "label": "free / making / charges / feel",
+      "doc_count": 41,
+      "prevalence": 0.0764,
+      "source_spread": {
+        "play_store": 40,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "trust_quality",
+        "channel_loyalty"
+      ],
+      "dominant_gaps": [
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "trust",
+        "time_pressure"
+      ],
+      "segment_skew": [
+        "working_professional",
+        "tier1_metro"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_af23d9ea3ce97a98",
+          "quote": "started charging delivery charges on cart below 400rs which took away the highlight feature of this app"
+        },
+        {
+          "doc_id": "pl_e723614399bf8496",
+          "quote": "Before it serves free delivery on 100\u20b9 , And now \ud83d\ude21\ud83d\ude21 400\u20b9"
+        },
+        {
+          "doc_id": "pl_294be4f86456260a",
+          "quote": "delivery charge threshold should be at 100 rs not 130"
+        },
+        {
+          "doc_id": "pl_65e0932d81b3c0d0",
+          "quote": "Discount coupons are not available, minimum purchases drastically increased, delivery charges imposed on purchases of less than \u20b9400/-"
+        },
+        {
+          "doc_id": "ap_4fc12250446766a2",
+          "quote": "The excessive markups and added charges have made ordering too expensive"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_a194fce1ef6775fb",
+        "pl_e513fbb1ff7a8f6c",
+        "pl_0cdbe0fd8ac6fd43",
+        "pl_16f62b0336158b7c",
+        "pl_d082d41ab531ee7a",
+        "pl_294be4f86456260a",
+        "pl_01448bf58bb63202",
+        "pl_b1684b40fbdee08d",
+        "pl_9ef2927da91485b0",
+        "pl_18539a9f13cd9bcc",
+        "pl_f13086d15ee9fb47",
+        "pl_72c287fb6fd34fff",
+        "pl_cdeeaea82963faad",
+        "pl_b2b186d8897d1f5c",
+        "pl_ca1f9487e350d1a4",
+        "pl_88feb52ada689cf1",
+        "pl_056073823f2f6f65",
+        "pl_5cd459387603d072",
+        "pl_0d88c11e392e0f0d",
+        "pl_c9117fbdc41d82aa",
+        "pl_c110ada4a2f38bb2",
+        "pl_bfdd4e55a524ff3a",
+        "pl_60f58c7ecb718810",
+        "pl_92c4514dd8bf2cdf",
+        "pl_78b6c7e4ba5baace",
+        "pl_0d02369fd4bc8169",
+        "pl_65e0932d81b3c0d0",
+        "pl_214f986dc8edb755",
+        "pl_c7eb5b7e9063f36e",
+        "pl_00e88daf10a98421",
+        "pl_534776b8458b194b",
+        "pl_536efada01cc7983",
+        "pl_0de093f72e24e3b1",
+        "pl_745007f00fa117fd",
+        "pl_fb0f5d5b26b3f4d8",
+        "pl_5cf9359219ceb918",
+        "pl_811a534ec1626797",
+        "pl_af23d9ea3ce97a98",
+        "pl_0ca5c49a38c3cb07",
+        "pl_e723614399bf8496",
+        "ap_4fc12250446766a2"
+      ]
+    },
+    {
+      "theme_id": "THM-04",
+      "label": "fresh / trust / arrive / vegetables",
+      "doc_count": 40,
+      "prevalence": 0.0745,
+      "source_spread": {
+        "play_store": 39,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "freshness_expiry",
+        "returnability",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "trust",
+        "price_certainty",
+        "list_reuse"
+      ],
+      "segment_skew": [
+        "cooks_daily",
+        "parent_young_child"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_99c4fd51d19a44de",
+          "quote": "kharab sade huye vegetables delivery"
+        },
+        {
+          "doc_id": "pl_5aa8160379d3f6eb",
+          "quote": "all products are rotten or old"
+        },
+        {
+          "doc_id": "pl_d89f307a86e4cf46",
+          "quote": "Even the potatoes were spoiled after a day."
+        },
+        {
+          "doc_id": "pl_d0ca2730fd68b236",
+          "quote": "I have ordered fruits from here and all the fruits are rotten"
+        },
+        {
+          "doc_id": "pl_5491cd4233dfdeae",
+          "quote": "sometimes they send rough vegetable stop it"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_99c4fd51d19a44de",
+        "pl_225d2e78eb253029",
+        "pl_dc592a981748027b",
+        "pl_ba09076ece01a5e6",
+        "pl_2ae2d2dc991a507d",
+        "pl_f85efcefed1a39ff",
+        "pl_5491cd4233dfdeae",
+        "pl_dd22da3f4d0f7107",
+        "pl_527e613ef0c56814",
+        "pl_55dd3f494626e703",
+        "pl_b4783e3de3dd752f",
+        "pl_4ceaf23fca6bb8b6",
+        "pl_488bc04254022fe2",
+        "pl_5c56924a884fdb8e",
+        "pl_0d15c04b9c98129a",
+        "pl_13d68f4af4f862ed",
+        "pl_eadaa3d3afbdddd7",
+        "pl_2159b8b16c70ffbb",
+        "pl_8091d288b31b428b",
+        "pl_d0ca2730fd68b236",
+        "pl_852fc7c7f1dd4f31",
+        "pl_668859d5e5a87c0e",
+        "pl_ffd885cc4f98b98f",
+        "pl_5aa8160379d3f6eb",
+        "pl_6d67ad4b1e796638",
+        "pl_2e04889ca1745228",
+        "pl_ed0d50c9b37891d9",
+        "pl_d89f307a86e4cf46",
+        "pl_2b722c1a4d39c3b8",
+        "pl_638d5afd75bdf61f",
+        "pl_9d6915331ddc162d",
+        "pl_5d7e1624760d54f7",
+        "pl_4420bace824db6af",
+        "pl_fc20e5b2eab28cdf",
+        "pl_cbab499f486a3039",
+        "pl_d72a3a1d58cc6a25",
+        "pl_52669e1bc496445b",
+        "pl_6fd29e97ccabad45",
+        "pl_4c451c6bb5a14aff",
+        "ap_56199abfe5718999"
+      ]
+    },
+    {
+      "theme_id": "THM-05",
+      "label": "prices / fair / high / unsure",
+      "doc_count": 38,
+      "prevalence": 0.0708,
+      "source_spread": {
+        "play_store": 37,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "trust_quality",
+        "channel_loyalty"
+      ],
+      "dominant_gaps": [
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "time_pressure",
+        "satisficing"
+      ],
+      "segment_skew": [
+        "working_professional"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_6b48265cfa5b0de4",
+          "quote": "overpricing is at peak even zomato won't do such overpricing very bad"
+        },
+        {
+          "doc_id": "pl_559d3ae627cd9e66",
+          "quote": "vegetables prixes are too high."
+        },
+        {
+          "doc_id": "pl_dfa48f64e3b8ed2e",
+          "quote": "price some time difference and high to like zepto blinkit"
+        },
+        {
+          "doc_id": "pl_0393b7259ae25c61",
+          "quote": "prices are high for more commodities through this platform"
+        },
+        {
+          "doc_id": "pl_e3e054098cbbd5bd",
+          "quote": "too much prices compare to market"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_0393b7259ae25c61",
+        "pl_210c4b78cf5f2ceb",
+        "pl_66de2cfbb34982d4",
+        "pl_0563cf15f38712f7",
+        "pl_e30ae12bfd04d496",
+        "pl_35e9de7fc7f2347a",
+        "pl_d6daf4f872c2ea00",
+        "pl_65addc70fd26e757",
+        "pl_2d1f3dd919e1eee1",
+        "pl_1e9aa4e8ea113ed2",
+        "pl_6dd24ea2d49e7bee",
+        "pl_28f145fedaa3c1f8",
+        "pl_4d8f28dd3855214a",
+        "pl_4a9ed1866e5deb22",
+        "pl_c7c2150c12696b33",
+        "pl_7689ad47b236ad57",
+        "pl_bfdd735248c0341b",
+        "pl_f42b73205c39f804",
+        "pl_6b48265cfa5b0de4",
+        "pl_5a5ff5da9b68e54a",
+        "pl_ea6b424d8f7bd069",
+        "pl_23dbc900f0a8f61c",
+        "pl_296632629b9dc5ce",
+        "pl_932f79a20a34e70a",
+        "pl_1d8a7d4cae2f03a3",
+        "pl_da0690e8fa75a403",
+        "pl_dfa48f64e3b8ed2e",
+        "pl_559d3ae627cd9e66",
+        "pl_402de4acb2a78acb",
+        "pl_7d9190eaf3613352",
+        "pl_67d9e4dee60076c5",
+        "pl_843a707a81e44429",
+        "pl_e3e054098cbbd5bd",
+        "pl_9ae9934aa87f573b",
+        "pl_31eb7c940b0e7b5b",
+        "pl_5cca0e72e234aafc",
+        "pl_01dbd99f9d53259a",
+        "ap_ad0e9d84eef4246e"
+      ]
+    },
+    {
+      "theme_id": "THM-06",
+      "label": "available / actually / limiting / range",
+      "doc_count": 32,
+      "prevalence": 0.0596,
+      "source_spread": {
+        "play_store": 32
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "awareness",
+        "trust_quality",
+        "size_uncertainty"
+      ],
+      "dominant_gaps": [
+        "size_guidance",
+        "returnability",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "time_pressure",
+        "trust",
+        "price_certainty"
+      ],
+      "segment_skew": [
+        "tier2_plus",
+        "tier1_metro"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_33ff439847dfaa24",
+          "quote": "all options good but menu will not much only few will available in online"
+        },
+        {
+          "doc_id": "pl_d715c123713f804b",
+          "quote": "they're not reachable in Tarn Taran so I'm not able to buy wonderful items"
+        },
+        {
+          "doc_id": "pl_3a213df9af280092",
+          "quote": "my area is not supported yet"
+        },
+        {
+          "doc_id": "pl_ac18fc50cd8b3ca9",
+          "quote": "all over best service but not all products available"
+        },
+        {
+          "doc_id": "pl_ac14bff3da556bed",
+          "quote": "why the heck does it allow me to order even those products that are unavailable in my location?"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_ff5d0c07a570503c",
+        "pl_8a00eda3bfdd3ab8",
+        "pl_1c8deb48907ce88b",
+        "pl_e673cd81335c06ad",
+        "pl_0df5ed8a307492b0",
+        "pl_b9d616eb8527e6d1",
+        "pl_ac18fc50cd8b3ca9",
+        "pl_92a34d32a618fc97",
+        "pl_3a213df9af280092",
+        "pl_d715c123713f804b",
+        "pl_73a5e44eb0989b02",
+        "pl_ac56af13e9479d83",
+        "pl_a3a1ee94e5b51d2a",
+        "pl_85f17e6ea45b982e",
+        "pl_54a2c746de507076",
+        "pl_a30d9205ca6e0dfa",
+        "pl_008d362382023faa",
+        "pl_ff27e0cb33af3571",
+        "pl_3e95e3b93e519e7b",
+        "pl_3e790feda707e59e",
+        "pl_be39eb99e2536518",
+        "pl_55d8f9ccc516b31a",
+        "pl_33ff439847dfaa24",
+        "pl_cf0326de7eee076d",
+        "pl_248657c6cdb39fb2",
+        "pl_390e4a3ee6c0ca63",
+        "pl_046c46d161939526",
+        "pl_08ad8ee3c3bd5ba3",
+        "pl_ac14bff3da556bed",
+        "pl_a002f765106715bf",
+        "pl_0569c943ca8082c3",
+        "pl_701ac07e9b86105e"
+      ]
+    },
+    {
+      "theme_id": "THM-07",
+      "label": "cancelled / payment / store / time",
+      "doc_count": 28,
+      "prevalence": 0.0521,
+      "source_spread": {
+        "play_store": 27,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "returnability",
+        "freshness_expiry",
+        "reviews"
+      ],
+      "dominant_habit_drivers": [
+        "time_pressure",
+        "trust",
+        "list_reuse"
+      ],
+      "segment_skew": [
+        "tier1_metro",
+        "working_professional"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_91cabe8eb448bbf8",
+          "quote": "product order karne ke baad or online payment lene ke baad [order-id] krdete hai or out of stock dikha dete h"
+        },
+        {
+          "doc_id": "pl_b0be9bdb01c35c68",
+          "quote": "your order will get cancelled without informing your cash on delivery will be stopped due to stock unavailable on dark store"
+        },
+        {
+          "doc_id": "pl_2162612c0bccf535",
+          "quote": "the whole order gets cancelled and the status is also not updated in app that the order is been cancelled"
+        },
+        {
+          "doc_id": "pl_495e89523c56c1a7",
+          "quote": "after they made me waiting for 2 and half hours they simple said your order has been cancelled"
+        },
+        {
+          "doc_id": "pl_79cf6e2ee2020343",
+          "quote": "the delivery partner cancelled the order . And now I'm not getting refund"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_f8cec39a6efb9c00",
+        "pl_49ee4ff2d9bee55a",
+        "pl_09df71d109f6658a",
+        "pl_c00dbb5b0b94c112",
+        "pl_6a8586a1fdb1216f",
+        "pl_024f7be8fd99d4c3",
+        "pl_f817df520eed59ec",
+        "pl_fbc1aa2582f330b3",
+        "pl_b0be9bdb01c35c68",
+        "pl_fb0f6e2cdf033914",
+        "pl_495e89523c56c1a7",
+        "pl_f6299023f3b901d6",
+        "pl_2162612c0bccf535",
+        "pl_c5bfb451535debfb",
+        "pl_83be1c1d2ff9ce05",
+        "pl_ab0d9bcefe7fcb44",
+        "pl_4ab4dc183eb28a43",
+        "pl_501b70844a0e02d6",
+        "pl_6908e28844c26f73",
+        "pl_91cabe8eb448bbf8",
+        "pl_6cfb258e69920dfe",
+        "pl_3de1c90af6b7029f",
+        "pl_8dcccaefc2fe1363",
+        "pl_79cf6e2ee2020343",
+        "pl_f50d85cb9f64efcb",
+        "pl_fbb71d4298dbbcf0",
+        "pl_fb7a1bd4e24a9b7b",
+        "ap_16e5a1f7df91b87c"
+      ]
+    },
+    {
+      "theme_id": "THM-08",
+      "label": "routine / unavailable / grocery / milk",
+      "doc_count": 22,
+      "prevalence": 0.041,
+      "source_spread": {
+        "play_store": 22
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "awareness",
+        "trust_quality",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "freshness_expiry",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "household_routine",
+        "price_certainty",
+        "time_pressure"
+      ],
+      "segment_skew": [
+        "cooks_daily",
+        "tier2_plus",
+        "pet_owner"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_c6c326ecd053c0f8",
+          "quote": "Now it shows only Electronics and Fashion no grocery!"
+        },
+        {
+          "doc_id": "pl_70e1a5806a525231",
+          "quote": "many times regular groceries are unavailable in my location"
+        },
+        {
+          "doc_id": "pl_99f484b8e6518f4d",
+          "quote": "There are no groceries category when we enter Ahmedabad location"
+        },
+        {
+          "doc_id": "pl_9dbe76de4fb8be2e",
+          "quote": "Make abhi eggs available back again at my location (Bhavnagar) or I'll uninstall blinkit in next 30 days"
+        },
+        {
+          "doc_id": "pl_c8484e66f718e2d8",
+          "quote": "Used to receive products at 6:30 which now is coming daily after 9am"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_f6105b2e11b5d283",
+        "pl_9dbe76de4fb8be2e",
+        "pl_bd28d496d365d5b1",
+        "pl_785e0a5e1517727f",
+        "pl_2be7faa9f12dff21",
+        "pl_aec0a9880b464b7e",
+        "pl_2530e995e00ddcba",
+        "pl_c4545c721e7972f6",
+        "pl_c8484e66f718e2d8",
+        "pl_398efc7d44279ad0",
+        "pl_9e3be33aac55bd55",
+        "pl_29c8927dcb82c158",
+        "pl_99f484b8e6518f4d",
+        "pl_2864799ff477b6d9",
+        "pl_9318d7ce0eb559b9",
+        "pl_70e1a5806a525231",
+        "pl_487d3ace056df55f",
+        "pl_c6c326ecd053c0f8",
+        "pl_761b7da293f99de1",
+        "pl_753f4d0a222a07c4",
+        "pl_84619d01a825bd4f",
+        "pl_859b3762c8065eeb"
+      ]
+    },
+    {
+      "theme_id": "THM-09",
+      "label": "charge / feels / extra / 30",
+      "doc_count": 18,
+      "prevalence": 0.0335,
+      "source_spread": {
+        "play_store": 18
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "trust_quality"
+      ],
+      "dominant_gaps": [
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "time_pressure"
+      ],
+      "segment_skew": [
+        "tier2_plus"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_7fa88ab06c9ed113",
+          "quote": "dont ask 30 Rs delivery charge extra instamart is not asking delivery charges"
+        },
+        {
+          "doc_id": "pl_5ba9b4518e411260",
+          "quote": "a flat charge of \u20b930 applies to everyone, which does not seem right"
+        },
+        {
+          "doc_id": "pl_d2f9ac998dbfef69",
+          "quote": "alag se charge nahi hona chahiye 5 se 10 tak ka hi hona chahiue"
+        },
+        {
+          "doc_id": "pl_71f9a881b6501207",
+          "quote": "now they even charging 30rs for quick orders,where zepto charges 0rs"
+        },
+        {
+          "doc_id": "pl_7aaab957c164c1d3",
+          "quote": "please remove the cap on minimum order . if i order below 399 then JioMart extra charge of rupees 30"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_32c641de790d7ae4",
+        "pl_f2d97311c9fdc0b3",
+        "pl_2ae09b9e9cfe986e",
+        "pl_a144e9a6c7eb930c",
+        "pl_c926eca2e523952c",
+        "pl_eb0f6aacd150e8c9",
+        "pl_d2f9ac998dbfef69",
+        "pl_1768a42d89097ae9",
+        "pl_71f9a881b6501207",
+        "pl_320b5195e8fc39fb",
+        "pl_0257ea0f74d3b20e",
+        "pl_98c87b3d5b7144d1",
+        "pl_db0dcfc63bbbebde",
+        "pl_d4ea366274c235b2",
+        "pl_e21355c71d51c053",
+        "pl_7fa88ab06c9ed113",
+        "pl_7aaab957c164c1d3",
+        "pl_5ba9b4518e411260"
+      ]
+    },
+    {
+      "theme_id": "THM-10",
+      "label": "expired / eroding / received expired / eroding trust",
+      "doc_count": 17,
+      "prevalence": 0.0317,
+      "source_spread": {
+        "play_store": 16,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "freshness_expiry",
+        "returnability",
+        "reviews"
+      ],
+      "dominant_habit_drivers": [
+        "household_routine"
+      ],
+      "segment_skew": [
+        "cooks_daily"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_8d64bec38a73bd47",
+          "quote": "chor hai saale jiomart waale kharaab product dekar customer support bhi scammer hai inke heath related bahot badaa issue hai"
+        },
+        {
+          "doc_id": "pl_fb62981be28893e1",
+          "quote": "They block your account than refunding amount .... Expired Products"
+        },
+        {
+          "doc_id": "pl_7f670d1389c25dcc",
+          "quote": "they delivered expire pouches when I complaining they 're not exchange or return the product"
+        },
+        {
+          "doc_id": "pl_ca8cab40c0cd984b",
+          "quote": "expired milk was delivered"
+        },
+        {
+          "doc_id": "pl_971d2a400a1c32b3",
+          "quote": "selling expired and bad quality products"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_ca8cab40c0cd984b",
+        "pl_07b2aeff58ccaac5",
+        "pl_e056828eb4d9da52",
+        "pl_bab21f2c55c94426",
+        "pl_0140277146b747dd",
+        "pl_7f670d1389c25dcc",
+        "pl_9f93a6d22c1287c0",
+        "pl_971d2a400a1c32b3",
+        "pl_223cd3f26cec8c7f",
+        "pl_fdb97405b58d2597",
+        "pl_f1ff99a289129e3b",
+        "pl_0286515b9d1a2a30",
+        "pl_609ce083057a4aef",
+        "pl_8d64bec38a73bd47",
+        "pl_fb62981be28893e1",
+        "pl_048f1a499dbc3ace",
+        "ap_03dc16b098ada54b"
+      ]
+    },
+    {
+      "theme_id": "THM-11",
+      "label": "quantity / expected / matches / weight",
+      "doc_count": 17,
+      "prevalence": 0.0317,
+      "source_spread": {
+        "play_store": 17
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "size_uncertainty",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "size_guidance",
+        "freshness_expiry",
+        "returnability"
+      ],
+      "dominant_habit_drivers": [
+        "household_routine",
+        "trust"
+      ],
+      "segment_skew": [
+        "cooks_daily"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_0ec55552b62f5d16",
+          "quote": "imli weight quantity is less but good thanks you"
+        },
+        {
+          "doc_id": "pl_ecf7cc3698c1b4b3",
+          "quote": "makhana from MOM so less quantity not right"
+        },
+        {
+          "doc_id": "pl_fa917ee474229f85",
+          "quote": "910 gm ka mangwaya aaya 750 gm fraud ka kaam hai yeah"
+        },
+        {
+          "doc_id": "pl_efb810379a9b5668",
+          "quote": "I got only half the quantity and also with bananas, I always get only 1 banana whenever I ordered 500g"
+        },
+        {
+          "doc_id": "pl_3312d6b7da6a60d5",
+          "quote": "sugar quantity low High demand shopping"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_c82536ded461fbd9",
+        "pl_65741d04add4f789",
+        "pl_9299679ecfb134c2",
+        "pl_cbff3c789b4cf719",
+        "pl_b6530310c31c9cbd",
+        "pl_efb810379a9b5668",
+        "pl_5bdc53ea7664a5f3",
+        "pl_303998cbf749a028",
+        "pl_fa917ee474229f85",
+        "pl_a4717c3efece2df2",
+        "pl_ecf7cc3698c1b4b3",
+        "pl_af57880eb6776731",
+        "pl_34815320840e7235",
+        "pl_10f4110adae4edaa",
+        "pl_1035176c5aae2085",
+        "pl_0ec55552b62f5d16",
+        "pl_3312d6b7da6a60d5"
+      ]
+    },
+    {
+      "theme_id": "THM-12",
+      "label": "price / leading / distrust / confidence",
+      "doc_count": 15,
+      "prevalence": 0.0279,
+      "source_spread": {
+        "play_store": 13,
+        "app_store": 2
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "price_benchmark",
+        "freshness_expiry"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_8eaa66cf23279712",
+          "quote": "poor quality product and very high price jio mart goldan days 2025"
+        },
+        {
+          "doc_id": "pl_851ba24afa5c516d",
+          "quote": "\u0938\u093e\u092e\u093e\u0928 \u0915\u0947 \u0915\u092e \u092a\u0948\u0938\u0947 \u0926\u093f\u0916\u093e \u0915\u0930 \u0905\u0927\u093f\u0915 \u092a\u0948\u0938\u0947 \u0935\u0938\u0942\u0932 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902"
+        },
+        {
+          "doc_id": "pl_35216b6797510cdb",
+          "quote": "parmotion schemes are less than others platforms like your company"
+        },
+        {
+          "doc_id": "pl_8af060c7e2d0febb",
+          "quote": "khub valo aktu product damta komle valo hoi"
+        },
+        {
+          "doc_id": "ap_ca6b7b88ea0a747b",
+          "quote": "Cheating the customers and selling fraud items in instamart and food quality also worst"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_b2aa6996b625adfa",
+        "pl_68fe244586a74014",
+        "pl_f5f83aced6d520fe",
+        "pl_01ec3a7a23ba56cd",
+        "pl_35216b6797510cdb",
+        "pl_8af060c7e2d0febb",
+        "pl_865b9e500649e045",
+        "pl_981685d66469e99e",
+        "pl_15798b613bfa85a7",
+        "pl_8eaa66cf23279712",
+        "pl_e8b998aa82e38666",
+        "pl_9163283bc039c798",
+        "pl_851ba24afa5c516d",
+        "ap_3ace85daa9416c87",
+        "ap_ca6b7b88ea0a747b"
+      ]
+    },
+    {
+      "theme_id": "THM-13",
+      "label": "low / low quality / quality / making hard",
+      "doc_count": 13,
+      "prevalence": 0.0242,
+      "source_spread": {
+        "play_store": 12,
+        "app_store": 1
+      },
+      "single_source": false,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "reviews",
+        "freshness_expiry",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "ap_635bcce7f88b4334",
+          "quote": "The product purchase from instamart are not good and quality is also poor"
+        },
+        {
+          "doc_id": "pl_2fae58a3cfa16897",
+          "quote": "According to the price products are very low quality"
+        },
+        {
+          "doc_id": "pl_572d073d82e902bf",
+          "quote": "ads are a useless app for buying at low prices and selling at high prices, products are of poor quality"
+        },
+        {
+          "doc_id": "pl_6e51f401b17e4a7c",
+          "quote": "pahle to rate kam karte hain FIR Jab kharidne ka time Aaye FIR badha dete"
+        },
+        {
+          "doc_id": "pl_968f78c1215a41c2",
+          "quote": "mere zepto wale app mein 5 rupay wala zone kyun nhi hai ?"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_055487e985c50ad0",
+        "pl_db5639806ad36f78",
+        "pl_968f78c1215a41c2",
+        "pl_2f8d7005b6240772",
+        "pl_134856d9410badc7",
+        "pl_572d073d82e902bf",
+        "pl_3a12f59694b4a80d",
+        "pl_947a17f27284caa4",
+        "pl_2fae58a3cfa16897",
+        "pl_f3dde3e718ca1aa2",
+        "pl_6e51f401b17e4a7c",
+        "pl_b556d150e0521f67",
+        "ap_635bcce7f88b4334"
+      ]
+    },
+    {
+      "theme_id": "THM-14",
+      "label": "ice cream / ice / cream / melted",
+      "doc_count": 12,
+      "prevalence": 0.0223,
+      "source_spread": {
+        "play_store": 12
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "awareness"
+      ],
+      "dominant_gaps": [
+        "freshness_expiry",
+        "returnability",
+        "brand_familiarity"
+      ],
+      "dominant_habit_drivers": [
+        "household_routine",
+        "trust",
+        "price_certainty"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_9917565b34a3951f",
+          "quote": "I asked for ice cream from Zepto, I got it melted"
+        },
+        {
+          "doc_id": "pl_b196d8a4319e4cae",
+          "quote": "ice cream pura pighla hua Mila"
+        },
+        {
+          "doc_id": "pl_48be4534bae24f1a",
+          "quote": "I received an expired ice cream that smelled rotten the moment I opened it"
+        },
+        {
+          "doc_id": "pl_3dc61d8a31e067f8",
+          "quote": "every time I ordered icecream it is already melted and when we ask for replacement thay don't answer"
+        },
+        {
+          "doc_id": "pl_b9071a0fb773a29f",
+          "quote": "Amul sugar free ice cream not available"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_b9071a0fb773a29f",
+        "pl_9917565b34a3951f",
+        "pl_b4d49f3d97a998fe",
+        "pl_26a822f61cb3da51",
+        "pl_3289f2671bceab15",
+        "pl_8ce8dc6d9767cbef",
+        "pl_3dc61d8a31e067f8",
+        "pl_1775c6c507bf7d49",
+        "pl_ec3190fd49e3eeb9",
+        "pl_b196d8a4319e4cae",
+        "pl_48be4534bae24f1a",
+        "pl_770af5bc8aef00e5"
+      ]
+    },
+    {
+      "theme_id": "THM-15",
+      "label": "brand / specific / substituted / trust exact",
+      "doc_count": 12,
+      "prevalence": 0.0223,
+      "source_spread": {
+        "play_store": 12
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "awareness",
+        "return_anxiety"
+      ],
+      "dominant_gaps": [
+        "brand_familiarity",
+        "freshness_expiry",
+        "returnability"
+      ],
+      "dominant_habit_drivers": [],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_faf3bc5f36e5d151",
+          "quote": "why don't you guys keep American club NY cool cigerattes"
+        },
+        {
+          "doc_id": "pl_a4d727adee5cc67a",
+          "quote": "they sent me a wrong product and its low quality one after complaining they replaced it but again sending same product"
+        },
+        {
+          "doc_id": "pl_6a7a6677b0977d15",
+          "quote": "blinkit mai nutrujona fash wash kafi cheej nhi milti hai istamart mai 12 baje ke bad kuch nhi milta"
+        },
+        {
+          "doc_id": "pl_204c86596325c75e",
+          "quote": "my favourite chips is never available on it every time I check"
+        },
+        {
+          "doc_id": "pl_1415608493656519",
+          "quote": "a different brand was delivered"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_6a7a6677b0977d15",
+        "pl_a4d727adee5cc67a",
+        "pl_b8bf52863e880e09",
+        "pl_204c86596325c75e",
+        "pl_1415608493656519",
+        "pl_7a55789abeb86dcf",
+        "pl_7da78b3a557383a7",
+        "pl_8d7823c7f521a4d7",
+        "pl_faf3bc5f36e5d151",
+        "pl_62d03f41c35ebd12",
+        "pl_982e84952e06e9b3",
+        "pl_99d97d836e8f3808"
+      ]
+    },
+    {
+      "theme_id": "THM-16",
+      "label": "switching / competitor / switch / pushing switch",
+      "doc_count": 10,
+      "prevalence": 0.0186,
+      "source_spread": {
+        "play_store": 10
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "channel_loyalty",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "returnability",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty"
+      ],
+      "segment_skew": [
+        "pet_owner",
+        "tier2_plus"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_10175538f834c6d6",
+          "quote": "holding or deactivating account with nonsense reasons"
+        },
+        {
+          "doc_id": "pl_eda7aa99bc655c6c",
+          "quote": "I switched to Milk basket from bb daily."
+        },
+        {
+          "doc_id": "pl_5f14ce97d7039417",
+          "quote": "almost 7 times Zetpo fraud with me"
+        },
+        {
+          "doc_id": "pl_1eaeec620f9453bf",
+          "quote": "The same food from the same restaurant was 120 rupees cheaper and delivered under 15 mins by Ownly"
+        },
+        {
+          "doc_id": "pl_3d8c06e37a574d4b",
+          "quote": "free pedigree packet stolen by packer check camera cctv in store"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_3d49e7f56e3539ae",
+        "pl_5f14ce97d7039417",
+        "pl_3d8c06e37a574d4b",
+        "pl_f22d72fde5af893b",
+        "pl_1eaeec620f9453bf",
+        "pl_eda7aa99bc655c6c",
+        "pl_f58d7fa65df16703",
+        "pl_10175538f834c6d6",
+        "pl_ad7b17481440a596",
+        "pl_1aae3aed51eb59c1"
+      ]
+    },
+    {
+      "theme_id": "THM-17",
+      "label": "non / slow / non returnable / returnable",
+      "doc_count": 10,
+      "prevalence": 0.0186,
+      "source_spread": {
+        "play_store": 10
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "choice_overload",
+        "return_anxiety",
+        "trust_quality"
+      ],
+      "dominant_gaps": [
+        "returnability"
+      ],
+      "dominant_habit_drivers": [
+        "trust"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_2997892b6fdfb151",
+          "quote": "very time I [order-id] it shows that it's out of stock"
+        },
+        {
+          "doc_id": "pl_35f7d535b85af340",
+          "quote": "A filter should be added for VEG and NON-VEG items in the app"
+        },
+        {
+          "doc_id": "pl_e84d2ab02f1a7556",
+          "quote": "Need option to filter \"sold by\"."
+        },
+        {
+          "doc_id": "pl_19f08cc9cec3a2db",
+          "quote": "scam the customer for false details in product page not mentioned it's not returnable product"
+        },
+        {
+          "doc_id": "pl_51a8f6d0a9579cb3",
+          "quote": "very bad service and most of the items are non returnable"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_49ead069873a155b",
+        "pl_e7e7572f2be42a0e",
+        "pl_35f7d535b85af340",
+        "pl_19f08cc9cec3a2db",
+        "pl_53d41e404f9c8244",
+        "pl_6c3b918516d1d112",
+        "pl_335cd416525353fc",
+        "pl_e84d2ab02f1a7556",
+        "pl_2997892b6fdfb151",
+        "pl_51a8f6d0a9579cb3"
+      ]
+    },
+    {
+      "theme_id": "THM-18",
+      "label": "missing / arrive missing / cheaper / refunded",
+      "doc_count": 8,
+      "prevalence": 0.0149,
+      "source_spread": {
+        "play_store": 8
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "returnability",
+        "freshness_expiry",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_2a7997671a6c7348",
+          "quote": "waste app they don't send all items"
+        },
+        {
+          "doc_id": "pl_495370e7c6773875",
+          "quote": "the delivery people will deliver the order with either some items missing or substituted with cheaper items and charge you for the whole order."
+        },
+        {
+          "doc_id": "pl_be100475a1558579",
+          "quote": "I ordered 2 packs of makhana but received only one and then they didn't refund the amount for 1 pack."
+        },
+        {
+          "doc_id": "pl_7edb48a8b808917a",
+          "quote": "worst app did not deliver all items and also they did not refund my money"
+        },
+        {
+          "doc_id": "pl_85cb8880ccc2b31e",
+          "quote": "pure product nhi bhejata missing rahata hai ab kabhi nhi mangaungi"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_7edb48a8b808917a",
+        "pl_85cb8880ccc2b31e",
+        "pl_f14f0490b734582b",
+        "pl_4ccc03e8b18b320b",
+        "pl_2a7997671a6c7348",
+        "pl_be100475a1558579",
+        "pl_495370e7c6773875",
+        "pl_d2ebf48853cfc1e9"
+      ]
+    },
+    {
+      "theme_id": "THM-19",
+      "label": "offers / cashback / justify / promotional",
+      "doc_count": 8,
+      "prevalence": 0.0149,
+      "source_spread": {
+        "play_store": 8
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "trust_quality"
+      ],
+      "dominant_gaps": [
+        "price_benchmark",
+        "freshness_expiry"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_eecd0c6f9ebb0021",
+          "quote": "more offer & cashback needed for more orders."
+        },
+        {
+          "doc_id": "pl_d0bbc17f63913492",
+          "quote": "some time cashback scam by zepto and provide expired product"
+        },
+        {
+          "doc_id": "pl_1d57d9f828bb2531",
+          "quote": "good app but previous offers removed please continue old offers"
+        },
+        {
+          "doc_id": "pl_b65e927d0077ba9e",
+          "quote": "their prices are comparatively higher than Jio Insta Mart"
+        },
+        {
+          "doc_id": "pl_5a8fd6316dc74d40",
+          "quote": "1rs item are not giving properly"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_73d2f75d803a94f7",
+        "pl_52afa8439a6290c2",
+        "pl_d0bbc17f63913492",
+        "pl_ef7286483ca242db",
+        "pl_5a8fd6316dc74d40",
+        "pl_b65e927d0077ba9e",
+        "pl_eecd0c6f9ebb0021",
+        "pl_1d57d9f828bb2531"
+      ]
+    },
+    {
+      "theme_id": "THM-20",
+      "label": "proof / processed / refunds / photo",
+      "doc_count": 7,
+      "prevalence": 0.013,
+      "source_spread": {
+        "play_store": 7
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "return_anxiety",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "returnability",
+        "freshness_expiry",
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_422b20cf4efbdd2c",
+          "quote": "They either send incorrect items or spoiled items but never initiate the refund even after sharing all the proofs."
+        },
+        {
+          "doc_id": "pl_fa509bddd2e12841",
+          "quote": "Poor quality and rotten vegetables and underweight items"
+        },
+        {
+          "doc_id": "pl_8da589a37d50e1a5",
+          "quote": "per hame bas 1 ka rwfund mila 2 ki pic bhi dii thi"
+        },
+        {
+          "doc_id": "pl_6d80a20a5c0c3ae7",
+          "quote": "but today i received expired items before order they sent worst items"
+        },
+        {
+          "doc_id": "pl_30b7f541a467c18b",
+          "quote": "they deliver expired and products with less quantity"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_f6a861961c4e6e4d",
+        "pl_fa509bddd2e12841",
+        "pl_30b7f541a467c18b",
+        "pl_422b20cf4efbdd2c",
+        "pl_6d80a20a5c0c3ae7",
+        "pl_8da589a37d50e1a5",
+        "pl_a9b347a96c27672a"
+      ]
+    },
+    {
+      "theme_id": "THM-21",
+      "label": "serve / 10 / minute / 10 minute",
+      "doc_count": 7,
+      "prevalence": 0.013,
+      "source_spread": {
+        "play_store": 7
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "awareness",
+        "price_risk"
+      ],
+      "dominant_gaps": [
+        "price_benchmark",
+        "returnability",
+        "freshness_expiry"
+      ],
+      "dominant_habit_drivers": [],
+      "segment_skew": [
+        "tier1_metro",
+        "tier2_plus"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_29eb8d38653182af",
+          "quote": "u could Add some medical things and can make it as a 10 min amazon"
+        },
+        {
+          "doc_id": "pl_45bf68ab14e5f80d",
+          "quote": "10 minute bol kar 30 minute me le kar aate hai aur to aur itna zyada price hota hai"
+        },
+        {
+          "doc_id": "pl_e327b3938a539ece",
+          "quote": "Why do people spend 10\u201315 minutes scrolling before ordering?"
+        },
+        {
+          "doc_id": "pl_b57a2afee7eb481e",
+          "quote": "Receiving rotten fruits and spoiled bananas repeatedly is just not okay"
+        },
+        {
+          "doc_id": "pl_e57754f8f1fa2fc8",
+          "quote": "they are not giving the delivery at our area not only in our area also in Guwahati"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_29eb8d38653182af",
+        "pl_dce681dc92c61f7a",
+        "pl_45bf68ab14e5f80d",
+        "pl_e327b3938a539ece",
+        "pl_6e2cc7c9b94f284c",
+        "pl_b57a2afee7eb481e",
+        "pl_e57754f8f1fa2fc8"
+      ]
+    },
+    {
+      "theme_id": "THM-22",
+      "label": "use / daily / repeat use / habit",
+      "doc_count": 7,
+      "prevalence": 0.013,
+      "source_spread": {
+        "play_store": 7
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "choice_overload"
+      ],
+      "dominant_gaps": [
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "household_routine"
+      ],
+      "segment_skew": [
+        "working_professional"
+      ],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_a7bc414875c9aff2",
+          "quote": "it NEEDS to know at least 3 things I like for some strange reason, or it wont leave that page!!"
+        },
+        {
+          "doc_id": "pl_20005502e757ab66",
+          "quote": "aise ofer or mile to apun roz oder karenga"
+        },
+        {
+          "doc_id": "pl_5b90f2b8f1db1fa8",
+          "quote": "FREE COD CashOnDelivery On Above 100.Rs. Products Free Delivery Facility in Jio Mart"
+        },
+        {
+          "doc_id": "pl_705b7465bdc88b0c",
+          "quote": "when bb daily and bb normal both merged the experience got pathetic where I have been using bb daily app for 3 years smoothly with any single issue"
+        },
+        {
+          "doc_id": "pl_8d437f3a318bfcb9",
+          "quote": "ye aap bahut paisa leta hai"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_20005502e757ab66",
+        "pl_a7bc414875c9aff2",
+        "pl_277b76ed2c4e36b4",
+        "pl_7dd386a929a5c8d3",
+        "pl_705b7465bdc88b0c",
+        "pl_5b90f2b8f1db1fa8",
+        "pl_8d437f3a318bfcb9"
+      ]
+    },
+    {
+      "theme_id": "THM-23",
+      "label": "genuine / duplicate / counterfeit / goods",
+      "doc_count": 6,
+      "prevalence": 0.0112,
+      "source_spread": {
+        "play_store": 6
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "trust_quality",
+        "channel_loyalty",
+        "return_anxiety"
+      ],
+      "dominant_gaps": [
+        "brand_familiarity",
+        "freshness_expiry",
+        "returnability"
+      ],
+      "dominant_habit_drivers": [
+        "trust"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_405ed9a5dc7a4985",
+          "quote": "I found this is providing duplicate products"
+        },
+        {
+          "doc_id": "pl_42f5562f1a216baa",
+          "quote": "sirf sirf duplicate sirf sirf duplicate sirf sirf duplicate all product"
+        },
+        {
+          "doc_id": "pl_5d18124c2f113404",
+          "quote": "I ordered l'oreal hair product and received a fake product instead. you can easily tell by the logo."
+        },
+        {
+          "doc_id": "pl_addc9f013517d6df",
+          "quote": "jo na bik rha ho vo product bechata hai aur iska product bahut hi gandgi hoti hai"
+        },
+        {
+          "doc_id": "pl_c034996888b38fa9",
+          "quote": "Sirf Dublycat Maal he iske paas bhi ise load mat karo"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_42f5562f1a216baa",
+        "pl_c034996888b38fa9",
+        "pl_63b2634de77324ec",
+        "pl_5d18124c2f113404",
+        "pl_addc9f013517d6df",
+        "pl_405ed9a5dc7a4985"
+      ]
+    },
+    {
+      "theme_id": "THM-24",
+      "label": "coupons / shops / coupons removed / removed",
+      "doc_count": 4,
+      "prevalence": 0.0074,
+      "source_spread": {
+        "play_store": 4
+      },
+      "single_source": true,
+      "below_min_size": false,
+      "dominant_barriers": [
+        "price_risk",
+        "awareness",
+        "channel_loyalty"
+      ],
+      "dominant_gaps": [
+        "price_benchmark"
+      ],
+      "dominant_habit_drivers": [
+        "price_certainty",
+        "trust"
+      ],
+      "segment_skew": [],
+      "sentiment": "negative",
+      "representative_quotes": [
+        {
+          "doc_id": "pl_da22d04484d6eb57",
+          "quote": "jiomart coupons are not consistent or, regulated"
+        },
+        {
+          "doc_id": "pl_564ec8a3c8355923",
+          "quote": "cuppons all are removed and prices are very high"
+        },
+        {
+          "doc_id": "pl_fa0ac5a4a8856427",
+          "quote": "the product was not show some location means those place take for delivery now remove"
+        },
+        {
+          "doc_id": "pl_ee4d325782a03bae",
+          "quote": "No Coupon as Earlier, trying to give addiction but we buy from local... not fraud like you"
+        }
+      ],
+      "member_doc_ids": [
+        "pl_fa0ac5a4a8856427",
+        "pl_ee4d325782a03bae",
+        "pl_564ec8a3c8355923",
+        "pl_da22d04484d6eb57"
+      ]
+    }
+  ]
+}

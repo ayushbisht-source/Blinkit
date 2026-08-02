@@ -2,44 +2,190 @@
   "checks": [
     {
       "name": "quote grounding",
-      "checked": 3,
-      "exact": 3,
-      "whitespace_normalised": 0,
-      "hallucinated": 0,
-      "hallucination_rate": 0.0,
-      "pass": true,
-      "examples": []
-    },
-    {
-      "name": "theme saturation",
-      "pass": false,
-      "reason": "only 3 extractions"
-    },
-    {
-      "name": "hold-out generalisation",
-      "pass": false,
-      "reason": "no themes"
-    },
-    {
-      "name": "source spread",
-      "status": "NOT RUN",
-      "pass": null,
-      "note": "no themes yet \u2014 run engine.pipeline.cluster first"
-    },
-    {
-      "name": "relevance gate audit",
-      "rejected_total": 1523,
-      "sampled": 40,
-      "possible_false_negatives": 1,
-      "false_negative_rate_estimate": 0.025,
+      "checked": 805,
+      "exact": 800,
+      "whitespace_normalised": 3,
+      "hallucinated": 2,
+      "hallucination_rate": 0.0025,
+      "quotes_used_in_themes": 119,
+      "unverifiable_quotes_used": 0,
       "pass": true,
       "examples": [
         {
-          "doc_id": "pl_1a8eb327332a6802",
-          "reason_given": "support",
-          "text": "Extremely disappointing after-sales support. I received a defective GoBoult product (left side not working) and reported it within 20 minutes of delivery. Inste"
+          "doc_id": "pl_0cb27c8d08942199",
+          "quote": "if we oder noodles they're smashed inside , and even oil when I ordered it was leaking"
+        },
+        {
+          "doc_id": "pl_c786fe7a440b0f3e",
+          "quote": "she said that the milk seems to fine, anyone else looking would find that the milk water is separated"
         }
       ]
+    },
+    {
+      "name": "theme saturation",
+      "n_documents": 818,
+      "distinct_labels": 15.0,
+      "share_found_by_halfway": 0.9633,
+      "new_labels_per_doc_final_decile": 0.00122,
+      "pass": true,
+      "curve_sample": [
+        13.0,
+        14.05,
+        14.45,
+        14.65,
+        15.0
+      ]
+    },
+    {
+      "name": "hold-out generalisation",
+      "method": "re-fit vectoriser+LSA+clustering on train only; assign unseen statements to nearest centroid; compare against size-matched random-assignment null",
+      "n_train": 430,
+      "n_holdout": 107,
+      "holdout_statements_with_no_known_vocabulary": 0,
+      "themes_refit": 25,
+      "median_similarity_train_to_own_centroid": 0.4762,
+      "median_similarity_holdout_to_nearest": 0.4669,
+      "null_median": 0.3518,
+      "null_sd": 0.0066,
+      "z_vs_null": 17.43,
+      "pass": true
+    },
+    {
+      "name": "source spread",
+      "themes": 24,
+      "sources_in_corpus": {
+        "play_store": 526,
+        "app_store": 11
+      },
+      "minority_source_share": 0.0205,
+      "single_source_themes": 16,
+      "single_source_share": 0.6667,
+      "expected_single_source_by_chance": 16.4,
+      "flagged": [
+        {
+          "theme_id": "THM-02",
+          "label": "food / expiry / freshness / trust",
+          "sources": {
+            "play_store": 43
+          }
+        },
+        {
+          "theme_id": "THM-06",
+          "label": "available / actually / limiting / range",
+          "sources": {
+            "play_store": 32
+          }
+        },
+        {
+          "theme_id": "THM-08",
+          "label": "routine / unavailable / grocery / milk",
+          "sources": {
+            "play_store": 22
+          }
+        },
+        {
+          "theme_id": "THM-09",
+          "label": "charge / feels / extra / 30",
+          "sources": {
+            "play_store": 18
+          }
+        },
+        {
+          "theme_id": "THM-11",
+          "label": "quantity / expected / matches / weight",
+          "sources": {
+            "play_store": 17
+          }
+        },
+        {
+          "theme_id": "THM-14",
+          "label": "ice cream / ice / cream / melted",
+          "sources": {
+            "play_store": 12
+          }
+        },
+        {
+          "theme_id": "THM-15",
+          "label": "brand / specific / substituted / trust exact",
+          "sources": {
+            "play_store": 12
+          }
+        },
+        {
+          "theme_id": "THM-16",
+          "label": "switching / competitor / switch / pushing switch",
+          "sources": {
+            "play_store": 10
+          }
+        },
+        {
+          "theme_id": "THM-17",
+          "label": "non / slow / non returnable / returnable",
+          "sources": {
+            "play_store": 10
+          }
+        },
+        {
+          "theme_id": "THM-18",
+          "label": "missing / arrive missing / cheaper / refunded",
+          "sources": {
+            "play_store": 8
+          }
+        },
+        {
+          "theme_id": "THM-19",
+          "label": "offers / cashback / justify / promotional",
+          "sources": {
+            "play_store": 8
+          }
+        },
+        {
+          "theme_id": "THM-20",
+          "label": "proof / processed / refunds / photo",
+          "sources": {
+            "play_store": 7
+          }
+        },
+        {
+          "theme_id": "THM-21",
+          "label": "serve / 10 / minute / 10 minute",
+          "sources": {
+            "play_store": 7
+          }
+        },
+        {
+          "theme_id": "THM-22",
+          "label": "use / daily / repeat use / habit",
+          "sources": {
+            "play_store": 7
+          }
+        },
+        {
+          "theme_id": "THM-23",
+          "label": "genuine / duplicate / counterfeit / goods",
+          "sources": {
+            "play_store": 6
+          }
+        },
+        {
+          "theme_id": "THM-24",
+          "label": "coupons / shops / coupons removed / removed",
+          "sources": {
+            "play_store": 4
+          }
+        }
+      ],
+      "pass": null,
+      "note": "Corpus is 98.0% a single source. At that mix 16 of 24 themes would be single-source by chance, so this check cannot distinguish a platform artifact from a finding. It needs a corpus with a genuinely mixed source base \u2014 see the collection limitation in the case study."
+    },
+    {
+      "name": "relevance gate audit",
+      "rejected_total": 2402,
+      "sampled": 40,
+      "possible_false_negatives": 0,
+      "false_negative_rate_estimate": 0.0,
+      "pass": true,
+      "examples": []
     },
     {
       "name": "human agreement (Cohen's kappa)",

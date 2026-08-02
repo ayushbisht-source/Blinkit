@@ -25,8 +25,28 @@ Calibration, measured against a synthetic corpus with three planted themes:
 The synthetic set has eight fixed templates per theme, so ~24 genuinely distinct lexical patterns
 exist in it; the clusterer recovering 18-25 of them is correct behaviour, not fragmentation. That
 makes it useful for checking purity but a poor guide to the ideal merge threshold, which has to be
-tuned on the real corpus. The default below is a conservative starting point that favours purity
-over consolidation.
+tuned on the real corpus.
+
+Re-calibrated on the real corpus (537 pain statements) — `python -m engine.pipeline.calibrate_merge`
+reproduces the table. The synthetic-derived default of 0.12 turned out to be badly wrong here: it
+merged all 537 statements into ONE theme covering 100% of the corpus, and wrote that out without
+complaint. Two things were learned and both are encoded below.
+
+  1. The threshold is now 0.35, chosen on *homogeneity* against the independently-assigned
+     `barrier[]` codes. Silhouette rises monotonically with k on the dense LSA projection just as it
+     does on sparse TF-IDF, and AMI/V-measure peak early because they average in completeness, which
+     the degenerate one-cluster solution maximises. Weighted purity is flat from 0.25 upward, which
+     is what licenses preferring the finer solution: the extra themes separate distinct mechanisms
+     that share a barrier code rather than splitting a real theme in half.
+
+  2. The merge step barely transfers. On the synthetic corpus it was load-bearing; here pairwise
+     centroid similarities are unimodal with no gap between same-theme and different-theme pairs, so
+     at the chosen threshold it fires exactly once (25 -> 24 groups). A step calibrated on planted
+     themes did not survive contact with real data, and that is reported rather than papered over.
+
+`assert_not_degenerate` now refuses to write a result where one theme swallows the corpus, because
+the original failure was not the bad threshold — it was that a bad threshold produced a
+confident-looking output file.
 """
 
 from __future__ import annotations
@@ -46,8 +66,18 @@ from sklearn.metrics import silhouette_score
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import Normalizer
 
+from engine.validation.checks import quote_is_grounded
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger("cluster")
+
+# Calibrated on the real corpus — see the module docstring and `calibrate_merge.py`. Named rather
+# than repeated so the CLI default, the function default and the calibration report cannot drift.
+DEFAULT_MERGE_AT = 0.35
+
+# A single theme covering most of the corpus is not a finding, it is the clusterer failing. Set
+# just above the largest theme the calibrated threshold produces (22.7%), with room to move.
+MAX_THEME_SHARE = 0.60
 
 INTERIM = Path("data/interim")
 PROCESSED = Path("data/processed")
@@ -95,7 +125,35 @@ def statements(rows: list[dict]) -> tuple[list[str], list[dict]]:
     return texts, kept
 
 
-def cluster_then_merge(dense, min_size: int, merge_at: float = 0.45, absorb_floor: float = 0.15):
+def assert_not_degenerate(labels, n: int) -> None:
+    """Refuse to write a partition that hasn't actually partitioned anything.
+
+    The provisional merge threshold produced exactly this — one theme, 537 statements, 100%
+    prevalence, labelled "trust / quality / received / receives" — and the pipeline wrote it to
+    themes.json and reported success. Every downstream stage would then have run on it: synthesis
+    would have written insights about the single theme, validation would have found nothing to
+    disagree with, and the case study would have carried a number that means nothing.
+
+    A wrong threshold is a tuning problem. Shipping a wrong threshold silently is a design problem,
+    and this is the fix for the second one.
+    """
+    k = len(set(labels))
+    if k < 2:
+        raise SystemExit(
+            f"Clustering collapsed to {k} theme over {n} statements. The merge threshold is too "
+            f"low for this corpus. Run `python -m engine.pipeline.calibrate_merge` and set "
+            f"--merge-at from its table."
+        )
+    share = max(np.bincount(labels)) / n
+    if share > MAX_THEME_SHARE:
+        raise SystemExit(
+            f"Largest theme holds {share:.1%} of {n} statements (ceiling {MAX_THEME_SHARE:.0%}). "
+            f"That is one blob plus a long tail, not a set of themes. Re-run "
+            f"`python -m engine.pipeline.calibrate_merge` and raise --merge-at."
+        )
+
+
+def cluster_then_merge(dense, min_size: int, merge_at: float = DEFAULT_MERGE_AT, absorb_floor: float = 0.15):
     """Over-cluster deliberately, then merge back what is actually the same theme.
 
     Why not pick k by maximising silhouette: on sparse TF-IDF the score rises monotonically with k,
@@ -167,8 +225,9 @@ def label_from_terms(vectorizer, matrix, indices) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-cluster-size", type=int, default=4)
-    ap.add_argument("--merge-at", type=float, default=0.12,
-                    help="merge clusters whose centroids exceed this cosine similarity")
+    ap.add_argument("--merge-at", type=float, default=DEFAULT_MERGE_AT,
+                    help="merge clusters whose centroids exceed this cosine similarity "
+                         "(calibrated: python -m engine.pipeline.calibrate_merge)")
     args = ap.parse_args()
 
     PROCESSED.mkdir(parents=True, exist_ok=True)
@@ -233,10 +292,12 @@ def main() -> None:
     )
     dense_tfidf, dense = dense, reduced
     labels, silhouette = cluster_then_merge(dense, args.min_cluster_size, merge_at=args.merge_at)  # noqa: E501
+    assert_not_degenerate(labels, len(texts))
     k = len(set(labels))
 
     total = len(texts)  # post-filter count is the correct prevalence denominator
     themes = []
+    unverified_quotes: list[str] = []
     for cid in sorted(set(labels)):
         idx = [i for i, l in enumerate(labels) if l == cid]
 
@@ -247,12 +308,24 @@ def main() -> None:
         centroid = dense[idx].mean(axis=0, keepdims=True)
         sims = cosine_similarity(dense[idx], centroid).ravel()
         order = np.argsort(sims)[::-1]
+        # Only quotes that can be found in their own source document are allowed to represent a
+        # theme. The extraction model fabricates at a low but non-zero rate (2 in 805 measured, both
+        # composites — real fragments of a real review stitched together), and a composite is
+        # precisely the kind a reader cannot catch by eye. Filtering here rather than trusting the
+        # rate to stay low is what makes `check_grounding`'s gate a guarantee instead of luck.
         reps = []
-        for j in order[:5]:
+        for j in order:
+            if len(reps) >= 5:
+                break
             m = members[j]
             q = (m.get("evidence_quote") or "").strip()
-            if q:
-                reps.append({"doc_id": m["doc_id"], "quote": q})
+            if not q:
+                continue
+            src = docs.get(m["doc_id"], {}).get("text", "")
+            if not quote_is_grounded(q, src):
+                unverified_quotes.append(m["doc_id"])
+                continue
+            reps.append({"doc_id": m["doc_id"], "quote": q})
 
         barriers = Counter(b for m in members for b in (m.get("barrier") or []))
         gaps = Counter(g for m in members for g in (m.get("information_gap") or []))
@@ -297,6 +370,12 @@ def main() -> None:
         "themes": themes,
     }
     THEMES.write_text(json.dumps(payload, indent=2))
+
+    if unverified_quotes:
+        log.warning(
+            "excluded %d quote(s) that could not be found in their source document: %s",
+            len(unverified_quotes), ", ".join(unverified_quotes[:5]),
+        )
 
     log.info("themes -> %s", THEMES)
     for t in themes:
