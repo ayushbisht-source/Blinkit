@@ -52,6 +52,10 @@ THEMES = PROCESSED / "themes.json"
 OUT = PROCESSED / "multi_model_agreement.json"
 PROMPTS = Path("engine/prompts")
 
+# Which family produced data/processed/insights.json. Read from the file when possible; this is
+# the fallback used to decide whether a comparison is cross-family or same-family.
+DEFAULT_BASELINE_FAMILY = os.getenv("BASELINE_FAMILY", "gemini")
+
 # provider:model. Chosen to be different model *families* — two Gemini variants agreeing says much
 # less than Gemini and Llama agreeing, because the failure being tested for is shared bias.
 DEFAULT_SPECS = [
@@ -219,8 +223,33 @@ def main() -> None:
             f"{names[1]}_confidence": b.get("confidence"),
         })
 
+    # What kind of comparison was this, really?
+    #
+    # The first run of this check compared the committed insights against a fresh Gemini run — and
+    # the committed insights had themselves been produced by Gemini, because the Anthropic balance
+    # was empty. It scored 0.75 RQ Jaccard and matched 20/25 mechanisms, which looks like strong
+    # cross-model agreement and is nothing of the kind: it is one model agreeing with itself across
+    # two sampling runs. That is worth knowing (the insights are not a fluke of one sample) but it
+    # is a far weaker claim, and reporting it unlabelled would have been the most misleading number
+    # in the project.
+    families = {n.split(":")[0].replace("baseline(committed)", DEFAULT_BASELINE_FAMILY) for n in names}
+    if len(families) > 1:
+        kind, strength = "cross-family", (
+            "Different model families, so agreement is evidence the insights are not one "
+            "vendor's idiosyncrasy."
+        )
+    else:
+        kind, strength = "same-family", (
+            "Both runs come from the same model family, so this measures run-to-run "
+            "REPRODUCIBILITY, not independent agreement. It shows the insights are stable across "
+            "sampling, and says nothing about whether a different model would read the quotes the "
+            "same way. Set GROQ_API_KEY (free, console.groq.com) for a genuine cross-family test."
+        )
+
     payload = {
         "models": names,
+        "comparison_type": kind,
+        "what_this_measures": strength,
         "themes_total": len(themes),
         "themes_synthesised_by_all": len(shared),
         "research_question_agreement": {
@@ -245,6 +274,7 @@ def main() -> None:
 
     print("\n── Multi-model agreement ──\n")
     print(f"  models              {', '.join(names)}")
+    print(f"  comparison          {payload['comparison_type'].upper()}")
     print(f"  themes compared     {len(shared)} of {len(themes)}")
     rqa = payload["research_question_agreement"]
     print(f"  RQ jaccard (mean)   {rqa['mean_jaccard']}   "
@@ -260,6 +290,7 @@ def main() -> None:
         print(f"  nearest-match       {ma['correct_theme_is_nearest']}/{ma['themes_compared']} "
               f"themes matched their own counterpart "
               f"({ma['correct_theme_is_nearest_rate']:.0%} vs {ma['chance_rate']:.0%} chance)")
+    print(f"\n  {payload['what_this_measures']}")
     print(f"\n  -> {OUT}")
 
 
