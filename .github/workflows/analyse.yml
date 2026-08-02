@@ -99,16 +99,32 @@ jobs:
         if: always()
         run: python -m engine.report
 
+      # Generated artifacts, not authored ones — so on a conflict the fresh run always wins.
+      #
+      # `git pull --rebase` is wrong here and failed exactly once in the obvious way: a local run
+      # regenerated themes.json and pushed while this workflow was mid-run, and rebasing a
+      # deterministic output file onto a different deterministic output file conflicts every time.
+      # There is no merge to perform — one of the two is simply the newer computation.
+      #
+      # So: move HEAD to the remote tip with the working tree left alone (`reset --mixed`), then
+      # re-stage what this run produced. The commit that results is "remote history, plus these
+      # outputs", which is what was wanted, and it cannot conflict.
       - name: Commit results
         if: always()
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f data/processed/ docs/01-discovery-engine.md 2>/dev/null || true
+
+          PATHS="data/processed docs/01-discovery-engine.md"
+
+          git fetch origin ${{ github.ref_name }}
+          git reset --mixed FETCH_HEAD          # working tree untouched; index now matches remote
+          git add -f $PATHS 2>/dev/null || true
+
           if git diff --staged --quiet; then
-            echo "Nothing to commit."
+            echo "No change to the generated outputs."
           else
             git commit -m "Analyse corpus via Actions run ${{ github.run_number }}"
-            git pull --rebase origin ${{ github.ref_name }}
             git push origin HEAD:${{ github.ref_name }}
           fi

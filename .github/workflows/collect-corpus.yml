@@ -68,15 +68,22 @@ jobs:
           path: data/interim/documents.jsonl
           retention-days: 14
 
+      # Reset onto the remote tip rather than rebasing — see analyse.yml for why. The corpus is a
+      # generated artifact; rebasing it onto a concurrently-pushed version of itself conflicts with
+      # nothing meaningful to resolve.
       - name: Commit corpus back to branch
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin ${{ github.ref_name }}
+          git reset --mixed FETCH_HEAD
           git add -f data/interim/documents.jsonl
+
           if git diff --staged --quiet; then
             echo "No corpus change to commit."
           else
             git commit -m "Collect corpus via Actions run ${{ github.run_number }}"
-            git pull --rebase origin ${{ github.ref_name }}
             git push origin HEAD:${{ github.ref_name }}
           fi

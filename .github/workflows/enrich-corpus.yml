@@ -117,16 +117,24 @@ jobs:
 
       # always() so a timeout still commits the partial work — the next run resumes from it
       # instead of paying for those documents twice.
+      #
+      # Same reset-onto-remote pattern as analyse.yml, and for the same reason: these are generated
+      # artifacts. Rebasing them onto a concurrently-pushed version of themselves conflicts with
+      # nothing to resolve, and it cost one completed analysis run before it was fixed there.
       - name: Commit results
         if: always()
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin ${{ github.ref_name }}
+          git reset --mixed FETCH_HEAD
           git add -f data/interim/relevance.jsonl data/interim/extractions.jsonl 2>/dev/null || true
+
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
             git commit -m "Enrich corpus via Actions run ${{ github.run_number }}"
-            git pull --rebase origin ${{ github.ref_name }}
             git push origin HEAD:${{ github.ref_name }}
           fi
