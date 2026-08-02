@@ -1,0 +1,338 @@
+{
+  "spec": "gemini:gemini-flash-latest",
+  "insights": [
+    {
+      "theme_id": "THM-01",
+      "statement": "Daily staple buyers receiving spoiled fresh items like milk and produce are unable to obtain customer support or refunds even after submitting proof, driving them away from buying fresh goods on quick-commerce.",
+      "mechanism": "Users attempt to purchase daily perishables under the assumption that items are fresh, but cold-chain or handling failures lead to premature spoilage before or upon delivery. When the app fails to offer customer support or honor proof of spoilage, users absorb the full financial loss and meal disruption, leading them to avoid app-based fresh categories and return to offline stores where quality is verifiable.",
+      "so_what": "This is a post-delivery recourse failure rather than a catalog or pricing issue, meaning displaying fresh categories or offering discounts will not drive adoption until instant, friction-free refund policies for spoiled items are enforced.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes focus on support friction and spoilage instances but do not track whether affected users completely stopped buying the category or merely reduced order frequency."
+    },
+    {
+      "theme_id": "THM-02",
+      "statement": "Grocery buyers receiving substandard fresh produce and packaged goods are blocked by the absence of return options, rendering category exploration an uncompensated financial risk.",
+      "mechanism": "Because quick-commerce apps prevent pre-purchase physical inspection of fresh or packaged items, users rely on platform quality control. When delivered items fail basic quality standards and no return policy exists, users realize they cannot mitigate the risk of receiving bad inventory, causing them to restrict future orders exclusively to standardized, high-certainty branded items.",
+      "so_what": "Non-exploration in fresh and unbranded categories is driven by return anxiety and asymmetric downside risk; category trial cannot be increased through visibility alone without explicit return guarantees.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.8,
+      "caveat": "The quotes express broad frustration with poor quality and lack of returns, but do not specify whether clear freshness parameters on the product page would have mitigated pre-purchase anxiety."
+    },
+    {
+      "theme_id": "THM-03",
+      "statement": "Users encountering extreme quality failures like foreign physical contaminants or expired food lose fundamental trust in platform vendor control when complaints are dismissed without compensation.",
+      "mechanism": "When users experience severe safety and quality breaches\u2014such as contaminated food or expired inventory\u2014and subsequently have support tickets closed without refund or replacement, they perceive platform quality control as nonexistent. This erodes baseline platform trust, causing users to treat all unfamiliar categories as high-hazard risks and restricting their basket to a minimal set of safe staples.",
+      "so_what": "Category expansion is blocked by severe trust erosion and perception of arbitrary complaint resolution; promotional offers in unproven categories will be viewed with skepticism rather than as incentives for trial.",
+      "research_questions_answered": [
+        1,
+        2,
+        6,
+        8
+      ],
+      "confidence": 0.75,
+      "caveat": "The quotes conflate restaurant cooked-food delivery issues with quick-commerce grocery and staple deliveries, which operate on different vendor management models."
+    },
+    {
+      "theme_id": "THM-04",
+      "statement": "Users comparing commodity and vegetable prices against local markets and competing platforms encounter higher base prices on this app, discouraging broader basket building.",
+      "mechanism": "When evaluating non-habitual categories like vegetables or commodities, users benchmark app prices against external reference anchors (offline markets, Zepto, Blinkit). Higher base item prices trigger perceived price risk, leading users to restrict their spending to urgent items rather than exploring new categories.",
+      "so_what": "Expanding category selection will not drive cross-category trial if unit prices exceed external market reference points, as users actively price-compare before trying unfamiliar items.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.7,
+      "caveat": "Quotes are brief and fragmented, making it unclear whether users completely halt purchases or simply buy smaller quantities of specific commodities."
+    },
+    {
+      "theme_id": "THM-05",
+      "statement": "Users seeking small, immediate orders are blocked from completing purchases due to a sudden increase in the free delivery threshold from ~\u20b999 to ~\u20b9399.",
+      "mechanism": "Users attempt to buy for immediate, low-value needs using an established expectation of a \u20b999\u2013\u20b9100 free delivery minimum. When the threshold jumps to \u20b9399\u2013\u20b9400, they lack enough immediate needs to fill the cart, feeling penalized by mandatory charges and choosing to abandon or restrict order frequency rather than force-adding unneeded products.",
+      "so_what": "Using high free-delivery thresholds to force basket expansion creates threshold friction and resentment rather than organic multi-category discovery.",
+      "research_questions_answered": [
+        1,
+        2,
+        6,
+        8
+      ],
+      "confidence": 0.85,
+      "caveat": "The evidence focuses entirely on user dissatisfaction with delivery policy changes and does not explicitly capture whether users churned to competitors or reduced total category breadth."
+    },
+    {
+      "theme_id": "THM-06",
+      "statement": "Users placing short-distance or small orders encounter unexpected fee stacking\u2014such as rain surges, packing fees, and GST\u2014that inflates total order cost.",
+      "mechanism": "Users evaluate order fairness by comparing total fee additions against order context (e.g., proximity within 1 km or low item value). When ancillary charges like packing fees and weather surges (up to \u20b9100) are added at checkout, the fee-to-item ratio breaks perceived transaction value, causing users to abort discretionary purchases.",
+      "so_what": "Unpredictable checkout fee stacking creates price uncertainty that deters spontaneous or low-conviction experimentation in unfamiliar categories.",
+      "research_questions_answered": [
+        2,
+        6,
+        8
+      ],
+      "confidence": 0.75,
+      "caveat": "Quotes articulate frustration with stacked fees but do not explicitly record whether specific category trials were abandoned at the cart stage."
+    },
+    {
+      "theme_id": "THM-07",
+      "statement": "Quick-commerce users trying to order specific SKUs or access service in non-core areas are blocked by ghost inventory and missing delivery coverage.",
+      "mechanism": "Users attempt to rely on quick-commerce for routine or varied items, but discrepancies between app inventory and actual dark store availability result in post-order cancellations or missing items. To avoid order disruption and wasted time, users restrict their baskets to a narrow set of ultra-reliable staple items.",
+      "so_what": "This is an inventory synchronisation and serviceability issue, not an interest issue; surfacing broader catalog recommendations will backfire by driving up fulfillment failure rates.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.7,
+      "caveat": "The quotes combine two distinct problems: geographic non-coverage in specific towns and real-time stock-outs of specific items."
+    },
+    {
+      "theme_id": "THM-08",
+      "statement": "Users receiving wrong, damaged, or missing items are unable to get replacements or full refunds due to restrictive or absent post-purchase support.",
+      "mechanism": "Users expect dispute resolution speed to match 10-minute delivery speed. When damaged or incorrect goods arrive, the platform places the financial loss and friction onto the user through partial refunds or non-existent support, forcing users to buy only low-risk, standardized categories where defect likelihood is minimal.",
+      "so_what": "Category cross-selling is capped by post-purchase financial risk; users will not experiment with new or higher-value categories until full-value refund predictability is guaranteed.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "Quotes focus on post-purchase support failures rather than explicitly tracking which exact categories users stopped trying after a bad experience."
+    },
+    {
+      "theme_id": "THM-09",
+      "statement": "Users ordering fresh produce receive rotten, insect-infested, or rapidly spoiling fruits and vegetables.",
+      "mechanism": "Buyers cannot physically inspect fresh produce before payment. Because delivered produce frequently arrives spoiled or decays within a day, the risk of wasted money causes users to permanently shift fresh category buying back to offline markets where physical selection is possible.",
+      "so_what": "Fresh category adoption cannot be driven by discounting or visibility; it requires solving batch quality control and providing verifiable freshness signals before checkout.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.9,
+      "caveat": "Evidence is limited strictly to fresh produce (fruits/vegetables) and may not generalize to non-perishable category cross-shopping."
+    },
+    {
+      "theme_id": "THM-10",
+      "statement": "Users relying on quick-commerce for routine morning groceries threaten to abandon the app when essential staples are out of stock or morning delivery slots shift.",
+      "mechanism": "Users view quick-commerce as a utility to maintain daily household routines at specific hours. When essential items are missing or delivery times shift past morning requirements (e.g., from 6:30 AM to after 9:00 AM), the core routine breaks. Surfacing non-grocery categories like electronics or fashion while core groceries are unavailable creates friction because users cannot fulfill the urgent routine need that brought them to the app.",
+      "so_what": "Category cross-selling and pushing non-grocery verticals will fail if baseline grocery fulfillment and time-of-day SLAs are unstable, as routine disruption drives app uninstalls rather than exploration.",
+      "research_questions_answered": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "confidence": 0.75,
+      "caveat": "Quotes cover different platform-specific changes (BB Daily app merge, Blinkit localized stockouts) and combine timing delays with item unavailability, making it unclear which specific operational failure drives uninstalls most."
+    },
+    {
+      "theme_id": "THM-11",
+      "statement": "Users buying packaged goods and food items receive lower weights or smaller container volumes than what was listed on the app display.",
+      "mechanism": "Users rely on stated weight and volume listing numbers as their primary price-per-quantity benchmark. When delivered items contain physically smaller amounts than listed (e.g., 750g delivered vs 910g ordered, or a 500ml container labeled 1L), users infer deliberate platform fraud, destroying the trust required to evaluate and try unfamiliar items or categories.",
+      "so_what": "Building confidence in new categories requires strict merchant fulfillment auditing, as inaccurate quantity listings create immediate perception of fraud that permanently restricts buying to known offline brands.",
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "confidence": 0.85,
+      "caveat": "The available quotes focus on post-delivery fulfillment discrepancies rather than documenting how users evaluate quantities prior to purchase on the app interface."
+    },
+    {
+      "theme_id": "THM-12",
+      "statement": "Users receiving incorrect, missing, or lower-MRP items are left without resolution or face account deactivation when contacting support.",
+      "mechanism": "When fulfillment errors occur, users attempt to seek redress via customer service. The absence of helpful support, combined with missing items or lower-MRP substitutions without refunds, transfers transaction risk entirely to the buyer, forcing them to minimize financial exposure by restricting orders to repeatable, low-risk items.",
+      "so_what": "Post-purchase defect resolution is a prerequisite for category discovery; users will not explore higher-value or unfamiliar categories when the failure recovery path is unreliable or hostile.",
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "confidence": 0.8,
+      "caveat": "Quotes mix different support failures (unresponsive customer service, missing items, account deactivation) across various contexts without specifying which product categories were affected."
+    },
+    {
+      "theme_id": "THM-13",
+      "statement": "Users attempting to redeem advertised coupons, promotional pricing, or deal items experience checkout failures or missing items upon delivery, leading to abandoned carts and frustration.",
+      "mechanism": "Promotional offers create an explicit price expectation before purchase. When technical failures (such as non-working WhatsApp codes), hidden category exclusions, or delivery-stage omissions shatter that expectation, the user experiences a loss of price certainty and retreats to predictable offline channels or standard repeat purchases.",
+      "so_what": "Using discounts to drive category discovery is ineffective if discount execution is unreliable; fixing checkout code validation and fulfillment accuracy must take priority over broadcasting new promotional campaigns.",
+      "research_questions_answered": [
+        2,
+        6,
+        8
+      ],
+      "confidence": 0.7,
+      "caveat": "The quotes mix several distinct failure points\u2014broken WhatsApp codes, fine-print daily essential exclusions, and missing physical delivery items\u2014without clarifying which stage of failure contributes most to drop-off."
+    },
+    {
+      "theme_id": "THM-14",
+      "statement": "Users halt shopping or switch to competitors like Instamart when faced with an unanchored flat \u20b930 delivery charge on their orders.",
+      "mechanism": "Quick-commerce users evaluate transaction value against alternative channels (competitors offering free delivery or offline stores with no fees). A flat \u20b930 delivery charge heavily distorts the price-per-item on smaller or exploratory baskets, making the convenience premium feel mathematically unfair and stopping low-urgency trial purchases entirely.",
+      "so_what": "Flat fee structures directly disincentivize small-basket category exploration; driving cross-category trial requires fee structures tied to basket size or category mix rather than uniform delivery surcharges.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes do not specify basket sizes, making it impossible to verify whether the fee sensitivity applies universally or primarily to small-ticket orders."
+    },
+    {
+      "theme_id": "THM-15",
+      "statement": "Users who receive incorrect, poor-quality, or mismatched items are denied returns or exchanges by support, leaving them financially liable for unusable products.",
+      "mechanism": "Exploring unfamiliar categories or non-staple products inherently carries selection and quality risk. When the post-delivery recourse system fails or actively rejects valid returns (e.g., claiming 'mismatch' or issuing flat refusals), the downside risk of trying new products becomes absolute, driving users back to safe, highly predictable repeat items.",
+      "so_what": "Cross-category expansion into higher-risk or non-staple goods is capped by return anxiety; adding category visibility or reviews in the interface will not drive adoption unless dispute resolution and return guarantees are enforced.",
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "confidence": 0.85,
+      "caveat": "Quotes combine complaints across both perishable groceries and non-perishable goods (electronics/models), which typically follow entirely different return and exchange policies."
+    },
+    {
+      "theme_id": "THM-16",
+      "statement": "Users trying to place orders or redeem discounts face post-checkout cancellations due to item unavailability, forcing them to repeatedly re-order or lose time.",
+      "mechanism": "Users assume that placing an order locks inventory for immediate delivery under time pressure. Because inventory accuracy at dark stores is unverified prior to payment, items are cancelled post-checkout; when forced to start over with unfulfilled promises, users lose confidence in delivery speed and fallback to familiar, low-risk essential purchases.",
+      "so_what": "This is a fulfillment predictability problem rather than a product awareness issue; offering discounts or featuring new categories will not increase adoption if post-checkout stock failures degrade operational trust.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.75,
+      "caveat": "Quotes mention generic orders and discounts getting cancelled without explicitly detailing which new categories were targeted in those failed orders."
+    },
+    {
+      "theme_id": "THM-17",
+      "statement": "Users searching for specific brands, personal care items, or distinct produce variants are blocked by stockouts or unapproved, lower-quality item substitutions.",
+      "mechanism": "When users venture beyond core essentials to buy specific preferred SKUs (e.g., specialty tomatoes, specific face washes, niche brands), dark stores either lack inventory or send incorrect/substitute products. Because replacing these wrong products is tedious or leads to repeated errors, users learn that non-standard items carry high mis-fulfillment risk and restrict future buying to standard baseline goods.",
+      "so_what": "This is a catalog fidelity and explicit substitution control problem; promoting long-tail or premium categories will fail unless platforms guarantee exact-SKU fulfillment or explicit user approval prior to substitution.",
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "confidence": 0.8,
+      "caveat": "Quotes come from multiple distinct platforms (Blinkit, Instamart) and touch diverse categories (produce, personal care, tobacco), which may reflect separate supply chain issues per category."
+    },
+    {
+      "theme_id": "THM-18",
+      "statement": "Users purchasing temperature-sensitive items like ice cream receive melted or expired goods and find customer support unhelpful when requesting replacements.",
+      "mechanism": "Users attempt to order impulse or specialty frozen goods, but dark-store cold-chain failures or transit delays deliver melted or spoiled items. When support fails to provide immediate refunds or replacements, the user absorbs full financial risk for spoiled goods, driving them to completely avoid temperature-sensitive or perishable categories.",
+      "so_what": "This is a delivery transit quality and support responsiveness problem; expanding frozen or fresh food categories is useless until temperature integrity in transit and instant refund guarantees are established.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes focus almost entirely on ice cream; while the mechanism likely applies to other cold-chain goods, direct evidence is restricted to frozen desserts."
+    },
+    {
+      "theme_id": "THM-19",
+      "statement": "Users receive perceived duplicate or unsellable stock and experience payment entry friction, leading them to distrust the platform's inventory and overall reliability.",
+      "mechanism": "When users receive items they perceive as duplicate or poor-quality clearouts alongside transactional friction like re-entering card details, they conclude the platform lacks quality control. Lacking a way to verify product authenticity pre-purchase, users refuse to risk buying unfamiliar or non-core items.",
+      "so_what": "This is a product authenticity and baseline transaction blocker rather than a discovery problem; introducing or promoting new categories will fail while core product trust remains compromised.",
+      "research_questions_answered": [
+        2,
+        6
+      ],
+      "confidence": 0.35,
+      "caveat": "Quotes combine disparate topics including alleged fake goods, unsellable inventory, store manager order blocks, and payment form persistence bugs, making a single causal mechanism unverified."
+    },
+    {
+      "theme_id": "THM-20",
+      "statement": "Users ordering multi-item orders regularly receive missing products without receiving refunds, leading them to treat multi-item baskets as a direct financial risk.",
+      "mechanism": "When multi-item deliveries arrive incomplete and the platform fails to refund the missing items, the user incurs immediate monetary loss. Lacking guarantee of post-purchase dispute resolution or complete fulfillment, users mitigate risk by refusing to add secondary or experimental items to their cart.",
+      "so_what": "This is a fulfillment risk and post-purchase resolution issue, not an awareness problem; encouraging larger or multi-category baskets will not succeed without guaranteed refund resolution for missing items.",
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes do not state whether missing items occur systematically across all categories or are isolated to specific dark stores or multi-pack items."
+    },
+    {
+      "theme_id": "THM-21",
+      "statement": "Users experience broken delivery time promises (10 minutes taking 30\u201350 minutes), unfulfilled packaging add-ons, and spoiled produce despite paying premium prices.",
+      "mechanism": "The quotes reflect multiple distinct operational failures\u2014delivery SLA breaches, spoiled fresh produce, pricing dissatisfaction, and unfulfilled gift-wrap add-ons. Because the user feedback spans unrelated failure points across speed, quality, catalog breadth, and fees, a single underlying behavioral mechanism cannot be cleanly established.",
+      "so_what": "Promoting speed-dependent impulse categories or expanding catalog selections will not drive conversion if the core delivery SLA and quality baseline are unreliable.",
+      "research_questions_answered": [
+        2,
+        6
+      ],
+      "confidence": 0.35,
+      "caveat": "The quotes aggregate diverse complaints including delivery delays, fruit quality, packaging charges, and category requests (medical items), preventing a single grounded mechanism."
+    },
+    {
+      "theme_id": "THM-22",
+      "statement": "Users encounter recurring delivery failures, missing items, and inaccurate app claims, causing a collapse in operational trust that restricts their buying to minimal, low-risk repeat orders.",
+      "mechanism": "When quick-commerce apps consistently fail baseline commitments\u2014such as accurate order contents, delivery times, and product listings\u2014users associate ordering with unpredictable risk. To protect themselves from wasted money and time, they stop relying on the app for broader shopping needs and stick strictly to high-certainty, essential repeat purchases.",
+      "so_what": "This is a core fulfillment reliability problem, not an awareness or intent problem. Surfacing new categories or promoting discovery will fail to drive trial as long as fundamental fulfillment errors destroy user trust.",
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes emphasize severe operational failures like undelivered orders and missing items, which may stem from specific dark-store operational issues rather than a general unwillingness to try new categories across all users."
+    },
+    {
+      "theme_id": "THM-23",
+      "statement": "Users receive damaged, spoiled, or suspect packaged goods and face rigid no-return policies upon delivery, preventing them from risking money on unfamiliar or uninspected categories.",
+      "mechanism": "Users cannot inspect packaged or sealed goods (such as rice or milk) prior to delivery and opening. When delivery agents or app policies refuse returns for damaged or poor-quality items post-delivery, the user absorbs the entire financial loss, driving them to stick strictly to offline purchases or familiar brands where quality is guaranteed.",
+      "so_what": "Cross-category trial in packaged or fresh goods is constrained by unmitigated financial risk; offering promotions will not induce trial unless backed by clear returnability assurances or delivery-point quality guarantees.",
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The evidence relies on a small cluster of quotes covering specific perishable or packaged items (milk, rice), so it may not generalize to non-perishable or standardized category trials."
+    },
+    {
+      "theme_id": "THM-24",
+      "statement": "Users find incomplete catalog availability and payment restrictions (like lack of late-night cash on delivery), preventing them from placing full orders.",
+      "mechanism": "The quotes show user frustration with stockouts and late-night ordering constraints, but the feedback is too brief and superficial to reveal the underlying cognitive or evaluation mechanism driving product selection behavior.",
+      "so_what": "Ensuring basic item availability is required for complete baskets, but resolving stockouts alone will not automatically encourage users to explore unfamiliar categories without further understanding user trial evaluation.",
+      "research_questions_answered": [
+        6,
+        8
+      ],
+      "confidence": 0.35,
+      "caveat": "The quotes are extremely generic and fragmented ('some products not available'), providing insufficient detail to support a mechanism-level explanation of category exploration barriers."
+    },
+    {
+      "theme_id": "THM-25",
+      "statement": "Users avoid purchasing non-grocery categories because the lack of transparent return policies and unreliable refund processing creates a perceived financial risk.",
+      "mechanism": "Users treat quick-commerce as a low-stakes utility for groceries, but when they attempt to buy non-grocery items, they lack a safety net. The absence of clear 'returnable' labeling and the experience of delayed or denied refunds converts a potential trial of a new category into a high-risk gamble, leading them to default to categories where risk is minimal (groceries).",
+      "so_what": "Expanding category breadth via marketing or better discovery will fail if the underlying transactional trust is broken; the friction is a risk-mitigation issue, not a selection issue.",
+      "research_questions_answered": [
+        2,
+        6
+      ],
+      "confidence": 0.85,
+      "caveat": "The quotes suggest a mix of specific issues (refund delays vs. non-returnable policies), so it's unclear if the primary barrier is the policy itself or the execution of the refund process."
+    }
+  ]
+}
