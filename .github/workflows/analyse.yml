@@ -78,12 +78,23 @@ jobs:
           python -m engine.pipeline.cluster $ARGS 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
+      # Output goes to the step summary, not just the raw log. This stage failed twice with the
+      # reason buried ~150 lines up in a job log, which made "why did synthesis produce nothing"
+      # far more expensive to answer than it should have been. A credit exhaustion, a rate limit
+      # and a bad response shape all look identical from outside; they do not look identical here.
       - name: Synthesize insights
         if: github.event.inputs.skip_synthesis != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python -m engine.pipeline.synthesize
+        run: |
+          echo "### Synthesis" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          set -o pipefail
+          python -m engine.pipeline.synthesize 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          status=$?
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          exit $status
 
       # Deliberately after synthesis and never skipped: the checks are what license every number
       # the write-up quotes, so they run even if synthesis failed.

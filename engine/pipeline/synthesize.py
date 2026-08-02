@@ -104,6 +104,60 @@ def _theme_payload(theme: dict) -> dict:
     }
 
 
+def _collect(result, batch: list[dict]) -> tuple[dict[str, dict], str]:
+    """Pull per-theme objects out of whatever shape the model actually returned.
+
+    The prompt asks for a bare JSON array. Models routinely comply *almost*: wrapping the array in
+    `{"insights": [...]}` is the common one. The original loop did `for r in result` and checked
+    `isinstance(r, dict)`, so a wrapped response iterated the dict's **keys** — strings — matched
+    nothing, raised nothing, and left the batch silently empty. Nine batches of that produced 25
+    placeholder insights and a green workflow.
+
+    So: accept the array, accept a single wrapped array whatever the key is called, accept a lone
+    object. Match on `theme_id`; if the model returned the right number of objects but unrecognised
+    ids, fall back to positional order and say so, because losing good analysis to an id typo is
+    worse than a warning.
+
+    Returns (insights_by_theme_id, reason_if_empty).
+    """
+    if isinstance(result, dict):
+        # A wrapper object: take the first value that is a list of dicts.
+        for value in result.values():
+            if isinstance(value, list) and any(isinstance(v, dict) for v in value):
+                result = value
+                break
+        else:
+            # Or a single insight returned bare rather than in an array.
+            result = [result] if result.get("theme_id") else []
+
+    if not isinstance(result, list):
+        return {}, f"expected a list, got {type(result).__name__}"
+    if not result:
+        return {}, "empty array"
+
+    objects = [r for r in result if isinstance(r, dict)]
+    if not objects:
+        kinds = sorted({type(r).__name__ for r in result})
+        return {}, f"array contained no objects (types: {', '.join(kinds)})"
+
+    wanted = {t["theme_id"] for t in batch}
+    matched = {r["theme_id"]: r for r in objects if r.get("theme_id") in wanted}
+    if matched:
+        return matched, ""
+
+    if len(objects) == len(batch):
+        log.warning(
+            "    theme_ids unrecognised (%s) — assigning by position",
+            ", ".join(str(r.get("theme_id")) for r in objects),
+        )
+        return {t["theme_id"]: {**r, "theme_id": t["theme_id"]} for t, r in zip(batch, objects)}, ""
+
+    return {}, (
+        f"{len(objects)} object(s) but none carried a theme_id from this batch "
+        f"(got {[r.get('theme_id') for r in objects]}, wanted {sorted(wanted)})"
+    )
+
+
 def fallback_insight(theme: dict) -> dict:
     """Used when no LLM is available.
 
@@ -154,21 +208,28 @@ def main() -> None:
         for i in range(0, len(themes), SYNTH_BATCH):
             batch = themes[i : i + SYNTH_BATCH]
             user = json.dumps([_theme_payload(t) for t in batch], indent=2)
+            n_batch = i // SYNTH_BATCH + 1
             try:
                 result = client.structured(
                     system, user, tier="strong", max_tokens=len(batch) * TOKENS_PER_THEME + 2000
                 )
-                for r in result:
-                    if isinstance(r, dict) and r.get("theme_id"):
-                        written[r["theme_id"]] = r
-                log.info("  themes %d-%d synthesised", i + 1, i + len(batch))
+                got, why = _collect(result, batch)
+                if got:
+                    written.update(got)
+                    log.info("  batch %d: %d/%d themes synthesised", n_batch, len(got), len(batch))
+                else:
+                    # A response that parsed but yielded nothing usable is a failure. Previously
+                    # this path raised nothing, logged nothing and left `written` empty — the call
+                    # cost money, the loop "succeeded", and placeholders were written.
+                    failures.append(f"unusable response: {why}")
+                    log.warning("  batch %d returned nothing usable — %s", n_batch, why)
             except Exception as exc:  # noqa: BLE001
                 # Type as well as message. "Expecting value: line 1 column 1" is a truncated
                 # response; an LLMError naming block types is a budget spent entirely on thinking.
                 # The bare message alone told us neither.
                 detail = f"{type(exc).__name__}: {exc}"
                 failures.append(detail)
-                log.warning("  batch %d failed — %s", i // SYNTH_BATCH + 1, detail)
+                log.warning("  batch %d failed — %s", n_batch, detail)
 
     # The whole point of this stage is the LLM pass. If a client was available and *nothing* came
     # back, the placeholders below are not a graceful degradation — they are 25 restatements of
