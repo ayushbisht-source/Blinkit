@@ -1,23 +1,25 @@
-# Core
+# Everything here is imported somewhere in engine/. Nothing here is aspirational.
+#
+# This list was pruned once: it carried sentence-transformers, umap-learn, hdbscan, duckdb, pandas,
+# matplotlib, streamlit and praw from an earlier plan, none of which any module imports. They cost
+# several minutes of CI time per run (sentence-transformers pulls torch) to install libraries the
+# pipeline never touches, and they quietly contradicted the README's claim that clustering is
+# dependency-light and runs anywhere.
+
+# LLM clients — engine/llm.py auto-detects whichever key is present
 anthropic>=0.40.0
+google-genai>=1.0
+
+# Schema, config, retries
 pydantic>=2.9
 python-dotenv>=1.0
 tenacity>=9.0
 
 # Collectors
 google-play-scraper>=1.2.7
-praw>=7.8
-requests>=2.32
+requests>=2.32          # App Store RSS and Reddit's public JSON — neither needs an SDK
 
-# Pipeline
-duckdb>=1.1
-pandas>=2.2
-sentence-transformers>=3.3
-umap-learn>=0.5.7
-hdbscan>=0.8.40
-datasketch>=1.6
-
-# Validation + reporting
-scikit-learn>=1.5
-matplotlib>=3.9
-streamlit>=1.40
+# Pipeline and validation
+numpy>=1.26
+scikit-learn>=1.5       # TF-IDF, TruncatedSVD, agglomerative clustering, metrics
+datasketch>=1.6         # MinHash near-duplicate removal in normalize.py
