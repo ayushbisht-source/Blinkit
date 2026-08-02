@@ -64,8 +64,15 @@ DEFAULT_SPECS = [
 ]
 
 
-def _run_one(spec: str, themes: list[dict], system: str) -> dict[str, dict]:
-    """Synthesise every theme under one provider:model. Returns {theme_id: insight}."""
+def _run_one(spec: str, themes: list[dict], system: str,
+             failures: list[dict] | None = None) -> dict[str, dict]:
+    """Synthesise every theme under one provider:model. Returns {theme_id: insight}.
+
+    Per-batch failures are appended to `failures` and written into the committed output. Diagnosing
+    this stage from job logs cost three wrong guesses and four runs: the warnings sat ~150 lines
+    into a log the tooling would only tail, so "3 of 25 themes" was all that was visible and the
+    reason never was. A failure that is not recorded as data is a failure you debug by guessing.
+    """
     from engine.llm import LLMClient
     from engine.pipeline.synthesize import (
         SYNTH_BATCH,
@@ -106,9 +113,21 @@ def _run_one(spec: str, themes: list[dict], system: str) -> dict[str, dict]:
             out.update(got)
             if not got:
                 log.warning("  [%s] batch %d unusable: %s", spec, i // SYNTH_BATCH + 1, why)
+                if failures is not None:
+                    failures.append({
+                        "spec": spec, "batch": i // SYNTH_BATCH + 1, "kind": "unusable_response",
+                        "reason": why,
+                        "response_type": type(result).__name__,
+                        "response_preview": str(result)[:400],
+                    })
         except Exception as exc:  # noqa: BLE001
             log.warning("  [%s] batch %d failed: %s: %s", spec, i // SYNTH_BATCH + 1,
                         type(exc).__name__, exc)
+            if failures is not None:
+                failures.append({
+                    "spec": spec, "batch": i // SYNTH_BATCH + 1, "kind": "exception",
+                    "exception_type": type(exc).__name__, "message": str(exc)[:600],
+                })
     log.info("[%s] synthesised %d/%d themes", spec, len(out), len(themes))
     return out
 
@@ -187,6 +206,7 @@ def main() -> None:
     system = (PROMPTS / "synthesize.txt").read_text()
 
     runs: dict[str, dict[str, dict]] = {}
+    failures: list[dict] = []
 
     baseline = Path(args.baseline)
     if baseline.exists():
@@ -202,7 +222,7 @@ def main() -> None:
         if not os.getenv(f"{provider.upper()}_API_KEY"):
             log.warning("skipping %s — %s_API_KEY not set", spec, provider.upper())
             continue
-        runs[spec] = _run_one(spec, themes, system)
+        runs[spec] = _run_one(spec, themes, system, failures)
         (PROCESSED / f"insights.{provider}.json").write_text(
             json.dumps({"spec": spec, "insights": list(runs[spec].values())}, indent=2)
         )
@@ -273,6 +293,9 @@ def main() -> None:
         },
         "mechanism_agreement": _mechanism_agreement(runs, shared),
         "per_theme": per_theme,
+        # Committed rather than logged, so a partial run can be diagnosed from the repo.
+        "batch_failures": failures,
+        "batch_failure_count": len(failures),
         "caveat": (
             "Agreement is not correctness. Models trained on overlapping corpora are not "
             "independent coders, so high agreement bounds how much the single-model insights can "
