@@ -1,0 +1,96 @@
+name: Multi-model agreement
+
+# Re-runs synthesis under additional models and measures whether they agree about what the themes
+# mean. This is the only check in the suite that tests the *insights* rather than the pipeline
+# around them — everything else validates counts, quotes and clusters, all of which can be perfect
+# while the mechanism prose is one model's invention.
+#
+# Free-tier friendly by design: GEMINI_API_KEY and GROQ_API_KEY both cost nothing, and synthesis is
+# ~9 calls per model over 25 themes.
+#
+# Add GROQ_API_KEY at Settings -> Secrets and variables -> Actions (console.groq.com, free).
+# Without it this still runs, comparing whatever models are available — but two models from the
+# same family agreeing is much weaker evidence than two families agreeing, so the result is
+# labelled accordingly.
+
+on:
+  workflow_dispatch:
+    inputs:
+      specs:
+        description: "Space-separated provider:model list. Blank = gemini + groq defaults."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  agree:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Report which providers are usable
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          echo "### Providers available" >> $GITHUB_STEP_SUMMARY
+          for p in ANTHROPIC GEMINI GROQ; do
+            eval "v=\$${p}_API_KEY"
+            if [ -n "$v" ]; then echo "- $p: key present" >> $GITHUB_STEP_SUMMARY;
+            else echo "- $p: **not set**" >> $GITHUB_STEP_SUMMARY; fi
+          done
+
+      - name: Run agreement check
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          echo "### Multi-model agreement" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          set -o pipefail
+          if [ -n "${{ github.event.inputs.specs }}" ]; then
+            python -m engine.validation.multi_model --specs ${{ github.event.inputs.specs }} 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          else
+            python -m engine.validation.multi_model 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          fi
+          status=$?
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          exit $status
+
+      # Same reset-onto-remote pattern as the other workflows: these are generated artifacts, and
+      # rebasing one deterministic output onto another has nothing to resolve.
+      - name: Commit results
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin ${{ github.ref_name }}
+          git reset --mixed FETCH_HEAD
+          git add -f data/processed/multi_model_agreement.json data/processed/insights.*.json 2>/dev/null || true
+
+          if git diff --staged --quiet; then
+            echo "No change to the agreement outputs."
+          else
+            git commit -m "Multi-model agreement via Actions run ${{ github.run_number }}"
+            git push origin HEAD:${{ github.ref_name }}
+          fi

@@ -56,6 +56,13 @@ ANTHROPIC_MODEL_STRONG = os.getenv("ANTHROPIC_MODEL_STRONG", "claude-sonnet-5")
 GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-flash-latest")
 GEMINI_MODEL_STRONG = os.getenv("GEMINI_MODEL_STRONG", "gemini-flash-latest")
 
+# Groq: OpenAI-compatible REST, free tier, no SDK needed. Added as a third provider so the
+# multi-model agreement check has a genuinely independent model family to compare against —
+# two Gemini variants agreeing tells you much less than Gemini and Llama agreeing.
+GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+GROQ_MODEL_FAST = os.getenv("GROQ_MODEL_FAST", "llama-3.1-8b-instant")
+GROQ_MODEL_STRONG = os.getenv("GROQ_MODEL_STRONG", "llama-3.3-70b-versatile")
+
 
 class LLMError(RuntimeError):
     pass
@@ -160,6 +167,10 @@ class LLMClient:
                 legacy_genai.configure(api_key=os.environ["GEMINI_API_KEY"])
                 self._genai = legacy_genai
             log.info("Gemini SDK: %s", self._gemini_sdk)
+        elif self.provider == "groq":
+            # Deliberately no SDK: the endpoint is OpenAI-compatible and `requests` is already a
+            # dependency, so this adds a provider without adding a package to install in CI.
+            self._groq_key = os.environ["GROQ_API_KEY"]
         else:
             raise LLMError(f"Unknown provider: {self.provider}")
 
@@ -365,8 +376,10 @@ class LLMClient:
         # things: an Anthropic key with an exhausted balance is present, selected, and useless.
         forced = os.getenv("LLM_PROVIDER", "").strip().lower()
         if forced:
-            if forced not in ("anthropic", "gemini"):
-                raise LLMError(f"LLM_PROVIDER={forced!r} — expected 'anthropic' or 'gemini'.")
+            if forced not in ("anthropic", "gemini", "groq"):
+                raise LLMError(
+                    f"LLM_PROVIDER={forced!r} — expected 'anthropic', 'gemini' or 'groq'."
+                )
             if not os.getenv(f"{forced.upper()}_API_KEY"):
                 raise LLMError(f"LLM_PROVIDER={forced} but {forced.upper()}_API_KEY is not set.")
             return forced
@@ -374,6 +387,8 @@ class LLMClient:
             return "anthropic"
         if os.getenv("GEMINI_API_KEY"):
             return "gemini"
+        if os.getenv("GROQ_API_KEY"):
+            return "groq"
         raise LLMError(
             "No API key found. Set ANTHROPIC_API_KEY (console.anthropic.com) or "
             "GEMINI_API_KEY (aistudio.google.com — free tier is sufficient for this corpus)."
@@ -383,6 +398,8 @@ class LLMClient:
         strong = tier == "strong"
         if self.provider == "anthropic":
             return ANTHROPIC_MODEL_STRONG if strong else ANTHROPIC_MODEL_FAST
+        if self.provider == "groq":
+            return GROQ_MODEL_STRONG if strong else GROQ_MODEL_FAST
         return self._gemini_model_for(tier)
 
     @retry(
@@ -430,6 +447,37 @@ class LLMClient:
         tier: str = "fast",
         max_tokens: int = 2000,
     ) -> Any:
+        if self.provider == "groq":
+            import requests
+
+            model = self.model(tier)
+            resp = requests.post(
+                f"{GROQ_BASE_URL}/chat/completions",
+                headers={"Authorization": f"Bearer {self._groq_key}"},
+                json={
+                    "model": model,
+                    "max_tokens": max_tokens,
+                    "temperature": 0,
+                    # Groq honours OpenAI's JSON mode, which removes the "model wrapped it in
+                    # prose" failure class entirely rather than parsing around it.
+                    "response_format": {"type": "json_object"},
+                    "messages": [
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user},
+                    ],
+                },
+                timeout=180,
+            )
+            if resp.status_code != 200:
+                # Raise the body, not just the status. `_is_provider_dead` and `_is_retryable` both
+                # match on message text, and a bare "400 Bad Request" tells neither of them anything.
+                raise LLMError(f"Groq {resp.status_code} on {model}: {resp.text[:400]}")
+            body = resp.json()
+            try:
+                return _extract_json(body["choices"][0]["message"]["content"])
+            except (KeyError, IndexError) as exc:
+                raise LLMError(f"Unexpected Groq response shape: {str(body)[:300]}") from exc
+
         if self.provider == "anthropic":
             resp = self._client.messages.create(
                 model=self.model(tier),
