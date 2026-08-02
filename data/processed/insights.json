@@ -3,22 +3,22 @@
   "research_questions_covered": [
     1,
     2,
+    4,
     5,
     6,
     8
   ],
   "research_questions_uncovered": [
     3,
-    4,
     7
   ],
   "insights": [
     {
       "insight_id": "INS-01",
       "theme_id": "THM-01",
-      "statement": "Cluster of 72 statements characterised by: receives / expiry / spoiled / milk.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "statement": "Users buying perishable daily staples like milk, vegetables, and jaggery receive spoiled or curdled items despite valid expiry dates and are unable to get resolution from customer support.",
+      "mechanism": "Users rely on printed expiry dates and implicit quality standards to evaluate fresh items, but receive compromised goods (such as milk curdling immediately upon heating). When they try to report the defect with proof, customer support fails to provide help, forcing users to absorb the financial loss and meal disruption, which destroys trust in ordering perishables.",
+      "so_what": "This is a post-delivery support and quality assurance failure rather than an awareness problem, meaning expanding perishable catalog options will not increase adoption until quality reliability and instant complaint resolution are guaranteed.",
       "prevalence": 0.1141,
       "n": 72,
       "source_spread": {
@@ -30,7 +30,12 @@
         "working_professional",
         "cooks_daily"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_c49085f9ad958bea",
         "pl_9ecbe0d6ee9a8805",
@@ -47,15 +52,15 @@
         "pl_6b46be511c5f8229"
       ],
       "contradiction_rate": 0.0139,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.75,
+      "caveat": "The quotes are restricted to a small sample of daily fresh staples (milk, vegetables, jaggery) and do not show whether this support failure impacts non-perishable items."
     },
     {
       "insight_id": "INS-02",
       "theme_id": "THM-02",
-      "statement": "Cluster of 51 statements characterised by: quality / poor / poor quality / return.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users purchasing fresh produce and bakery items receive poor-quality goods without pre-delivery quality checks and have no return policy to recover lost money or time.",
+      "mechanism": "Users order unstandardized fresh products assuming the platform performs quality checks. When delivered substandard items, they discover there is no return policy to rectify the purchase, turning the transaction into a unrecoverable waste of money and time that discourages future category exploration.",
+      "so_what": "Category exploration for unstandardized items is blocked by return anxiety and perceived financial risk; introducing explicit quality checks or returnability guarantees is necessary before users will try non-standardized fresh categories.",
       "prevalence": 0.0808,
       "n": 51,
       "source_spread": {
@@ -68,7 +73,12 @@
         "tier2_plus",
         "lives_alone"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_52ccc1dcb976912e",
         "pl_fb5d9b2063f9211a",
@@ -83,15 +93,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.7,
+      "caveat": "Quotes state that items are 'poor quality' and non-returnable but do not specify what pre-purchase information or visual proof would enable users to evaluate quality prior to ordering."
     },
     {
       "insight_id": "INS-03",
       "theme_id": "THM-03",
-      "statement": "Cluster of 50 statements characterised by: food / trust / undermining / undermining trust.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, price_risk, return_anxiety. Requires synthesis before use.",
+      "statement": "Users experience severe safety and hygiene issues\u2014such as contaminated food, expired items, or tampered orders\u2014and face closed complaints without replacement or refunds.",
+      "mechanism": "A single causal mechanism cannot be established because the quotes combine disparate failure modes across different platforms and service models: physical hygiene contamination (cockroach leg), delivery tampering (half-eaten item), expired retail inventory, promotional offer dissatisfaction (\u20b949 offer), and arbitrary complaint closure on JioMart.",
+      "so_what": "Treating these complaints under a single trust umbrella is unactionable; product teams must separate prepared food handling failures from grocery inventory date checks and support ticket auto-closure rules.",
       "prevalence": 0.0792,
       "n": 50,
       "source_spread": {
@@ -104,7 +114,11 @@
         "parent_young_child",
         "working_professional"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_e1b535beefba7212",
         "pl_2b3c0a8c0bdeadbb",
@@ -119,15 +133,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.35,
+      "caveat": "The quotes point in multiple distinct directions spanning food delivery hygiene, quick-commerce expiration, promotional pricing disputes, and platform-specific support closures, making a unified mechanism unsupported by the data."
     },
     {
       "insight_id": "INS-04",
       "theme_id": "THM-04",
-      "statement": "Cluster of 42 statements characterised by: prices / fair / unsure / price.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "statement": "Quick-commerce users comparing commodity prices are deterred from purchasing across categories because item rates (such as vegetables) are priced significantly higher than local markets and competitor platforms like Zepto or Blinkit.",
+      "mechanism": "Users evaluate item fairness by benchmarking prices against offline markets or competing apps. Higher base commodity pricing signals overall platform inflation, creating a perception of price risk that stops users from exploring broader item categories on the app.",
+      "so_what": "Surfacing broad catalog items or new categories will not convert users who anchor the app's overall value on overpriced core commodities; catalog expansion cannot overcome a fundamental price-benchmark barrier.",
       "prevalence": 0.0666,
       "n": 42,
       "source_spread": {
@@ -138,7 +152,12 @@
       "segment_skew": [
         "working_professional"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_dfa48f64e3b8ed2e",
         "pl_1d8a7d4cae2f03a3",
@@ -155,15 +174,15 @@
         "pl_ff27e0cb33af3571"
       ],
       "contradiction_rate": 0.0238,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.8,
+      "caveat": "Quotes state that prices are high compared to market/competitors, but do not directly measure whether this causes basket abandonment or restricts users specifically to a fixed set of habitual items."
     },
     {
       "insight_id": "INS-05",
       "theme_id": "THM-05",
-      "statement": "Cluster of 34 statements characterised by: free / minimum / threshold / value.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "statement": "Users making small top-up orders are blocked by steep free-delivery minimum spend thresholds (recently raised from \u20b999/\u20b9100 to \u20b9399/\u20b9400), making low-value purchases or single-item trials economically unviable.",
+      "mechanism": "Users rely on quick-commerce for immediate, small-basket needs, but the abrupt jump in free-delivery thresholds forces them to either accept added fees or artificially pad their carts, destroying the low-friction utility of top-up shopping.",
+      "so_what": "Low-stakes category experimentation is constrained by high basket minimums; users will not test unfamiliar products if forced to build a \u20b9400 basket to avoid delivery penalties.",
       "prevalence": 0.0539,
       "n": 34,
       "source_spread": {
@@ -173,7 +192,12 @@
       "segment_skew": [
         "tier1_metro"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        4,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_78b6c7e4ba5baace",
         "pl_e723614399bf8496",
@@ -188,15 +212,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "While quotes explicitly document anger over threshold increases, they do not show whether users reduce order frequency or simply shift to larger scheduled baskets."
     },
     {
       "insight_id": "INS-06",
       "theme_id": "THM-06",
-      "statement": "Cluster of 33 statements characterised by: making / feel / charges / cost.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality, choice_overload. Requires synthesis before use.",
+      "statement": "Users placing short-distance orders are deterred at checkout by accumulated fee stacks\u2014including delivery fees, surge/rain charges up to \u20b9100, packing fees, and taxes\u2014that make total order cost feel disproportionate to distance and item value.",
+      "mechanism": "When users proceed to checkout, unexpected unbundled fees (distance charges even within 1km, weather surges, packing costs) create fee shock relative to the underlying basket value, causing users to restrict orders to essential, high-urgency items.",
+      "so_what": "Surplus fee friction at final checkout acts as a tax on impulse spending, meaning discovery and cross-category browsing will not translate to orders if fee stacking undermines perceived order value.",
       "prevalence": 0.0523,
       "n": 33,
       "source_spread": {
@@ -208,7 +232,11 @@
         "working_professional",
         "tier1_metro"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "ap_4fc12250446766a2",
         "ap_b334db85efac75db",
@@ -223,15 +251,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The feedback captures checkout cost frustration but lacks quantitative evidence on whether fee shock leads to complete cart abandonment or migration to offline options."
     },
     {
       "insight_id": "INS-07",
       "theme_id": "THM-07",
-      "statement": "Cluster of 31 statements characterised by: available / stock / actually / range.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): awareness, trust_quality, no_trigger. Requires synthesis before use.",
+      "statement": "Users attempting to purchase non-essential or localized items encounter stockouts, area unserviceability, or post-order cancellations due to app inventory mismatches.",
+      "mechanism": "When users look beyond core items, real-time inventory latency at local dark stores leads to items appearing available on the app that are actually out of stock, causing post-purchase cancellations. To avoid the frustration of delayed or canceled fulfillment, users abandon category exploration and limit orders to predictable, core staples.",
+      "so_what": "This is a fulfillment-reliability issue rather than an interest or discovery problem; promoting wider catalogs will increase user friction if local dark store inventory accuracy is not synchronized in real time.",
       "prevalence": 0.0491,
       "n": 31,
       "source_spread": {
@@ -241,7 +269,11 @@
       "segment_skew": [
         "tier2_plus"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_b9d616eb8527e6d1",
         "pl_08ad8ee3c3bd5ba3",
@@ -259,15 +291,15 @@
         "pl_e7e7572f2be42a0e"
       ],
       "contradiction_rate": 0.0645,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.45,
+      "caveat": "The quotes conflate complete geographic unserviceability in specific tier-2 towns with real-time stockouts in active zones, making it unclear whether localized inventory or general service availability is the primary driver."
     },
     {
       "insight_id": "INS-08",
       "theme_id": "THM-08",
-      "statement": "Cluster of 30 statements characterised by: replacement / wrong / refund / offered.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "statement": "Users who receive incorrect, damaged, or incomplete items face rejected claims, partial refunds, or absent support, stopping them from trying unproven product categories.",
+      "mechanism": "When an order error occurs, users expect resolution speed matching the quick delivery time. Because the platform lacks automated or fast post-delivery dispute resolution and enforces non-return policies, the entire financial risk of an incorrect item falls on the user, driving them to stick strictly to low-risk, familiar SKUs.",
+      "so_what": "This is a post-purchase downside risk problem; category expansion campaigns or trial discounts will fail unless clear returnability guarantees and instant refund policies lower the cost of order errors.",
       "prevalence": 0.0475,
       "n": 30,
       "source_spread": {
@@ -278,7 +310,11 @@
       "segment_skew": [
         "cooks_daily"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_2d4f4bc9e581dc21",
         "pl_56a38da76eee6a9e",
@@ -293,15 +329,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The available quotes come entirely from dissatisfied users who experienced fulfillment errors, which may overstate the risk perception relative to users who have never experienced a bad delivery."
     },
     {
       "insight_id": "INS-09",
       "theme_id": "THM-09",
-      "statement": "Cluster of 26 statements characterised by: fresh / trust / arrive / trust vegetables.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users ordering fresh fruits and vegetables receive rotten, spoiled, or infested produce, forcing them to restrict quick-commerce purchases to packaged goods.",
+      "mechanism": "Offline fresh produce shopping relies on manual inspection for freshness, which quick-commerce replaces with sight-unseen picking. Because dark store operations lack stringent quality filtering prior to dispatch, users receive spoiled perishables and permanently retreat to offline vendors for fresh categories.",
+      "so_what": "This is a physical quality assurance and inspection problem, not a pricing or catalog depth issue; discounting fresh categories will not drive retention if delivery quality repeatedly destroys trust.",
       "prevalence": 0.0412,
       "n": 26,
       "source_spread": {
@@ -313,7 +349,11 @@
         "cooks_daily",
         "pet_owner"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_6d67ad4b1e796638",
         "pl_cbab499f486a3039",
@@ -328,15 +368,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.9,
+      "caveat": "The quotes focus exclusively on extreme quality failures in fresh produce, so it is unclear if quality anxiety extends to other temperature-sensitive or perishable categories like dairy or meat."
     },
     {
       "insight_id": "INS-10",
       "theme_id": "THM-10",
-      "statement": "Cluster of 26 statements characterised by: unavailable / routine / daily / disrupting.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): awareness, price_risk, trust_quality. Requires synthesis before use.",
+      "statement": "Users relying on quick-commerce apps for routine morning staples are blocked from maintaining household routines when daily groceries are out of stock, delivery times drift, or catalog navigation prioritizes non-grocery items.",
+      "mechanism": "Daily cooks and household managers rely on predictable morning delivery windows and reliable staple availability to execute daily routines. When dark store stock fails, SLAs shift from early morning to late morning, or app redesigns push electronics and fashion over groceries, users cannot complete their planned tasks and respond by threatening to churn or switch services.",
+      "so_what": "Promoting non-grocery categories at the cost of staple visibility and delivery reliability directly undermines habit retention, proving that category diversification cannot come at the expense of core staple fulfillment.",
       "prevalence": 0.0412,
       "n": 26,
       "source_spread": {
@@ -348,7 +388,11 @@
         "tier2_plus",
         "working_professional"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        4,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_70e1a5806a525231",
         "pl_705b7465bdc88b0c",
@@ -367,15 +411,15 @@
         "pl_753f4d0a222a07c4"
       ],
       "contradiction_rate": 0.1154,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "Quotes reference multiple distinct platforms (BB Daily, Blinkit) and localized operational shifts, meaning individual failures may stem from regional dark store logistics rather than universal UX changes."
     },
     {
       "insight_id": "INS-11",
       "theme_id": "THM-11",
-      "statement": "Cluster of 25 statements characterised by: quantity / matches / expected / freshness.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, size_uncertainty, price_risk. Requires synthesis before use.",
+      "statement": "Users ordering items with explicit weight or volume specs receive physical products with lower actual quantities or incorrect container stickers, leaving them feeling misled.",
+      "mechanism": "Because quick-commerce pre-payment prevents pre-purchase physical inspection, users rely entirely on app-listed quantity benchmarks. When delivered items contain less weight than listed or feature conflicting volume labels (such as a 500ml container bearing a 1L sticker), users infer intentional misrepresentation and lose trust in category specifications across the platform.",
+      "so_what": "Hesitation to explore variable-quantity or packaged categories is driven by pre-delivery specification uncertainty and fulfillment mismatch, not by a lack of category interest.",
       "prevalence": 0.0396,
       "n": 25,
       "source_spread": {
@@ -385,7 +429,11 @@
       "segment_skew": [
         "cooks_daily"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_ecf7cc3698c1b4b3",
         "pl_0ec55552b62f5d16",
@@ -400,15 +448,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.9,
+      "caveat": "Feedback relies on post-delivery self-reports, making it impossible to distinguish between merchant packaging errors, dark-store picking mistakes, or incorrect app listings."
     },
     {
       "insight_id": "INS-12",
       "theme_id": "THM-12",
-      "statement": "Cluster of 22 statements characterised by: instead / pushing / resolving / competitor.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, channel_loyalty, return_anxiety. Requires synthesis before use.",
+      "statement": "Users experiencing missing or substituted lower-MRP items are blocked from recovering their money by unresponsive customer support and arbitrary account restrictions.",
+      "mechanism": "When fulfillment errors occur, users attempt to resolve missing or wrong items through customer care. When support refuses responsibility or deactivates accounts without clear explanation, users face unmitigated financial loss, driving them to avoid new category trials where item error rates are unknown.",
+      "so_what": "Users will not explore unfamiliar categories if the downside risk of order errors is unhedged by customer support; dispute resolution reliability is a strict prerequisite for cross-category trial.",
       "prevalence": 0.0349,
       "n": 22,
       "source_spread": {
@@ -419,7 +467,11 @@
       "segment_skew": [
         "tier2_plus"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_91ee53a840d32105",
         "pl_8337ba52bb99694f",
@@ -437,15 +489,15 @@
         "pl_8337ba52bb99694f"
       ],
       "contradiction_rate": 0.0909,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "Quotes describe general support failure and account blocks across multiple fulfillment issues without pinpointing the specific automated support workflows or policy thresholds responsible."
     },
     {
       "insight_id": "INS-13",
       "theme_id": "THM-13",
-      "statement": "Cluster of 21 statements characterised by: offers / advertised / discount / checkout.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality, channel_loyalty. Requires synthesis before use.",
+      "statement": "Users attracted by promotional coupons, \u20b91 deals, or external discounts experience checkout invalidation or missing promotional items upon delivery.",
+      "mechanism": "Users rely on discount hooks (such as WhatsApp coupons or promotional deals) to justify cart additions, but encounter undisclosed category exclusions, broken coupon codes at checkout, or omitted promo items in the delivered bag. Because the app advertises savings that fail during redemption or fulfillment, users lose price certainty and stop trusting promotional triggers to explore new items.",
+      "so_what": "Using push notifications or deal banners to drive category trial will backfire as long as promotion application rules are opaque and fulfillment drops deal items; clear cart-level coupon eligibility and guaranteed promo fulfillment must precede deal-driven category expansion.",
       "prevalence": 0.0333,
       "n": 21,
       "source_spread": {
@@ -454,7 +506,11 @@
       },
       "single_source": false,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_18539a9f13cd9bcc",
         "pl_1d57d9f828bb2531",
@@ -469,15 +525,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.75,
+      "caveat": "Quotes blur frontend coupon validation errors with backend delivery omissions, making it difficult to isolate whether the root cause is technical promo rules or warehouse stockouts."
     },
     {
       "insight_id": "INS-14",
       "theme_id": "THM-14",
-      "statement": "Cluster of 20 statements characterised by: charge / feels / 30 / unfair.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality. Requires synthesis before use.",
+      "statement": "Users refrain from placing orders or trying small-basket categories due to a perceived flat \u20b930 delivery charge that inflates cart value.",
+      "mechanism": "Users evaluate quick-commerce convenience against competitor pricing (e.g., Instamart) and offline alternatives, anchoring reasonable delivery fees at \u20b95\u2013\u20b910 or free. A flat \u20b930 fee breaks their mental unit economics\u2014especially on smaller top-up baskets\u2014causing users to cancel transactions entirely rather than pay an added fee perceived as disproportionate.",
+      "so_what": "Promoting new or low-ticket categories will not drive trial if a fixed \u20b930 delivery fee raises total checkout cost above the user's offline benchmark; fee structure directly constrains basket trial.",
       "prevalence": 0.0317,
       "n": 20,
       "source_spread": {
@@ -488,7 +544,11 @@
         "tier2_plus",
         "working_professional"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_7fa88ab06c9ed113",
         "pl_5ba9b4518e411260",
@@ -503,15 +563,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The data does not specify if the \u20b930 fee is charged universally across all cart sizes or only below a specific minimum order threshold."
     },
     {
       "insight_id": "INS-15",
       "theme_id": "THM-15",
-      "statement": "Cluster of 19 statements characterised by: leaving / recourse / exchange / electronics.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, size_uncertainty. Requires synthesis before use.",
+      "statement": "Users who receive incorrect or defective products are denied returns or exchanges by customer support, trapping them with unusable items.",
+      "mechanism": "When ordering items that carry quality or mismatch risk, users expect post-purchase recourse if the wrong or spoiled item arrives. However, customer support actively rejects return/exchange requests post-delivery\u2014even when the platform sent the wrong product\u2014forcing the user to absorb the financial loss and disincentivizing future purchases outside safe, predictable categories.",
+      "so_what": "Expanding into higher-ticket or quality-sensitive categories is blocked by return anxiety; until post-delivery dispute resolution and automated returns for wrong items are guaranteed, users will restrict orders to low-risk habit categories.",
       "prevalence": 0.0301,
       "n": 19,
       "source_spread": {
@@ -519,7 +579,13 @@
       },
       "single_source": true,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_9a257ae78e8aa89a",
         "pl_86e26d52e27d6f6f",
@@ -534,15 +600,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.9,
+      "caveat": "Quotes combine complaints about fresh food items and hard goods without specifying if policy enforcement differs by category."
     },
     {
       "insight_id": "INS-16",
       "theme_id": "THM-16",
-      "statement": "Cluster of 16 statements characterised by: cancelled / time / wasting / breaking trust.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users placing quick-commerce orders experience sudden post-checkout order cancellations due to unfulfilled stock or revoked discounts, forcing them to re-order repeatedly.",
+      "mechanism": "Users rely on quick commerce under time pressure with the expectation of predictable, fast delivery. When real-time inventory checks fail post-checkout, platforms unilaterally cancel orders after payment. When forced to re-order, users face repeated cancellations or lost discount benefits, nullifying the promised time savings and driving them back to predictable habits or offline buying.",
+      "so_what": "This is a real-time inventory synchronization issue; displaying promotions or driving category awareness while inventory accuracy is low actively damages user trust.",
       "prevalence": 0.0254,
       "n": 16,
       "source_spread": {
@@ -552,7 +618,11 @@
       "segment_skew": [
         "working_professional"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_fb0f6e2cdf033914",
         "pl_c5bfb451535debfb",
@@ -570,15 +640,15 @@
         "pl_495e89523c56c1a7"
       ],
       "contradiction_rate": 0.125,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.8,
+      "caveat": "The provided quotes illustrate cancellation distress, but do not explicitly show if users specifically stop trying new categories or churn from the platform altogether."
     },
     {
       "insight_id": "INS-17",
       "theme_id": "THM-17",
-      "statement": "Cluster of 16 statements characterised by: specific / brand / substituted / quality.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, awareness, return_anxiety. Requires synthesis before use.",
+      "statement": "Users seeking specific brands, niche personal care items, or distinct produce variants are blocked by frequent stock-outs and unauthorized product substitutions.",
+      "mechanism": "When trying non-staple categories, users rely on specific offline brand and variant anchors. When platforms lack long-tail SKUs or substitute them with different items (e.g., sending large tomatoes instead of cherry tomatoes), the user receives lower utility and faces replacement friction, leading them to avoid exploring non-staple categories on the app.",
+      "so_what": "Category expansion into long-tail or specialized goods cannot be driven by UI surface area alone; precise inventory availability and user-approved substitution mechanisms are essential pre-conditions.",
       "prevalence": 0.0254,
       "n": 16,
       "source_spread": {
@@ -589,7 +659,13 @@
       "segment_skew": [
         "tier1_metro"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_faf3bc5f36e5d151",
         "pl_a4d727adee5cc67a",
@@ -604,15 +680,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "Quotes bundle stock unavailability with unwanted substitution across very diverse product categories (beauty, groceries, tobacco), which may have different underlying supply constraints."
     },
     {
       "insight_id": "INS-18",
       "theme_id": "THM-18",
-      "statement": "Cluster of 15 statements characterised by: cream / ice cream / ice / melted.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users purchasing temperature-sensitive goods like ice cream receive melted or expired items, with unhelpful customer support when requesting refunds or replacements.",
+      "mechanism": "Exploring frozen categories carries physical risk. When cold-chain logistics fail and post-delivery support fails to provide immediate redress or replacements, the user absorbs the full financial loss, leading them to categorize frozen items as high-risk and stick exclusively to ambient staples.",
+      "so_what": "This is a logistics integrity and support-resolution problem, not an awareness problem; promotional discounts on cold categories will fail to drive repeat trial without quality guarantees or automated instant refunds.",
       "prevalence": 0.0238,
       "n": 15,
       "source_spread": {
@@ -621,7 +697,12 @@
       },
       "single_source": false,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_9917565b34a3951f",
         "pl_b196d8a4319e4cae",
@@ -638,15 +719,15 @@
         "pl_b9071a0fb773a29f"
       ],
       "contradiction_rate": 0.0667,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The evidence focuses heavily on ice cream; assuming this mechanism applies identically to all perishable or chilled categories relies on similar cold-chain failure rates."
     },
     {
       "insight_id": "INS-19",
       "theme_id": "THM-19",
-      "statement": "Cluster of 14 statements characterised by: genuine / payment / store / duplicate.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, channel_loyalty. Requires synthesis before use.",
+      "statement": "Users suspect quick-commerce apps of selling duplicate, expired, or dirty inventory, while experiencing friction during checkout due to unsaved payment details.",
+      "mechanism": "The quotes provided lack a coherent underlying mechanism, pointing variously to counterfeit product allegations, dirty/unsold stock clearance, store manager order blocking, and unremembered payment card details.",
+      "so_what": "Product trust cannot be repaired through messaging alone when quotes conflate payment UX friction with severe counterfeit and inventory hygiene allegations.",
       "prevalence": 0.0222,
       "n": 14,
       "source_spread": {
@@ -654,7 +735,10 @@
       },
       "single_source": true,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_ab0d9bcefe7fcb44",
         "pl_405ed9a5dc7a4985",
@@ -671,15 +755,15 @@
         "pl_cea76d49d85eecab"
       ],
       "contradiction_rate": 0.0714,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.3,
+      "caveat": "The raw quotes cover disparate topics (counterfeit perception, inventory cleanliness, store-level blocking, and card-saving payment UX) without a single unifying behavioral cause."
     },
     {
       "insight_id": "INS-20",
       "theme_id": "THM-20",
-      "statement": "Cluster of 14 statements characterised by: missing / leading / leading distrust / loss.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users ordering multi-item baskets receive incomplete orders and are denied refunds for missing items by customer support.",
+      "mechanism": "When dark-store fulfillment fails to pack complete orders and automated support denies refunds, the user absorbs direct financial loss. To mitigate this unbacked financial risk, users stop placing complex orders or abandon cross-category shopping where missing item risks are higher.",
+      "so_what": "This is an unmitigated post-purchase financial risk problem rather than a category discovery problem; promoting new categories will fail to drive expansion if multi-item fulfillment and refund resolution remain unreliable.",
       "prevalence": 0.0222,
       "n": 14,
       "source_spread": {
@@ -688,7 +772,11 @@
       },
       "single_source": false,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_9163283bc039c798",
         "pl_85cb8880ccc2b31e",
@@ -703,15 +791,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The quotes emphasize platform abandonment ('ab kabhi nhi mangaungi') rather than explicitly detailing how users restrict their basket selection to safe single-item categories."
     },
     {
       "insight_id": "INS-21",
       "theme_id": "THM-21",
-      "statement": "Cluster of 14 statements characterised by: promised / extra / minute / 10.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): price_risk, trust_quality, awareness. Requires synthesis before use.",
+      "statement": "Users incentivized by promised 10-minute delivery timeframes experience 30-to-50-minute fulfillment delays alongside high prices and quality failures in perishable goods.",
+      "mechanism": "The app anchors user expectations on ultra-fast 10-minute delivery. When actual fulfillment takes three times longer and arrives with poor product quality (e.g., rotten fruit) or extra fees, the value proposition fails, disincentivizing users from relying on the app for time-sensitive or quality-critical categories.",
+      "so_what": "Promising unrealistic delivery speeds sets an expectation anchor that turns routine logistics variance into a breach of trust, undermining user willingness to try fresh or premium categories.",
       "prevalence": 0.0222,
       "n": 14,
       "source_spread": {
@@ -722,7 +810,11 @@
       "segment_skew": [
         "tier1_metro"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_45bf68ab14e5f80d",
         "pl_782e47b7f027168b",
@@ -740,15 +832,15 @@
         "pl_c5707d5d86c85bec"
       ],
       "contradiction_rate": 0.1429,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.55,
+      "caveat": "Quotes combine several distinct pain points\u2014delivery delays, elevated pricing, rotten produce, gift-wrapping charges, and medical category requests\u2014limiting the isolation of a single cause."
     },
     {
       "insight_id": "INS-22",
       "theme_id": "THM-22",
-      "statement": "Cluster of 12 statements characterised by: eroding trust / eroding / trust / claims.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, channel_loyalty. Requires synthesis before use.",
+      "statement": "Users who suffer repeated fulfillment failures\u2014such as missing items, late deliveries, and mismatched products\u2014lose trust in app claims and restrict their buying to safe, predictable purchases.",
+      "mechanism": "The app sets performance expectations through promises on delivery speed and item accuracy that dark store operations fail to deliver. After experiencing repeated unfulfilled claims (missing food items, 3x longer wait times), users calculate that trying an unfamiliar category carries too high a risk of wasted money or effort, retreating strictly to habitual repeat orders.",
+      "so_what": "This is a operational reliability problem rather than a discovery problem; surfacing new categories or promotional banners to users with recent fulfillment breaches will not drive trial and may aggravate distrust.",
       "prevalence": 0.019,
       "n": 12,
       "source_spread": {
@@ -760,7 +852,11 @@
         "cooks_daily",
         "tier2_plus"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6
+      ],
       "evidence_doc_ids": [
         "pl_0286515b9d1a2a30",
         "ap_03dc16b098ada54b",
@@ -775,15 +871,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.85,
+      "caveat": "The quotes aggregate several distinct operational failures (non-delivery, missing items, misrepresentation), making it hard to isolate which specific breach drives category retreat first."
     },
     {
       "insight_id": "INS-23",
       "theme_id": "THM-23",
-      "statement": "Cluster of 10 statements characterised by: packaging / refuses / competitors / bad.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): trust_quality, return_anxiety, price_risk. Requires synthesis before use.",
+      "statement": "Users receiving damaged or unverified goods are prevented from inspecting quality prior to opening, while rigid return policies force them to absorb the financial loss of spoiled or fake products.",
+      "mechanism": "Evaluating items like fresh milk, staples, or unfamiliar brands requires physical inspection (smell, packaging integrity, taste) that can only occur after delivery. Because delivery agents refuse returns post-delivery and policies reject opened items, the user bears 100% of the financial risk of defective inventory, driving them to avoid unvetted categories in favor of offline stores with pre-purchase inspection.",
+      "so_what": "Expanding adoption in unstandardized or non-monitored categories cannot be achieved through app UI updates; it requires zero-risk return policies or explicit post-delivery refund guarantees.",
       "prevalence": 0.0158,
       "n": 10,
       "source_spread": {
@@ -791,7 +887,12 @@
       },
       "single_source": true,
       "segment_skew": [],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        2,
+        5,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_72e551a986ae40e6",
         "pl_bf3004a131d18db1",
@@ -806,15 +907,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.8,
+      "caveat": "Evidence combines transit damage (torn milk pouch), freshness uncertainty (rice), and authenticity concerns (fake products), blending distinct supply chain failures under one return barrier."
     },
     {
       "insight_id": "INS-24",
       "theme_id": "THM-24",
-      "statement": "Cluster of 9 statements characterised by: limiting / available limiting / available / late night.",
-      "mechanism": "NOT ANALYSED \u2014 generated without a model; no mechanism claimed.",
-      "so_what": "Dominant barrier(s): awareness, price_risk, size_uncertainty. Requires synthesis before use.",
+      "statement": "Users attempting to build full baskets or place late-night orders encounter missing inventory and checkout payment restrictions, preventing full order completion.",
+      "mechanism": "Users enter the platform with multi-category shopping intent but hit partial stockouts or disabled payment options (such as late-night Cash on Delivery). Unable to complete their intended basket on one platform, they abandon non-essential discovery items and limit purchases to the few critical staples that are consistently in stock.",
+      "so_what": "Low category cross-sell in this segment is driven by inventory fulfillment gaps and checkout policy friction rather than lack of user interest; pushing recommendations will fail if core stock availability is unreliable.",
       "prevalence": 0.0143,
       "n": 9,
       "source_spread": {
@@ -824,7 +925,12 @@
       "segment_skew": [
         "tier1_metro"
       ],
-      "research_questions_answered": [],
+      "research_questions_answered": [
+        1,
+        2,
+        6,
+        8
+      ],
       "evidence_doc_ids": [
         "pl_cf0326de7eee076d",
         "pl_248657c6cdb39fb2",
@@ -839,15 +945,15 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.0,
-      "caveat": "Template output, not analysis. Re-run with an API key present."
+      "confidence": 0.55,
+      "caveat": "The supporting quotes are brief and disconnected, mixing general inventory stockouts with a specific late-night cash-on-delivery request, making the causal mechanism less cohesive."
     },
     {
       "insight_id": "INS-25",
       "theme_id": "THM-25",
-      "statement": "Users restrict purchases to grocery on quick-commerce apps (e.g., JioMart) because non-grocery items they tried were non-returnable, defective, or had refunds/cancellations mishandled, and this was not disclosed clearly before purchase.",
-      "mechanism": "Users don't have a way to know upfront whether an item is returnable or how reliable the refund/cancellation process will be; the product page omits or buries this information. After being burned once (stuck with a wrong-size item, no refund after a week, a cancelled order with no return option), users don't treat it as a one-off failure \u2014 they generalize it into a rule ('never buy anything except grocery') and permanently narrow their behaviour to the one category where they've never been burned. The avoidance is a trust-based heuristic substituting for information they can't get at decision time.",
-      "so_what": "This is a trust/risk problem, not a discovery or catalog-breadth problem \u2014 users already know non-grocery categories exist, they've tried them and were penalized. Surfacing new categories more prominently, or improving search/browse, will not undo this; the fix has to attack the risk itself (clear, enforced returnability status pre-purchase, fast refund SLAs) or the behaviour will keep hardening category by category as more users get burned once each.",
+      "statement": "Users restrict their quick-commerce orders exclusively to groceries because purchasing non-grocery items exposes them to hidden non-returnable policies, defective goods, and unfulfilled refunds.",
+      "mechanism": "When considering non-grocery products, users lack clear upfront information about item returnability, product accuracy, and sizing. When delivered goods are defective or ill-fitting, platforms either refuse returns, reveal non-returnable clauses post-purchase, or delay refund processing for over a week, forcing users to absorb the financial loss and retreat permanently to low-risk grocery staples.",
+      "so_what": "Category expansion is blocked by post-purchase financial risk rather than a lack of product awareness, meaning marketing promotions for non-grocery categories will not convert users until return policies and refund guarantees are explicitly displayed on the product page.",
       "prevalence": 0.0143,
       "n": 9,
       "source_spread": {
@@ -860,8 +966,7 @@
         1,
         2,
         5,
-        6,
-        8
+        6
       ],
       "evidence_doc_ids": [
         "ap_1b53037679f8e508",
@@ -877,8 +982,8 @@
       ],
       "contradicting_evidence": [],
       "contradiction_rate": 0.0,
-      "confidence": 0.65,
-      "caveat": "Sample is small (5 quotes) and conflates several distinct failure modes \u2014 refund delay, item defect, seller-side cancellation, and non-disclosure of return policy \u2014 that may have different root causes even though users experience them as one 'non-returnable = don't buy' lesson. Also appears anchored to a single platform (JioMart), so the generalization to quick-commerce broadly is unverified."
+      "confidence": 0.8,
+      "caveat": "Some quotes explicitly single out JioMart, suggesting that severe refund delays and hidden return policies might be tied to specific platform operations rather than universal across all quick-commerce providers."
     }
   ]
 }
