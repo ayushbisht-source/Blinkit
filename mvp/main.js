@@ -59,7 +59,6 @@ function renderPersonas() {
     <button class="chip" data-id="${u.id}" aria-current="${u.id === currentUser.id}">
       <div class="cn">${u.name}</div>
       <div class="ct">${u.tag}</div>
-      <span class="cp ${u.provenance ? '' : 'syn'}">${u.provenance ?? 'LIFESTYLE'}</span>
     </button>`).join('');
 
   $('personas').querySelectorAll('.chip').forEach((b) => {
