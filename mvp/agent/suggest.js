@@ -32,12 +32,36 @@ const ADJACENCY = {
   'Tea & Coffee': ['Dairy & Bread', 'Snacks & Beverages'],
 };
 
-// Life-stage signals are far stronger evidence than generic adjacency: a stated pet owner who has
-// never bought pet supplies is a much better bet than any category-graph neighbour.
+// Life-stage and lifestyle signals are far stronger evidence than generic adjacency: a stated pet
+// owner who has never bought pet supplies is a much better bet than any category-graph neighbour.
+//
+// This map is also how the brief's three named goals are actually reached:
+//
+//   "a user who buys groceries starts buying pet supplies"      -> pet_owner
+//   "a user who buys snacks starts buying personal care"        -> skincare_routine
+//   "a user who buys household essentials starts buying baby"   -> parent_young_child
+//
+// It would have been easier to add those as adjacency edges — grocery buyers get pet food, snack
+// buyers get shampoo — and it would have been wrong. That produces "most people who buy dairy also
+// keep pet supplies stocked", which is a true sentence about a population and a meaningless one
+// about this shopper. 13 of 40 survey respondents named comparison time as their blocker and the
+// research is explicit that generic "customers like you" copy is the noise they already ignore.
+// A declared fact about the person is the only reason worth putting on the card.
+//
+// The lifestyle keys below extend beyond `engine/schema.py`'s SegmentSignal enum, which carries
+// only the eight the corpus could evidence. They are demo-side profile attributes, not research
+// findings, and are marked as such here so the two never get confused.
 const SIGNAL_CATEGORIES = {
   pet_owner: 'Pet Supplies',
   parent_young_child: 'Baby Care',
   cooks_daily: 'Home & Kitchen',
+  gym_goer: 'Health & Pharma',
+  skincare_routine: 'Personal Care',
+  tea_ritual: 'Tea & Coffee',
+  new_home: 'Home & Kitchen',
+  hosts_often: 'Frozen Food',
+  deep_cleans: 'Cleaning Supplies',
+  fresh_cook: 'Fruits & Vegetables',
 };
 
 function unownedCategories(owned) {
@@ -109,6 +133,19 @@ export function candidateCategories(user, owned) {
  * plausible-sounding reason would violate hard rule 4 — and a reason the user can tell is generic
  * is exactly the noise they already ignore.
  */
+export const SIGNAL_PHRASE = {
+  pet_owner: 'You have a pet',
+  parent_young_child: 'You buy for a little one',
+  cooks_daily: 'You cook most days',
+  gym_goer: 'You train regularly',
+  skincare_routine: 'You keep a skincare routine',
+  tea_ritual: 'You are a daily tea drinker',
+  new_home: 'You have just moved in',
+  hosts_often: 'You host people often',
+  deep_cleans: 'You do a proper clean every week',
+  fresh_cook: 'You cook fresh rather than packaged',
+};
+
 function composeFallback({ mode, user, category, product, lapsedDays, cadence, driver }) {
   if (mode === 'B') {
     const when = lapsedDays >= 30 ? `${Math.round(lapsedDays / 7)} weeks ago` : `${lapsedDays} days ago`;
@@ -121,11 +158,7 @@ function composeFallback({ mode, user, category, product, lapsedDays, cadence, d
   const trust = `${product.name} is the most reordered starter pick here`;
 
   if (driver?.kind === 'signal') {
-    const phrase = {
-      pet_owner: 'You have a pet',
-      parent_young_child: 'You buy for a little one',
-      cooks_daily: 'You cook most days',
-    }[driver.signal] ?? 'Based on what you buy';
+    const phrase = SIGNAL_PHRASE[driver.signal] ?? 'Based on what you buy';
     return { reason: `${phrase} — ${category.toLowerCase()} is the usual next thing people add`, trust };
   }
 

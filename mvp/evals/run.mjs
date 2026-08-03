@@ -8,7 +8,7 @@
 // the rules are enforced by tests rather than living only in prose.
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID, CATEGORIES } from '../data/seed.js';
-import { suggest } from '../agent/suggest.js';
+import { suggest, SIGNAL_PHRASE } from '../agent/suggest.js';
 import { categoryHistory, priceAnchor, MODE_B_MIN_DAYS, MODE_B_MAX_DAYS } from '../agent/eligibility.js';
 
 const results = [];
@@ -65,11 +65,14 @@ for (const user of USERS) {
 {
   let pass = true;
   const bad = [];
-  const SIGNAL_PHRASES = {
-    pet_owner: 'you have a pet',
-    parent_young_child: 'you buy for a little one',
-    cooks_daily: 'you cook most days',
-  };
+  // Imported, not restated. This table used to be a second copy, and when the agent gained seven
+  // lifestyle signals the copy did not — so the "reason cites nothing verifiable" arm produced
+  // eight false failures, and, more quietly, the "claims a signal the user never declared" arm
+  // stopped covering those seven signals entirely. A duplicated constant is a check that silently
+  // narrows.
+  const SIGNAL_PHRASES = Object.fromEntries(
+    Object.entries(SIGNAL_PHRASE).map(([k, v]) => [k, v.toLowerCase()])
+  );
 
   for (const { user, out } of cards) {
     if (!out.card) continue;

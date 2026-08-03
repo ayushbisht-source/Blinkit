@@ -249,6 +249,182 @@ export const USERS = [
       { date: daysAgo(33), items: [{ productId: 'db1', qty: 3 }, { productId: 'db2', qty: 1 }] },
     ],
   },
+
+  // ── Fifteen lifestyle profiles ────────────────────────────────────────────────────────────────
+  //
+  // Each one is narrow by design: a concentrated basket plus one declared fact about the person.
+  // That combination is what the strategic goal actually needs — the goal is not "suggest
+  // something", it is a *new category* per month, so a profile that already buys widely has
+  // nothing to cross into and a profile with no declared fact has no true reason to offer.
+  //
+  // The brief's three worked examples appear here deliberately:
+  //   groceries -> pet supplies         Diya, Vikram
+  //   snacks -> personal care           Kabir, Sana
+  //   household essentials -> baby care Meera
+  {
+    id: 'p01', name: 'Aarav Menon', tag: 'Gym Goer & Tech Single', household: 'Alone',
+    label: 'Gym goer — snacks and dairy only', expect: 'Mode A into Health & Pharma via gym_goer.',
+    signals: ['gym_goer', 'lives_alone', 'working_professional'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'sb1', qty: 3 }, { productId: 'db1', qty: 2 }] },
+      { date: daysAgo(8), items: [{ productId: 'sb2', qty: 4 }, { productId: 'db1', qty: 2 }] },
+      { date: daysAgo(17), items: [{ productId: 'sb3', qty: 5 }, { productId: 'db3', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p02', name: 'Diya Kulkarni', tag: 'New Puppy Owner', household: 'With family',
+    label: 'Grocery regular who just got a puppy',
+    expect: "The brief's first example: groceries -> pet supplies, via a declared pet.",
+    signals: ['pet_owner', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(3), items: [{ productId: 'fv1', qty: 2 }, { productId: 'db1', qty: 3 }] },
+      { date: daysAgo(10), items: [{ productId: 'fv2', qty: 2 }, { productId: 'db2', qty: 1 }] },
+      { date: daysAgo(19), items: [{ productId: 'fv3', qty: 1 }, { productId: 'db1', qty: 3 }] },
+    ],
+  },
+  {
+    id: 'p03', name: 'Kabir Rane', tag: 'Night-Shift Coder', household: 'Alone',
+    label: 'Late-night snacker with a skincare habit',
+    expect: "The brief's second example: snacks -> personal care.",
+    signals: ['skincare_routine', 'lives_alone', 'working_professional'],
+    orders: [
+      { date: daysAgo(1), items: [{ productId: 'sb2', qty: 3 }, { productId: 'sb1', qty: 2 }] },
+      { date: daysAgo(6), items: [{ productId: 'sb3', qty: 4 }] },
+      { date: daysAgo(14), items: [{ productId: 'sb1', qty: 3 }, { productId: 'sb2', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'p04', name: 'Meera Iyer', tag: 'Young Family & Home Runner', household: 'With family',
+    label: 'Household-essentials buyer with a young child',
+    expect: "The brief's third example: household essentials -> baby care.",
+    signals: ['parent_young_child', 'tier2_plus'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'he1', qty: 1 }, { productId: 'he2', qty: 1 }] },
+      { date: daysAgo(11), items: [{ productId: 'he1', qty: 1 }, { productId: 'cs1', qty: 1 }] },
+      { date: daysAgo(21), items: [{ productId: 'he2', qty: 2 }, { productId: 'cs2', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p05', name: 'Rohan Deshpande', tag: 'Weekend Cook', household: 'With family / Roommates',
+    label: 'Buys fresh produce, no kitchen kit', expect: 'Mode A into Home & Kitchen via cooks_daily.',
+    signals: ['cooks_daily', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'fv2', qty: 3 }, { productId: 'fv3', qty: 2 }] },
+      { date: daysAgo(9), items: [{ productId: 'fv1', qty: 2 }, { productId: 'fv2', qty: 2 }] },
+      { date: daysAgo(18), items: [{ productId: 'fv3', qty: 2 }, { productId: 'fv1', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p06', name: 'Sana Qureshi', tag: 'Hostel Student', household: 'With family / Roommates',
+    label: 'Student on snacks, starting a skincare routine',
+    expect: 'Mode A into Personal Care. Small basket, so the trial pack matters.',
+    signals: ['skincare_routine', 'student', 'tier2_plus'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'sb3', qty: 6 }] },
+      { date: daysAgo(7), items: [{ productId: 'sb1', qty: 3 }, { productId: 'sb3', qty: 3 }] },
+      { date: daysAgo(16), items: [{ productId: 'sb2', qty: 2 }, { productId: 'sb1', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'p07', name: 'Vikram Nair', tag: 'Cat Parent & Dairy Regular', household: 'Alone',
+    label: 'Buys milk daily, has a cat, has never bought pet food',
+    expect: 'Mode A into Pet Supplies via a declared cat.',
+    signals: ['pet_owner', 'lives_alone', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(1), items: [{ productId: 'db1', qty: 3 }, { productId: 'db2', qty: 1 }] },
+      { date: daysAgo(6), items: [{ productId: 'db1', qty: 3 }] },
+      { date: daysAgo(13), items: [{ productId: 'db1', qty: 2 }, { productId: 'db3', qty: 1 }] },
+      { date: daysAgo(22), items: [{ productId: 'db1', qty: 3 }, { productId: 'db2', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'p08', name: 'Ananya Bose', tag: 'Skincare Enthusiast', household: 'Alone',
+    label: 'Personal care regular, never bought health & pharma',
+    expect: 'Signal already spent (owns Personal Care) — falls to adjacency, cheapest trial wins.',
+    signals: ['skincare_routine', 'working_professional', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(3), items: [{ productId: 'pc2', qty: 2 }, { productId: 'pc3', qty: 1 }] },
+      { date: daysAgo(12), items: [{ productId: 'pc1', qty: 2 }, { productId: 'pc2', qty: 1 }] },
+      { date: daysAgo(24), items: [{ productId: 'pc3', qty: 1 }, { productId: 'pc1', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p09', name: 'Farhan Sheikh', tag: 'Daily Chai Ritual', household: 'With family',
+    label: 'Tea buyer who never buys the milk to go with it',
+    expect: 'Mode A into Dairy & Bread by adjacency from Tea & Coffee.',
+    signals: ['tea_ritual', 'tier2_plus'],
+    orders: [
+      { date: daysAgo(4), items: [{ productId: 'tc1', qty: 1 }, { productId: 'sb3', qty: 3 }] },
+      { date: daysAgo(15), items: [{ productId: 'tc1', qty: 1 }, { productId: 'sb1', qty: 2 }] },
+      { date: daysAgo(28), items: [{ productId: 'tc2', qty: 1 }, { productId: 'sb3', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'p10', name: 'Ishita Raghavan', tag: 'Meal Prepper & Runner', household: 'Alone',
+    label: 'Frozen-food regular who trains', expect: 'Mode A into Health & Pharma via gym_goer.',
+    signals: ['gym_goer', 'lives_alone', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'ff1', qty: 2 }, { productId: 'ff2', qty: 2 }] },
+      { date: daysAgo(9), items: [{ productId: 'ff2', qty: 3 }] },
+      { date: daysAgo(20), items: [{ productId: 'ff1', qty: 2 }, { productId: 'sb1', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'p11', name: 'Nikhil Chawla', tag: 'Just Moved In', household: 'With family / Roommates',
+    label: 'Cleaning-supplies buyer setting up a new flat',
+    expect: 'Mode A into Home & Kitchen via new_home.',
+    signals: ['new_home', 'working_professional', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(3), items: [{ productId: 'cs1', qty: 2 }, { productId: 'cs2', qty: 1 }] },
+      { date: daysAgo(10), items: [{ productId: 'cs2', qty: 1 }, { productId: 'he2', qty: 1 }] },
+      { date: daysAgo(19), items: [{ productId: 'cs1', qty: 1 }, { productId: 'he1', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p12', name: 'Tanvi Bhatt', tag: 'Working Parent', household: 'With family',
+    label: 'Baby-care regular, no health & pharma yet',
+    expect: 'Signal already spent (owns Baby Care) — falls to adjacency, cheapest trial wins.',
+    signals: ['parent_young_child', 'working_professional', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'bc1', qty: 1 }, { productId: 'bc2', qty: 1 }] },
+      { date: daysAgo(9), items: [{ productId: 'bc1', qty: 1 }, { productId: 'bc3', qty: 1 }] },
+      { date: daysAgo(20), items: [{ productId: 'bc2', qty: 2 }, { productId: 'bc1', qty: 1 }] },
+    ],
+  },
+  {
+    id: 'p13', name: 'Aditya Pillai', tag: 'Hosts Every Weekend', household: 'With family / Roommates',
+    label: 'Snacks and drinks for guests, never frozen',
+    expect: 'Mode A into Frozen Food via hosts_often.',
+    signals: ['hosts_often', 'working_professional', 'tier1_metro'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'sb2', qty: 6 }, { productId: 'sb1', qty: 4 }] },
+      { date: daysAgo(9), items: [{ productId: 'sb1', qty: 3 }, { productId: 'sb3', qty: 4 }] },
+      { date: daysAgo(16), items: [{ productId: 'sb2', qty: 5 }] },
+    ],
+  },
+  {
+    id: 'p14', name: 'Riya Malhotra', tag: 'Dog Parent, Spotless Flat', household: 'Alone',
+    label: 'Pet-supplies regular who has never bought cleaning products',
+    expect: 'Mode A into Cleaning Supplies via deep_cleans.',
+    signals: ['deep_cleans', 'pet_owner', 'lives_alone'],
+    orders: [
+      { date: daysAgo(3), items: [{ productId: 'ps1', qty: 3 }, { productId: 'ps4', qty: 1 }] },
+      { date: daysAgo(11), items: [{ productId: 'ps2', qty: 1 }, { productId: 'ps1', qty: 2 }] },
+      { date: daysAgo(23), items: [{ productId: 'ps1', qty: 3 }] },
+    ],
+  },
+  {
+    id: 'p15', name: 'Zoya Ansari', tag: 'Cooks Fresh Daily', household: 'With family',
+    label: 'Tea and snacks buyer who cooks from scratch',
+    expect: 'Mode A into Fruits & Vegetables via fresh_cook.',
+    signals: ['fresh_cook', 'tier2_plus'],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'tc1', qty: 1 }, { productId: 'sb3', qty: 3 }] },
+      { date: daysAgo(10), items: [{ productId: 'db1', qty: 2 }, { productId: 'tc1', qty: 1 }] },
+      { date: daysAgo(21), items: [{ productId: 'db1', qty: 2 }, { productId: 'sb1', qty: 2 }] },
+    ],
+  },
+
 ];
 
 export const PRODUCTS_BY_ID = Object.fromEntries(CATALOGUE.map((p) => [p.id, p]));
