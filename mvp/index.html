@@ -6,167 +6,184 @@
 <title>Blinkit — Category Spark MVP</title>
 <style>
   :root{
-    --yellow:#F8CB46; --green:#0C831F; --green-lit:#118A28; --green-bg:#F0FAF1;
-    --ink:#1F1F1F; --muted:#666; --dim:#8A8A8A; --line:#E8E8E8; --bg:#FFF; --wash:#F7F7F7;
-    --orange:#C4552B;
+    --page:#0a0c10; --shell:#11151c; --panel:#161b24; --card:#1c222d; --line:#252d3a;
+    --fg:#e8ecf2; --muted:#8792a3; --dim:#5c6675;
+    --yellow:#f8cb46; --green:#12a03a; --green-lit:#1fc24a;
+    --orange:#f0682c; --cyan:#3fb8e8;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"Cascadia Mono",monospace;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--wash);color:var(--ink);
-       font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-  button{font:inherit;cursor:pointer}
+  body{margin:0;background:var(--page);color:var(--fg);padding:26px;
+       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .shell{max-width:1720px;margin:0 auto;background:var(--shell);border:1px solid var(--line);
+         border-radius:18px;overflow:hidden}
 
-  /* ── header ─────────────────────────────────────────────────────────────── */
-  header{background:var(--yellow);position:sticky;top:0;z-index:20}
-  .hrow{max-width:1400px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:22px}
-  .brand{font-size:26px;font-weight:800;letter-spacing:-1px;color:#1F1F1F}
-  .eta{line-height:1.25}
-  .eta b{display:block;font-size:15px;font-weight:800}
-  .eta span{font-size:12.5px;color:#4a4a4a}
-  .search{flex:1;background:#fff;border:1px solid #EDEDED;border-radius:8px;padding:11px 14px;
-          display:flex;align-items:center;gap:9px;color:var(--dim);font-size:14px;min-width:160px}
-  .cartbtn{background:var(--green);color:#fff;border:0;border-radius:8px;padding:11px 18px;
-           font-weight:700;display:flex;align-items:center;gap:9px}
-  .cartbtn small{font-weight:600;opacity:.9}
+  header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px 28px;
+         border-bottom:1px solid var(--line)}
+  .logo{font-size:23px;font-weight:800;color:var(--yellow);letter-spacing:-.5px}
+  .tag{background:var(--green-lit);color:#04210b;font:800 11px var(--mono);letter-spacing:.9px;
+       padding:5px 11px;border-radius:7px}
+  header .right{margin-left:auto;color:var(--muted);font-size:14px}
+  header .right a{color:var(--muted)}
 
-  /* ── persona strip ──────────────────────────────────────────────────────── */
-  .strip{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:66px;z-index:15}
-  .striprow{max-width:1400px;margin:0 auto;padding:12px 20px}
-  .striplabel{font-size:12px;color:var(--muted);margin-bottom:9px}
-  .striplabel b{color:var(--ink)}
-  .chips{display:flex;gap:9px;overflow-x:auto;padding-bottom:3px}
-  .chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;
-        padding:9px 13px;text-align:left;min-width:172px;transition:border-color .12s,box-shadow .12s}
-  .chip:hover{border-color:#CFCFCF}
-  .chip[aria-current="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset;
-                             background:var(--green-bg)}
-  .chip .cn{font-size:13.5px;font-weight:700;line-height:1.25}
-  .chip .ct{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .wrap{display:grid;gap:22px;padding:26px 28px 30px;align-items:start;
+        grid-template-columns:minmax(280px,1fr) minmax(340px,400px) minmax(300px,1fr)}
+  @media(max-width:1180px){.wrap{grid-template-columns:1fr}}
 
-  /* ── layout ─────────────────────────────────────────────────────────────── */
-  .wrap{max-width:1400px;margin:0 auto;padding:20px;display:grid;gap:20px;
-        grid-template-columns:1fr 372px;align-items:start}
-  @media(max-width:980px){.wrap{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .panel h2{margin:0 0 6px;font-size:19px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .panel .hint{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 18px}
+  .rule{height:1px;background:var(--line);margin:14px 0 18px}
 
-  .sec{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
-  .sec h2{margin:0 0 3px;font-size:17px;font-weight:800}
-  .sec .sub{margin:0 0 16px;font-size:12.5px;color:var(--muted)}
+  .plist{max-height:70vh;overflow-y:auto;padding-right:4px}
+  .persona{display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;
+           background:var(--card);border:1px solid var(--line);border-radius:12px;
+           padding:15px 16px;margin-bottom:12px;transition:border-color .12s,background .12s}
+  .persona:hover{border-color:var(--dim)}
+  .persona[aria-current="true"]{border-color:var(--yellow);background:#1e1c12}
+  .persona .pn{font-size:17px;font-weight:700;margin-bottom:8px}
+  .persona .ptag{display:inline-block;background:#232b37;color:#b9c3d1;font-size:12px;
+                 padding:3px 9px;border-radius:6px;margin-bottom:12px}
+  .persona .prow{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}
+  .persona .prow b{color:var(--fg);font-weight:600}
 
-  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(158px,1fr))}
-  .prod{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;
-        flex-direction:column;gap:5px;background:#fff}
-  .prod .img{height:92px;border-radius:8px;background:var(--wash);display:flex;align-items:center;
-             justify-content:center;font-size:38px;margin-bottom:3px}
-  .prod .cat{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
-  .prod .nm{font-size:13px;font-weight:600;line-height:1.3;min-height:34px}
-  .prod .pk{font-size:11.5px;color:var(--muted)}
-  .prod .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
-  .prod .pr{font-weight:700;font-size:13.5px}
-  .add{background:var(--green-bg);color:var(--green);border:1px solid var(--green);border-radius:7px;
-       padding:5px 15px;font-size:12.5px;font-weight:800}
-  .add:hover{background:var(--green);color:#fff}
+  .phone{background:#0f141c;border:1px solid var(--line);border-radius:26px;overflow:hidden;
+         box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .ptop{background:var(--green);padding:16px 20px;display:flex;align-items:center;gap:10px}
+  .ptop .eta{font-size:12.5px;color:#c7f0d0}
+  .ptop .who{font-size:17px;font-weight:700}
+  .ptop .bolt{margin-left:auto;font-size:19px;color:var(--yellow)}
+  .pbody{padding:18px 18px 8px;max-height:68vh;overflow-y:auto}
+  .sect{font:700 11.5px var(--mono);letter-spacing:1.1px;color:var(--muted);margin:0 0 12px}
 
-  /* ── cart ───────────────────────────────────────────────────────────────── */
-  .cart{position:sticky;top:150px}
-  .crow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F2F2F2}
-  .crow .ci{width:38px;height:38px;border-radius:7px;background:var(--wash);display:flex;
-            align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
-  .crow .cd{flex:1;min-width:0}
-  .crow .cd b{display:block;font-size:13px;font-weight:600}
-  .crow .cd span{font-size:11.5px;color:var(--muted)}
-  .stepper{display:flex;align-items:center;background:var(--green);border-radius:6px;overflow:hidden}
-  .stepper button{background:none;border:0;color:#fff;padding:3px 8px;font-size:14px;line-height:1.2}
-  .stepper b{color:#fff;font-size:12.5px;min-width:16px;text-align:center}
-  .crow .cv{font-weight:700;font-size:13px;white-space:nowrap}
-  .empty{color:var(--muted);font-size:13px;padding:14px 0;text-align:center}
+  .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+        border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .thumb{width:38px;height:38px;border-radius:9px;background:#232b37;display:flex;
+         align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
+  .item .nm{flex:1;min-width:0}
+  .item .nm b{display:block;font-size:14.5px;font-weight:600}
+  .item .nm span{font-size:12.5px;color:var(--muted)}
+  .item .pr{font:700 14px var(--mono);color:var(--yellow);white-space:nowrap}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:#0f141c;
+              color:var(--fg);cursor:pointer;font:600 13px/1 sans-serif}
+  .qty button:hover{border-color:var(--green-lit);color:var(--green-lit)}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0 12px}
 
-  /* ── the spark card ─────────────────────────────────────────────────────── */
-  .spark{border:1px solid var(--yellow);border-radius:11px;background:#FFFCF2;padding:13px;margin:14px 0}
-  .skhead{display:flex;align-items:center;gap:7px;margin-bottom:11px}
-  .skpill{background:var(--yellow);color:#3d3000;font-size:10px;font-weight:800;letter-spacing:.5px;
-          padding:3px 8px;border-radius:5px}
-  .skmode{font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--muted);
-          border:1px solid var(--line);border-radius:5px;padding:3px 7px;background:#fff}
-  .skmode.b{color:var(--green);border-color:#BFE3C4}
-  .skx{margin-left:auto;background:none;border:0;color:var(--dim);font-size:17px;line-height:1;padding:0 2px}
-  .skmain{display:flex;gap:11px;margin-bottom:9px}
-  .skimg{width:58px;height:58px;border-radius:9px;background:#fff;border:1px solid var(--line);
-         display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 auto}
-  .skinfo{min-width:0}
-  .skinfo .n{font-size:14px;font-weight:700;line-height:1.3}
-  .skinfo .m{font-size:11.5px;color:var(--muted);margin:3px 0 5px}
-  .skinfo .star{color:var(--green);font-weight:700}
-  .skinfo .p{font-weight:800;font-size:15px}
-  .reason{background:#fff;border-left:3px solid var(--green);border-radius:6px;padding:9px 11px;
-          font-size:12.8px;line-height:1.45;margin-bottom:9px}
-  .anchor{font-size:12px;color:var(--green);font-weight:600;margin-bottom:7px}
+  .spark{border:1px solid #3a3320;border-radius:14px;background:#171a15;padding:14px;margin:14px 0}
+  .sk-head{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+  .sk-pill{background:var(--orange);color:#2a0f03;font:800 10.5px var(--mono);letter-spacing:.7px;
+           padding:4px 10px;border-radius:7px}
+  .sk-mode{font:800 10px var(--mono);letter-spacing:.7px;padding:4px 9px;border-radius:7px;
+           border:1px solid var(--line);color:var(--muted)}
+  .sk-mode.b{border-color:var(--green-lit);color:var(--green-lit)}
+  .sk-x{margin-left:auto;background:none;border:0;color:var(--muted);cursor:pointer;font-size:19px;
+        line-height:1;padding:0 2px}
+  .sk-main{display:flex;gap:13px;margin-bottom:10px}
+  .sk-thumb{width:62px;height:62px;border-radius:11px;background:#232b37;display:flex;
+            align-items:center;justify-content:center;font-size:30px;flex:0 0 auto}
+  .sk-info{min-width:0}
+  .sk-info .n{font-size:15.5px;font-weight:700;line-height:1.3}
+  .sk-info .meta{font-size:12.5px;color:var(--muted);margin:4px 0 6px}
+  .sk-info .star{color:var(--green-lit);font-weight:700}
+  .sk-info .price{font:800 17px var(--mono);color:var(--yellow)}
+  .reason{background:#0f141c;border-left:3px solid var(--green-lit);border-radius:8px;
+          padding:11px 13px;font-size:13.5px;line-height:1.5;margin-bottom:10px}
+  .anchor{font-size:12.5px;color:var(--green-lit);margin-bottom:8px;font-variant-numeric:tabular-nums}
   .anchor.bad{color:var(--orange)}
-  .trust{font-size:11.5px;color:var(--muted);margin-bottom:11px}
-  .skadd{width:100%;background:var(--green);color:#fff;border:0;border-radius:8px;padding:11px;
-         font-weight:800;font-size:13.5px}
-  .sknot{width:100%;margin-top:7px;background:#fff;border:1px solid var(--line);border-radius:8px;
-         padding:8px;color:var(--muted);font-size:12.5px;font-weight:600}
+  .trust{font-size:12.5px;color:var(--muted);margin-bottom:13px}
+  .addbtn{width:100%;background:var(--green);border:0;border-radius:10px;padding:12px;color:#fff;
+          font:700 14.5px sans-serif;cursor:pointer}
+  .addbtn:hover{background:var(--green-lit)}
+  .notnow{width:100%;margin-top:8px;background:transparent;border:1px solid var(--line);
+          border-radius:10px;padding:9px;color:var(--muted);font:600 13px sans-serif;cursor:pointer}
 
-  .nocard{border:1px dashed #D8D8D8;border-radius:11px;background:var(--wash);padding:14px;margin:14px 0}
-  .nocard b{color:var(--orange);font-size:13.5px}
-  .nocard p{margin:7px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
-  .nocard code{background:#fff;border:1px solid var(--line);border-radius:4px;padding:1px 5px;
-               font-size:11.5px;color:var(--ink)}
+  .nocard{border:1px dashed #3d4756;border-radius:14px;background:#141821;padding:16px;margin:14px 0}
+  .nocard b{color:var(--orange);font-size:14.5px}
+  .nocard p{margin:9px 0 0;font-size:12.8px;color:var(--muted);line-height:1.55}
+  .nocard code{font-family:var(--mono);font-size:12px;color:var(--fg);background:#0f141c;
+               padding:2px 6px;border-radius:5px}
 
-  .bill{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
-  .bill .b{display:flex;justify-content:space-between;font-size:12.8px;color:var(--muted);margin-bottom:7px}
-  .bill .b b{color:var(--ink);font-weight:600}
-  .bill .free{color:var(--green);font-weight:700}
-  .bill .warn{color:var(--orange)}
-  .pay{width:100%;margin-top:12px;background:var(--green);color:#fff;border:0;border-radius:9px;
-       padding:13px;font-weight:800;font-size:14.5px;display:flex;justify-content:space-between}
-  .foot{max-width:1400px;margin:0 auto;padding:4px 20px 34px;color:var(--dim);font-size:11.5px;line-height:1.6}
-  a{color:var(--green)}
+  .bill{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+  .bill .r{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:var(--muted)}
+  .bill .r b{color:var(--fg);font-weight:600;font-family:var(--mono)}
+  .bill .free{color:var(--green-lit);font-weight:700}
+  .bill .warn{color:var(--orange);font-size:12.5px}
+  .placebar{background:var(--green);padding:15px 20px;display:flex;justify-content:space-between;
+            align-items:center;cursor:pointer;font-weight:700;font-size:16px;color:#fff}
+  .placebar:hover{background:var(--green-lit)}
+  .placebar span:last-child{font-family:var(--mono)}
+
+  .cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+  .prod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .prod .c{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .prod .n{font-size:13px;font-weight:600;margin:3px 0}
+  .prod .p{font-size:12px;color:var(--muted)}
+  .prod button{width:100%;margin-top:7px;background:transparent;border:1px solid var(--green-lit);
+               color:var(--green-lit);border-radius:8px;padding:5px;cursor:pointer;
+               font:600 12px sans-serif}
+  .prod button:hover{background:var(--green);color:#fff;border-color:var(--green)}
+
+  .note{color:var(--dim);font-size:12px;line-height:1.6;margin:16px 0 0}
+  a{color:var(--green-lit)}
 </style>
 </head>
 <body>
+<div class="shell">
+  <header>
+    <span class="logo">Blinkit</span>
+    <span class="tag">CATEGORY SPARK MVP</span>
+    <span class="right">Graduation Project Discovery Simulator · <a href="./deck/">case study</a></span>
+  </header>
 
-<header>
-  <div class="hrow">
-    <span class="brand">blinkit</span>
-    <span class="eta"><b>Delivery in 10 minutes</b><span id="who">—</span></span>
-    <span class="search">🔍 Search for atta, dal, coke and more</span>
-    <button class="cartbtn" id="paytop">🛒 <span id="carttop">My Cart</span></button>
+  <div class="wrap">
+    <section class="panel">
+      <h2>👥 Selected Personas</h2>
+      <p class="hint">
+        Select a user profile to simulate how the Suggestions Engine targets their demographic.
+        Profiles are synthetic and patterned on the depth interviews — including two where the
+        correct behaviour is to suggest nothing at all. They are not the interviewees, whose
+        transcripts stay anonymous.
+      </p>
+      <div class="plist" id="personas"></div>
+    </section>
+
+    <section>
+      <div class="phone">
+        <div class="ptop">
+          <div>
+            <div class="eta">Delivering in 10 Mins</div>
+            <div class="who" id="who">—</div>
+          </div>
+          <span class="bolt">⚡</span>
+        </div>
+        <div class="pbody">
+          <div class="sect">YOUR REGULAR BASKET</div>
+          <div id="cart"></div>
+          <div id="suggestion"></div>
+          <div class="bill" id="bill"></div>
+        </div>
+        <div class="placebar" id="place"><span>Place Order</span><span id="placetotal">Rs 0</span></div>
+      </div>
+
+      <p class="note">
+        Mode, category, product and the price anchor are computed deterministically and are identical
+        with or without an LLM — only the wording differs, so the demo cannot be broken by an API
+        quota.
+      </p>
+    </section>
+
+    <!-- catalogue -->
+    <section class="panel">
+      <h2>🛒 Add More Items</h2>
+      <p class="hint">
+        Anything added here lands in the basket, and the agent re-runs at cart review. The
+        suggestion is computed from the shopper's own history — adding items does not change what
+        it is allowed to suggest, only whether the moment has arrived.
+      </p>
+      <div class="cat" id="grid"></div>
+    </section>
   </div>
-</header>
-
-<div class="strip">
-  <div class="striprow">
-    <div class="striplabel"><b>Shopping as</b></div>
-    <div class="chips" id="personas"></div>
-  </div>
-</div>
-
-<div class="wrap">
-  <main class="sec">
-    <h2>Shop by product</h2>
-    <p class="sub">Add anything to the cart — the suggestion is computed at cart review, from this
-    shopper's own order history.</p>
-    <div class="grid" id="grid"></div>
-  </main>
-
-  <aside>
-    <div class="sec cart">
-      <h2>My Cart</h2>
-      <p class="sub" id="cartsub">Pre-filled with this shopper's usual order.</p>
-      <div id="cart"></div>
-      <div id="suggestion"></div>
-      <div class="bill" id="bill"></div>
-      <button class="pay" id="pay"><span>Place Order</span><span id="paytotal">₹0</span></button>
-    </div>
-  </aside>
-</div>
-
-<div class="foot">
-  Synthetic catalogue, order histories and shopper profiles. Five profiles are patterned on the
-  depth interviews and tagged P01–P05; they are not the interviewees, whose transcripts stay
-  anonymous. Mode, category, product and the price anchor are computed deterministically and are
-  identical with or without an LLM — only the wording differs, so the demo cannot be broken by an
-  API quota. <a href="./deck/">Case study deck</a>.
 </div>
 
 <script type="module" src="./main.js"></script>

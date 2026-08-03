@@ -3,10 +3,12 @@
 // Deliberately runs the *same* agent modules the eval suite tests — no reimplementation for the
 // browser. If the demo shows a card, that card came from the code that passes the evals.
 //
-// No diagnostics panel and no uplift figures: this is styled as the storefront a shopper would
-// actually see. The agent's reasoning is still fully inspectable — it is asserted by
-// mvp/evals/run.mjs, which is what should be trusted anyway, rather than by a number printed
-// next to the thing that produced it.
+// No instrumentation panels: this is styled as the surface a shopper would actually see. The
+// agent's reasoning is still fully inspectable — it is asserted by mvp/evals/run.mjs, which is what
+// should be trusted anyway, rather than by a number printed next to the thing that produced it.
+// There are deliberately no uplift figures anywhere in this demo either — there is no experiment
+// behind one, and an invented percentage would be the most confident number on the page with
+// nothing supporting it.
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID } from './data/seed.js';
 import { suggest } from './agent/suggest.js';
@@ -21,7 +23,7 @@ try {
 }
 
 const $ = (id) => document.getElementById(id);
-const rupees = (n) => '\u20B9' + Math.round(n).toLocaleString('en-IN');
+const rupees = (n) => 'Rs ' + Math.round(n).toLocaleString('en-IN');
 const ICONS = {
   'Dairy & Bread': '🥛', 'Snacks & Beverages': '🥤', 'Fruits & Vegetables': '🥬',
   'Household Essentials': '🧴', 'Personal Care': '🪥', 'Baby Care': '🍼',
@@ -56,12 +58,16 @@ const avgOrderValue = (u) =>
 
 function renderPersonas() {
   $('personas').innerHTML = USERS.map((u) => `
-    <button class="chip" data-id="${u.id}" aria-current="${u.id === currentUser.id}">
-      <div class="cn">${u.name}</div>
-      <div class="ct">${u.tag}</div>
+    <button class="persona" data-id="${u.id}" aria-current="${u.id === currentUser.id}">
+      <div class="pn">${u.name ?? u.id}</div>
+      <div class="ptag">${u.tag ?? u.subtitle ?? ''}</div>
+      <div class="prow">
+        <span>Household: <b>${u.household ?? '—'}</b></span>
+        <span>AOV Profiling: <b>${rupees(avgOrderValue(u))}</b></span>
+      </div>
     </button>`).join('');
 
-  $('personas').querySelectorAll('.chip').forEach((b) => {
+  $('personas').querySelectorAll('.persona').forEach((b) => {
     b.onclick = () => {
       currentUser = USERS.find((u) => u.id === b.dataset.id);
       lastKey = null;
@@ -83,16 +89,15 @@ function loadRegularBasket() {
 function renderCatalogue() {
   $('grid').innerHTML = CATALOGUE.filter((p) => p.stock > 0).map((p) => `
     <div class="prod">
-      <div class="img">${ICONS[p.category] ?? '\uD83D\uDED2'}</div>
-      <div class="cat">${p.category}</div>
-      <div class="nm">${p.name}</div>
-      <div class="pk">${p.pack}</div>
-      <div class="foot">
-        <span class="pr">${rupees(p.price)}</span>
-        <button class="add" data-id="${p.id}">ADD</button>
-      </div>
+      <div class="c">${p.category}</div>
+      <div class="n">${p.name}</div>
+      <div class="p">${p.pack} · ${rupees(p.price)}</div>
+      <button data-id="${p.id}">Add</button>
     </div>`).join('');
-  $('grid').querySelectorAll('.add').forEach((b) => (b.onclick = () => addToCart(b.dataset.id)));
+
+  $('grid').querySelectorAll('button').forEach((b) => {
+    b.onclick = () => addToCart(b.dataset.id);
+  });
 }
 
 function addToCart(productId, qty = 1) {
@@ -116,19 +121,19 @@ function cartTotal() {
 
 function renderCart() {
   if (!cart.length) {
-    $('cart').innerHTML = '<div class="empty">Cart is empty. Add something to trigger cart review.</div>';
+    $('cart').innerHTML =
+      '<div class="empty">Basket is empty. Add items below — the agent only acts at cart review, ' +
+      'when the task the shopper came for is already done.</div>';
     return;
   }
   $('cart').innerHTML = cart.map((l) => {
     const p = PRODUCTS_BY_ID[l.productId];
     return `
-      <div class="crow">
-        <span class="ci">${ICONS[p.category] ?? '\uD83D\uDED2'}</span>
-        <span class="cd"><b>${p.name}</b><span>${p.pack}</span></span>
-        <span class="stepper">
-          <button data-dec="${p.id}">\u2212</button><b>${l.qty}</b><button data-inc="${p.id}">+</button>
-        </span>
-        <span class="cv">${rupees(p.price * l.qty)}</span>
+      <div class="item">
+        <span class="thumb">${ICONS[p.category] ?? '🛒'}</span>
+        <span class="nm"><b>${p.name}</b><span>Qty: ${l.qty} · ${p.pack}</span></span>
+        <span class="qty"><button data-dec="${p.id}">−</button><button data-inc="${p.id}">+</button></span>
+        <span class="pr">${rupees(p.price * l.qty)}</span>
       </div>`;
   }).join('');
   $('cart').querySelectorAll('[data-inc]').forEach((b) => (b.onclick = () => setQty(b.dataset.inc, 1)));
@@ -140,14 +145,13 @@ function renderBill() {
   const free = total >= FREE_DELIVERY_ABOVE;
   const fee = cart.length && !free ? DELIVERY_FEE : 0;
   $('bill').innerHTML = cart.length ? `
-    <div class="b"><span>Item total</span><b>${rupees(total)}</b></div>
-    <div class="b"><span>Delivery charge</span>
-      <b class="${free ? 'free' : ''}">${free ? 'FREE' : rupees(DELIVERY_FEE)}</b></div>
-    ${free ? '' : `<div class="b"><span class="warn">Add ${rupees(FREE_DELIVERY_ABOVE - total)} more for free delivery</span><b></b></div>`}
+    <div class="sect">BILL DETAILS</div>
+    <div class="r"><span>Item Total</span><b>${rupees(total)}</b></div>
+    <div class="r"><span>Delivery Partner Fee</span>
+      <b class="${free ? 'free' : ''}">${free ? 'FREE (Waiver)' : rupees(DELIVERY_FEE)}</b></div>
+    ${free ? '' : `<div class="r"><span class="warn">Add ${rupees(FREE_DELIVERY_ABOVE - total)} more for free delivery</span><b></b></div>`}
   ` : '';
-  $('paytotal').textContent = rupees(total + fee);
-  const n = cart.reduce((s, l) => s + l.qty, 0);
-  $('carttop').textContent = n ? `${n} item${n > 1 ? 's' : ''} \u00B7 ${rupees(total + fee)}` : 'My Cart';
+  $('placetotal').textContent = rupees(total + fee);
 }
 
 // ── the card ─────────────────────────────────────────────────────────────────────────────────
@@ -175,7 +179,7 @@ async function renderSuggestion() {
   if (!out.card) {
     $('suggestion').innerHTML = `
       <div class="nocard">
-        <b>No suggestion shown.</b>
+        <b>No card shown.</b>
         <p>Reason: <code>${out.why}</code></p>
         <p>Showing nothing is a designed outcome. A card whose reason the data cannot substantiate is
         exactly the noise these shoppers already ignore — and two of the five interviews describe
@@ -192,24 +196,24 @@ async function renderSuggestion() {
   const r = rating(c.product.id);
   $('suggestion').innerHTML = `
     <div class="spark">
-      <div class="skhead">
-        <span class="skpill">CATEGORY SPARK</span>
-        <span class="skmode ${out.mode === 'B' ? 'b' : ''}">${out.mode === 'B' ? 'MODE B · SECOND PURCHASE' : 'MODE A · FIRST CROSSOVER'}</span>
-        <button class="skx" id="dis" title="Dismiss">×</button>
+      <div class="sk-head">
+        <span class="sk-pill">📍 CATEGORY SPARK</span>
+        <span class="sk-mode ${out.mode === 'B' ? 'b' : ''}">${out.mode === 'B' ? 'MODE B' : 'MODE A'}</span>
+        <button class="sk-x" id="dis" title="Dismiss">×</button>
       </div>
-      <div class="skmain">
-        <span class="skimg">${ICONS[c.category] ?? '🛒'}</span>
-        <span class="skinfo">
+      <div class="sk-main">
+        <span class="sk-thumb">${ICONS[c.category] ?? '🛒'}</span>
+        <span class="sk-info">
           <div class="n">${c.product.name}</div>
-          <div class="m">${c.product.pack} &nbsp;·&nbsp; <span class="star">${r.stars} ★</span> (${r.count.toLocaleString('en-IN')})</div>
-          <div class="p">${rupees(c.product.price)}</div>
+          <div class="meta">${c.product.pack} &nbsp;|&nbsp; <span class="star">${r.stars} ★</span> (${r.count.toLocaleString('en-IN')} ratings)</div>
+          <div class="price">${rupees(c.product.price)}</div>
         </span>
       </div>
       <div class="reason">${c.reason}</div>
       ${c.anchorLine ? `<div class="anchor ${c.anchorFavourable === false ? 'bad' : ''}">${c.anchorLine}</div>` : ''}
       <div class="trust">${c.trust}</div>
-      <button class="skadd" id="acc">Add to Cart</button>
-      <button class="sknot" id="not">Not now</button>
+      <button class="addbtn" id="acc">Add to Cart</button>
+      <button class="notnow" id="not">Not now</button>
     </div>`;
 
   $('acc').onclick = () => {
@@ -221,7 +225,6 @@ async function renderSuggestion() {
   };
   $('dis').onclick = dismiss;
   $('not').onclick = dismiss;
-
 
   if (lastKey !== key) {
     lastKey = key;
@@ -236,21 +239,19 @@ function render() {
 }
 
 function renderAll() {
-  $('who').textContent = `${currentUser.name} · ${currentUser.household}`;
+  $('who').textContent = currentUser.name ?? currentUser.id;
   $('personas').querySelectorAll('.persona').forEach((b) => {
     b.setAttribute('aria-current', String(b.dataset.id === currentUser.id));
   });
   render();
 }
 
-const placeOrder = () => {
+$('place').onclick = () => {
   if (!cart.length) return;
   loadRegularBasket();
   lastKey = null;
   render();
 };
-$('pay').onclick = placeOrder;
-$('paytop').onclick = placeOrder;
 
 renderPersonas();
 renderCatalogue();
