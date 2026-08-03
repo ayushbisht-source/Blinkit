@@ -80,6 +80,8 @@ function daysAgo(n) {
 export const USERS = [
   {
     id: 'u1',
+    tag: 'Snack & Dairy Regular',
+    household: 'Alone',
     name: 'Narrow Repeater',
     subtitle: 'Dairy &amp; snacks only · lives alone',
     provenance: 'Textbook target segment',
@@ -95,6 +97,8 @@ export const USERS = [
   },
   {
     id: 'u2',
+    tag: 'Lapsed Pet Buyer',
+    household: 'With family',
     name: 'Lapsed Crosser',
     subtitle: 'Tried pet supplies once, 28 days ago',
     provenance: 'P03 · the Mode B case',
@@ -111,6 +115,8 @@ export const USERS = [
   },
   {
     id: 'u3',
+    tag: 'Wide Basket Explorer',
+    household: 'With family',
     name: 'Broad Basket',
     subtitle: 'Six categories already',
     provenance: 'Tests the novelty assertion',
@@ -125,6 +131,8 @@ export const USERS = [
   },
   {
     id: 'u4',
+    tag: 'Bulk Consolidator',
+    household: 'With family / Roommates',
     name: 'Consolidator',
     subtitle: 'Infrequent, wide basket',
     provenance: 'Bundles rather than browses',
@@ -145,6 +153,8 @@ export const USERS = [
   },
   {
     id: 'u5',
+    tag: 'New Parent & Regular',
+    household: 'With family',
     name: 'New Parent',
     subtitle: 'Baby care already established',
     provenance: 'P04 · buys baby care on-app',
@@ -159,6 +169,8 @@ export const USERS = [
   },
   {
     id: 'u6',
+    tag: 'Recent Crosser',
+    household: 'Alone',
     name: 'Recent Crosser',
     subtitle: 'Personal care, 40 days ago',
     provenance: 'Outside the Mode B window',
@@ -177,6 +189,8 @@ export const USERS = [
   },
   {
     id: 'u7',
+    tag: 'First-Time Shopper',
+    household: 'Alone',
     name: 'Brand New',
     subtitle: 'One order on record',
     provenance: 'Not enough history to suggest',
@@ -195,6 +209,8 @@ export const USERS = [
   // is simply wrong — and until these profiles existed, the demo had no way to show that.
   {
     id: 'u8',
+    tag: 'New Mother & Kirana Loyalist',
+    household: 'With family',
     name: 'Kirana Loyalist',
     subtitle: 'Buys staples next door, "like from ages"',
     provenance: 'P04 · incumbent supplier',
@@ -214,6 +230,8 @@ export const USERS = [
   },
   {
     id: 'u9',
+    tag: 'Produce Sceptic',
+    household: 'With family',
     name: 'Burned on Produce',
     subtitle: 'Tried veg once, one bad delivery, never again',
     provenance: 'P05 · settled negative belief',

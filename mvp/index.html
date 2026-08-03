@@ -3,119 +3,205 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One Thing — Blinkit category discovery MVP</title>
+<title>Blinkit — Category Spark MVP</title>
 <style>
   :root{
-    --bg:#f6f7f9; --card:#fff; --ink:#12131a; --muted:#6b7280; --line:#e5e7eb;
-    --brand:#f8cb46; --brand-ink:#1a1a1a; --accent:#0c831f; --warn:#b45309;
-    --radius:14px;
+    --page:#0a0c10; --shell:#11151c; --panel:#161b24; --card:#1c222d; --line:#252d3a;
+    --fg:#e8ecf2; --muted:#8792a3; --dim:#5c6675;
+    --yellow:#f8cb46; --green:#12a03a; --green-lit:#1fc24a;
+    --orange:#f0682c; --cyan:#3fb8e8;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"Cascadia Mono",monospace;
   }
   *{box-sizing:border-box}
-  body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-       background:var(--bg);color:var(--ink)}
-  header{background:var(--brand);padding:14px 20px;display:flex;align-items:center;gap:16px;
-         flex-wrap:wrap;position:sticky;top:0;z-index:10}
-  header h1{font-size:17px;margin:0;font-weight:700;color:var(--brand-ink)}
-  header .sub{font-size:12px;color:#6b5a12}
-  .wrap{max-width:1140px;margin:0 auto;padding:20px;display:grid;
-        grid-template-columns:1fr 380px;gap:20px;align-items:start}
-  @media(max-width:900px){.wrap{grid-template-columns:1fr}}
-  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
-  .panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
-            margin:0 0 12px}
-  select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:14px;
-         background:#fff}
-  .persona{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
-  .owned{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
-  .chip{font-size:11px;background:#eef2f7;border-radius:99px;padding:3px 9px;color:#374151}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
-  .prod{border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff;
-        display:flex;flex-direction:column;gap:5px}
-  .prod .cat{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-  .prod .nm{font-weight:600;font-size:13.5px;line-height:1.3}
-  .prod .pk{font-size:11.5px;color:var(--muted)}
-  .prod .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;
-             padding-top:7px}
-  .prod .pr{font-weight:700;font-size:14px}
-  button{cursor:pointer;font:inherit}
-  .add{background:#fff;color:var(--accent);border:1px solid var(--accent);border-radius:8px;
-       padding:4px 12px;font-size:12.5px;font-weight:600}
-  .add:hover{background:var(--accent);color:#fff}
-  .cart-item{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;
-             border-bottom:1px solid #f1f2f4}
-  .cart-total{display:flex;justify-content:space-between;font-weight:700;padding-top:10px;
-              font-size:15px}
-  .empty{color:var(--muted);font-size:13px;padding:8px 0}
-  /* The One Thing card */
-  .onething{border:2px solid var(--accent);border-radius:var(--radius);padding:14px;margin-top:14px;
-            background:linear-gradient(180deg,#f4fbf5,#fff)}
-  .onething .reason{font-weight:650;font-size:14px;margin-bottom:10px;line-height:1.4}
-  .onething .prod-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .onething .nm{font-weight:600}
-  .onething .price{font-weight:700;font-size:15px;white-space:nowrap}
-  .anchor{font-size:12.5px;margin-top:6px;padding:6px 9px;border-radius:8px;background:#eef7ef;
-          color:#14532d;font-variant-numeric:tabular-nums}
-  .anchor.bad{background:#fdf3e7;color:var(--warn)}
-  .trust{font-size:12px;color:var(--muted);margin-top:7px}
-  .cta{display:flex;gap:8px;margin-top:12px}
-  .cta .primary{flex:1;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px;
-                font-weight:650}
-  .cta .ghost{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 14px;
-              color:var(--muted)}
-  .mode{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
-        padding:2px 7px;border-radius:5px;background:var(--accent);color:#fff;margin-bottom:9px}
-  .mode.b{background:#7c3aed}
-  .why{margin-top:12px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);
-       padding-top:9px}
-  .why code{background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:11.5px}
-  .nocard{border:1px dashed var(--line);border-radius:var(--radius);padding:14px;margin-top:14px;
-          color:var(--muted);font-size:13px}
-  .log{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#374151;
-       background:#f9fafb;border:1px solid var(--line);border-radius:9px;padding:9px;
-       max-height:180px;overflow:auto;white-space:pre-wrap}
-  footer{max-width:1140px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:12px}
+  body{margin:0;background:var(--page);color:var(--fg);padding:26px;
+       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .shell{max-width:1720px;margin:0 auto;background:var(--shell);border:1px solid var(--line);
+         border-radius:18px;overflow:hidden}
+
+  header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px 28px;
+         border-bottom:1px solid var(--line)}
+  .logo{font-size:23px;font-weight:800;color:var(--yellow);letter-spacing:-.5px}
+  .tag{background:var(--green-lit);color:#04210b;font:800 11px var(--mono);letter-spacing:.9px;
+       padding:5px 11px;border-radius:7px}
+  header .right{margin-left:auto;color:var(--muted);font-size:14px}
+  header .right a{color:var(--muted)}
+
+  .wrap{display:grid;gap:22px;padding:26px 28px 30px;align-items:start;
+        grid-template-columns:minmax(280px,1fr) minmax(340px,400px) minmax(300px,1fr)}
+  @media(max-width:1180px){.wrap{grid-template-columns:1fr}}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .panel h2{margin:0 0 6px;font-size:19px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .panel .hint{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 18px}
+  .rule{height:1px;background:var(--line);margin:14px 0 18px}
+
+  .plist{max-height:70vh;overflow-y:auto;padding-right:4px}
+  .persona{display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;
+           background:var(--card);border:1px solid var(--line);border-radius:12px;
+           padding:15px 16px;margin-bottom:12px;transition:border-color .12s,background .12s}
+  .persona:hover{border-color:var(--dim)}
+  .persona[aria-current="true"]{border-color:var(--yellow);background:#1e1c12}
+  .persona .pn{font-size:17px;font-weight:700;margin-bottom:8px}
+  .persona .ptag{display:inline-block;background:#232b37;color:#b9c3d1;font-size:12px;
+                 padding:3px 9px;border-radius:6px;margin-bottom:12px}
+  .persona .prow{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}
+  .persona .prow b{color:var(--fg);font-weight:600}
+
+  .phone{background:#0f141c;border:1px solid var(--line);border-radius:26px;overflow:hidden;
+         box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .ptop{background:var(--green);padding:16px 20px;display:flex;align-items:center;gap:10px}
+  .ptop .eta{font-size:12.5px;color:#c7f0d0}
+  .ptop .who{font-size:17px;font-weight:700}
+  .ptop .bolt{margin-left:auto;font-size:19px;color:var(--yellow)}
+  .pbody{padding:18px 18px 8px;max-height:68vh;overflow-y:auto}
+  .sect{font:700 11.5px var(--mono);letter-spacing:1.1px;color:var(--muted);margin:0 0 12px}
+
+  .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+        border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .thumb{width:38px;height:38px;border-radius:9px;background:#232b37;display:flex;
+         align-items:center;justify-content:center;font-size:19px;flex:0 0 auto}
+  .item .nm{flex:1;min-width:0}
+  .item .nm b{display:block;font-size:14.5px;font-weight:600}
+  .item .nm span{font-size:12.5px;color:var(--muted)}
+  .item .pr{font:700 14px var(--mono);color:var(--yellow);white-space:nowrap}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:#0f141c;
+              color:var(--fg);cursor:pointer;font:600 13px/1 sans-serif}
+  .qty button:hover{border-color:var(--green-lit);color:var(--green-lit)}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0 12px}
+
+  .spark{border:1px solid #3a3320;border-radius:14px;background:#171a15;padding:14px;margin:14px 0}
+  .sk-head{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+  .sk-pill{background:var(--orange);color:#2a0f03;font:800 10.5px var(--mono);letter-spacing:.7px;
+           padding:4px 10px;border-radius:7px}
+  .sk-mode{font:800 10px var(--mono);letter-spacing:.7px;padding:4px 9px;border-radius:7px;
+           border:1px solid var(--line);color:var(--muted)}
+  .sk-mode.b{border-color:var(--green-lit);color:var(--green-lit)}
+  .sk-x{margin-left:auto;background:none;border:0;color:var(--muted);cursor:pointer;font-size:19px;
+        line-height:1;padding:0 2px}
+  .sk-main{display:flex;gap:13px;margin-bottom:10px}
+  .sk-thumb{width:62px;height:62px;border-radius:11px;background:#232b37;display:flex;
+            align-items:center;justify-content:center;font-size:30px;flex:0 0 auto}
+  .sk-info{min-width:0}
+  .sk-info .n{font-size:15.5px;font-weight:700;line-height:1.3}
+  .sk-info .meta{font-size:12.5px;color:var(--muted);margin:4px 0 6px}
+  .sk-info .star{color:var(--green-lit);font-weight:700}
+  .sk-info .price{font:800 17px var(--mono);color:var(--yellow)}
+  .reason{background:#0f141c;border-left:3px solid var(--green-lit);border-radius:8px;
+          padding:11px 13px;font-size:13.5px;line-height:1.5;margin-bottom:10px}
+  .anchor{font-size:12.5px;color:var(--green-lit);margin-bottom:8px;font-variant-numeric:tabular-nums}
+  .anchor.bad{color:var(--orange)}
+  .trust{font-size:12.5px;color:var(--muted);margin-bottom:13px}
+  .addbtn{width:100%;background:var(--green);border:0;border-radius:10px;padding:12px;color:#fff;
+          font:700 14.5px sans-serif;cursor:pointer}
+  .addbtn:hover{background:var(--green-lit)}
+  .notnow{width:100%;margin-top:8px;background:transparent;border:1px solid var(--line);
+          border-radius:10px;padding:9px;color:var(--muted);font:600 13px sans-serif;cursor:pointer}
+
+  .nocard{border:1px dashed #3d4756;border-radius:14px;background:#141821;padding:16px;margin:14px 0}
+  .nocard b{color:var(--orange);font-size:14.5px}
+  .nocard p{margin:9px 0 0;font-size:12.8px;color:var(--muted);line-height:1.55}
+  .nocard code{font-family:var(--mono);font-size:12px;color:var(--fg);background:#0f141c;
+               padding:2px 6px;border-radius:5px}
+
+  .bill{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+  .bill .r{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:var(--muted)}
+  .bill .r b{color:var(--fg);font-weight:600;font-family:var(--mono)}
+  .bill .free{color:var(--green-lit);font-weight:700}
+  .bill .warn{color:var(--orange);font-size:12.5px}
+  .placebar{background:var(--green);padding:15px 20px;display:flex;justify-content:space-between;
+            align-items:center;cursor:pointer;font-weight:700;font-size:16px;color:#fff}
+  .placebar:hover{background:var(--green-lit)}
+  .placebar span:last-child{font-family:var(--mono)}
+
+  .cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px}
+  .prod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .prod .c{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .prod .n{font-size:13px;font-weight:600;margin:3px 0}
+  .prod .p{font-size:12px;color:var(--muted)}
+  .prod button{width:100%;margin-top:7px;background:transparent;border:1px solid var(--green-lit);
+               color:var(--green-lit);border-radius:8px;padding:5px;cursor:pointer;
+               font:600 12px sans-serif}
+  .prod button:hover{background:var(--green);color:#fff;border-color:var(--green)}
+
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .stat b{display:block;font:800 27px var(--mono);color:var(--yellow);line-height:1.1}
+  .stat span{font-size:12.5px;color:var(--muted);display:block;margin-top:6px}
+  .term{background:#05070a;border:1px solid var(--line);border-radius:12px;padding:14px;
+        height:300px;overflow-y:auto;font:12px/1.75 var(--mono)}
+  .term .ev{margin-bottom:9px}
+  .term .ts{color:var(--cyan)}
+  .term .k{font-weight:700;color:var(--green-lit)}
+  .term .k.sup{color:var(--orange)}
+  .term .k.acc{color:var(--yellow)}
+  .term .d{color:var(--muted)}
+  .term .d b{color:var(--green-lit);font-weight:700}
+  .term .d i{color:var(--yellow);font-style:normal;font-weight:700}
+  .trace{background:#05070a;border:1px solid var(--line);border-radius:12px;padding:14px;
+         font:11.5px/1.75 var(--mono);color:var(--muted);white-space:pre-wrap;margin-top:2px}
+  .caveat{font-size:12.5px;color:var(--dim);line-height:1.6;border-top:1px solid var(--line);
+          margin-top:18px;padding-top:14px}
+  a{color:var(--green-lit)}
 </style>
 </head>
 <body>
-<header>
-  <h1>One&nbsp;Thing</h1>
-  <span class="sub">Blinkit category-discovery MVP · cart-triggered adjacent-category card</span>
-</header>
+<div class="shell">
+  <header>
+    <span class="logo">Blinkit</span>
+    <span class="tag">CATEGORY SPARK MVP</span>
+    <span class="right">Graduation Project Discovery Simulator · <a href="./deck/">case study</a></span>
+  </header>
 
-<div class="wrap">
-  <main>
-    <div class="panel" style="margin-bottom:16px">
-      <h2>Shopper</h2>
-      <select id="user"></select>
-      <div class="persona" id="persona"></div>
-      <div class="owned" id="owned"></div>
-    </div>
+  <div class="wrap">
+    <section class="panel">
+      <h2>👥 Selected Personas</h2>
+      <p class="hint">
+        Select a user profile to simulate how the Suggestions Engine targets their demographic.
+        Profiles are synthetic and patterned on the five depth interviews — including two where the
+        correct behaviour is to suggest nothing at all. They are not the interviewees, who stay
+        anonymous as P01–P05.
+      </p>
+      <div class="plist" id="personas"></div>
+    </section>
 
-    <div class="panel">
-      <h2>Catalogue</h2>
-      <div class="grid" id="grid"></div>
-    </div>
-  </main>
+    <section>
+      <div class="phone">
+        <div class="ptop">
+          <div>
+            <div class="eta">Delivering in 10 Mins</div>
+            <div class="who" id="who">—</div>
+          </div>
+          <span class="bolt">⚡</span>
+        </div>
+        <div class="pbody">
+          <div class="sect">YOUR REGULAR BASKET</div>
+          <div id="cart"></div>
+          <div id="suggestion"></div>
+          <div class="bill" id="bill"></div>
+        </div>
+        <div class="placebar" id="place"><span>Place Order</span><span id="placetotal">Rs 0</span></div>
+      </div>
 
-  <aside>
-    <div class="panel">
-      <h2>Cart</h2>
-      <div id="cart"></div>
-      <div id="suggestion"></div>
-    </div>
+      <div class="panel" style="margin-top:22px">
+        <div class="sect">ADD MORE ITEMS</div>
+        <div class="cat" id="grid"></div>
+      </div>
+    </section>
 
-    <div class="panel" style="margin-top:16px">
-      <h2>Decision trace</h2>
-      <div class="log" id="log">—</div>
-    </div>
-  </aside>
+    <section class="panel">
+      <h2>📊 Engine Diagnostics</h2>
+      <div class="stats" id="stats"></div>
+      <div class="rule"></div>
+      <h2>🧮 Live Event Collector</h2>
+      <div class="rule"></div>
+      <div class="term" id="log"></div>
+      <div class="sect" style="margin:18px 0 8px">DECISION TRACE</div>
+      <div class="trace" id="trace">—</div>
+      <div class="caveat" id="caveat"></div>
+    </section>
+  </div>
 </div>
-
-<footer>
-  Synthetic catalogue and order histories. The suggestion runs entirely in the browser on the
-  deterministic path — no API key required — so the demo behaves identically regardless of model
-  quota. Card copy is richer when an LLM is available; the decision itself is unchanged.
-</footer>
 
 <script type="module" src="./main.js"></script>
 </body>

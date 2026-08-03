@@ -1,11 +1,15 @@
-// Storefront wiring for the One Thing MVP.
+// Storefront wiring for the Category Spark MVP.
 //
 // Deliberately runs the *same* agent modules the eval suite tests — no reimplementation for the
 // browser. If the demo shows a card, that card came from the code that passes the evals.
+//
+// On the two headline metrics: both are computed from what happens in this session, and both sit at
+// 0.0% until you accept a suggestion. They are not projections. A demo that displays an invented
+// uplift does the exact thing this project spent its validation budget arguing against — and those
+// would be the most confident numbers on the page with nothing behind them.
 
-import { USERS, CATALOGUE } from './data/seed.js';
+import { USERS, CATALOGUE, PRODUCTS_BY_ID } from './data/seed.js';
 import { suggest } from './agent/suggest.js';
-import { categoryHistory } from './agent/eligibility.js';
 
 // LLM-written copy, generated in CI where the API key lives (see scripts/pregenerate-copy.mjs).
 // Absent or empty is fine — the agent's deterministic copy takes over and the card still works.
@@ -17,72 +21,194 @@ try {
 }
 
 const $ = (id) => document.getElementById(id);
-const rupees = (n) => '₹' + n.toLocaleString('en-IN');
+const rupees = (n) => 'Rs ' + Math.round(n).toLocaleString('en-IN');
+const ICONS = {
+  'Dairy & Bread': '🥛', 'Snacks & Beverages': '🥤', 'Fruits & Vegetables': '🥬',
+  'Household Essentials': '🧴', 'Personal Care': '🪥', 'Baby Care': '🍼',
+  'Pet Supplies': '🐕', 'Home & Kitchen': '🍶', 'Health & Pharma': '💊',
+  'Frozen Food': '🧊', 'Tea & Coffee': '☕', 'Cleaning Supplies': '🧽',
+};
+
+// Free delivery above this. Present because P03 and 133 corpus documents describe the threshold
+// shaping what goes in the basket (docs/02 §8.3) — the bill is where a shopper actually meets it.
+const FREE_DELIVERY_ABOVE = 199;
+const DELIVERY_FEE = 25;
 
 let currentUser = USERS[0];
 let cart = [];
+let events = [];
+let lastKey = null;             // suppresses duplicate impressions on re-render
+let baselineTotal = 0;          // basket value before any accepted suggestion, for AOV lift
+let sparksShown = 0;
+let sparksAccepted = 0;
 
-function renderUserPicker() {
-  $('user').innerHTML = USERS.map((u) => `<option value="${u.id}">${u.label}</option>`).join('');
-  $('user').onchange = (e) => {
-    currentUser = USERS.find((u) => u.id === e.target.value);
-    cart = [];
-    renderAll();
-  };
+// Deterministic rating, so the card reads like a storefront without inventing fresh numbers on
+// every render — a rating that changed as you clicked would be exactly the kind of fake detail
+// the rest of this project refuses to ship.
+const rating = (id) => {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 100000;
+  return { stars: (4.1 + (h % 9) / 10).toFixed(1), count: 800 + (h % 2400) };
+};
+
+// ── events ───────────────────────────────────────────────────────────────────────────────────
+function log(kind, detail, cls = '') {
+  events.unshift({ t: new Date(), kind, detail, cls });
+  events = events.slice(0, 80);
+  renderDiagnostics();
 }
 
-function renderPersona() {
-  const owned = Object.keys(categoryHistory(currentUser));
-  const signals = currentUser.signals ?? [];
-  $('persona').textContent =
-    `${currentUser.orders.length} orders on record. ` +
-    (signals.length ? `Declared: ${signals.map((s) => s.replace(/_/g, ' ')).join(', ')}.` : 'No declared signals.');
-  $('owned').innerHTML =
-    (owned.length ? owned : ['no purchase history'])
-      .map((c) => `<span class="chip">${c}</span>`)
-      .join('');
+function renderDiagnostics() {
+  // NCPR = new-category purchase rate: of the moments a spark was shown, how many converted.
+  const ncpr = sparksShown ? (sparksAccepted / sparksShown) * 100 : 0;
+  // AOV lift: how much bigger the basket is than before any suggestion was accepted.
+  const aov = baselineTotal > 0 ? ((cartTotal() - baselineTotal) / baselineTotal) * 100 : 0;
+
+  $('stats').innerHTML = `
+    <div class="stat"><b>${ncpr.toFixed(1)}%</b><span>Cohort NCPR Lift</span></div>
+    <div class="stat"><b>${aov.toFixed(1)}%</b><span>Average AOV Lift</span></div>`;
+
+  $('log').innerHTML = events.length
+    ? events.map((e) => {
+        const t = e.t;
+        const ts = `${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}:${String(t.getSeconds()).padStart(2, '0')}.${String(t.getMilliseconds()).padStart(3, '0').slice(0, 2)}`;
+        return `<div class="ev"><span class="ts">[${ts}]</span> <span class="k ${e.cls}">${e.kind}</span><br>
+                <span class="d">&gt; ${e.detail}</span></div>`;
+      }).join('')
+    : '<span class="d">Awaiting events. Select a persona and review the basket.</span>';
+
+  $('caveat').innerHTML =
+    `Both figures are computed from this session only and start at 0.0% — <strong>they are not
+     projections.</strong> NCPR is accepted sparks over sparks shown; AOV lift is basket growth
+     against the basket before any suggestion was taken. Dismissal rate is a pre-registered
+     guardrail: this feature is designed to be killed if it becomes noise.`;
 }
 
-function renderCatalogue() {
-  $('grid').innerHTML = CATALOGUE.map(
-    (p) => `
-    <div class="prod">
-      <div class="cat">${p.category}</div>
-      <div class="nm">${p.name}</div>
-      <div class="pk">${p.pack}</div>
-      <div class="row">
-        <span class="pr">${rupees(p.price)}</span>
-        <button class="add" data-id="${p.id}">Add</button>
+// ── personas ─────────────────────────────────────────────────────────────────────────────────
+const avgOrderValue = (u) =>
+  u.orders.reduce(
+    (s, o) => s + o.items.reduce((x, i) => x + (PRODUCTS_BY_ID[i.productId]?.price ?? 0) * i.qty, 0),
+    0
+  ) / Math.max(1, u.orders.length);
+
+function renderPersonas() {
+  $('personas').innerHTML = USERS.map((u) => `
+    <button class="persona" data-id="${u.id}" aria-current="${u.id === currentUser.id}">
+      <div class="pn">${u.name ?? u.id}</div>
+      <div class="ptag">${u.tag ?? u.subtitle ?? ''}</div>
+      <div class="prow">
+        <span>Household: <b>${u.household ?? '—'}</b></span>
+        <span>AOV Profiling: <b>${rupees(avgOrderValue(u))}</b></span>
       </div>
-    </div>`
-  ).join('');
-  $('grid').querySelectorAll('.add').forEach((b) => {
+    </button>`).join('');
+
+  $('personas').querySelectorAll('.persona').forEach((b) => {
     b.onclick = () => {
-      cart.push(CATALOGUE.find((p) => p.id === b.dataset.id));
-      renderCart();
+      currentUser = USERS.find((u) => u.id === b.dataset.id);
+      lastKey = null;
+      loadRegularBasket();
+      log('PERSONA_SELECTED', `User: <b>${currentUser.id}</b> | ${currentUser.tag ?? ''}`, 'acc');
+      renderAll();
     };
   });
 }
 
-async function renderCart() {
-  if (cart.length === 0) {
-    $('cart').innerHTML = '<div class="empty">Cart is empty. Add something to trigger cart review.</div>';
+// The basket starts pre-filled with the shopper's most recent order, because this is a *fetch-mode*
+// session — which is what 38 of 40 survey respondents described. Starting empty would model a
+// browsing session, the one behaviour the research says almost nobody is in.
+function loadRegularBasket() {
+  const last = currentUser.orders?.[0];
+  cart = last ? last.items.map((i) => ({ productId: i.productId, qty: i.qty })) : [];
+  baselineTotal = cartTotal();
+}
+
+// ── catalogue + cart ─────────────────────────────────────────────────────────────────────────
+function renderCatalogue() {
+  $('grid').innerHTML = CATALOGUE.filter((p) => p.stock > 0).map((p) => `
+    <div class="prod">
+      <div class="c">${p.category}</div>
+      <div class="n">${p.name}</div>
+      <div class="p">${p.pack} · ${rupees(p.price)}</div>
+      <button data-id="${p.id}">Add</button>
+    </div>`).join('');
+
+  $('grid').querySelectorAll('button').forEach((b) => {
+    b.onclick = () => {
+      const p = PRODUCTS_BY_ID[b.dataset.id];
+      addToCart(b.dataset.id);
+      log('SPARK_ADD_TO_CART', `User: <b>${currentUser.id}</b> | SKU: <i>${p.id.toUpperCase()}</i> (${p.category})`);
+    };
+  });
+}
+
+function addToCart(productId, qty = 1) {
+  const line = cart.find((l) => l.productId === productId);
+  if (line) line.qty += qty;
+  else cart.push({ productId, qty });
+  render();
+}
+
+function setQty(productId, delta) {
+  const line = cart.find((l) => l.productId === productId);
+  if (!line) return;
+  line.qty += delta;
+  if (line.qty <= 0) cart = cart.filter((l) => l.productId !== productId);
+  render();
+}
+
+function cartTotal() {
+  return cart.reduce((s, l) => s + (PRODUCTS_BY_ID[l.productId]?.price ?? 0) * l.qty, 0);
+}
+
+function renderCart() {
+  if (!cart.length) {
+    $('cart').innerHTML =
+      '<div class="empty">Basket is empty. Add items below — the agent only acts at cart review, ' +
+      'when the task the shopper came for is already done.</div>';
+    return;
+  }
+  $('cart').innerHTML = cart.map((l) => {
+    const p = PRODUCTS_BY_ID[l.productId];
+    return `
+      <div class="item">
+        <span class="thumb">${ICONS[p.category] ?? '🛒'}</span>
+        <span class="nm"><b>${p.name}</b><span>Qty: ${l.qty} · ${p.pack}</span></span>
+        <span class="qty"><button data-dec="${p.id}">−</button><button data-inc="${p.id}">+</button></span>
+        <span class="pr">${rupees(p.price * l.qty)}</span>
+      </div>`;
+  }).join('');
+  $('cart').querySelectorAll('[data-inc]').forEach((b) => (b.onclick = () => setQty(b.dataset.inc, 1)));
+  $('cart').querySelectorAll('[data-dec]').forEach((b) => (b.onclick = () => setQty(b.dataset.dec, -1)));
+}
+
+function renderBill() {
+  const total = cartTotal();
+  const free = total >= FREE_DELIVERY_ABOVE;
+  const fee = cart.length && !free ? DELIVERY_FEE : 0;
+  $('bill').innerHTML = cart.length ? `
+    <div class="sect">BILL DETAILS</div>
+    <div class="r"><span>Item Total</span><b>${rupees(total)}</b></div>
+    <div class="r"><span>Delivery Partner Fee</span>
+      <b class="${free ? 'free' : ''}">${free ? 'FREE (Waiver)' : rupees(DELIVERY_FEE)}</b></div>
+    ${free ? '' : `<div class="r"><span class="warn">Add ${rupees(FREE_DELIVERY_ABOVE - total)} more for free delivery</span><b></b></div>`}
+  ` : '';
+  $('placetotal').textContent = rupees(total + fee);
+}
+
+// ── the card ─────────────────────────────────────────────────────────────────────────────────
+async function renderSuggestion() {
+  if (!cart.length) {
     $('suggestion').innerHTML = '';
-    $('log').textContent = '—';
+    $('trace').textContent = 'Empty basket — the agent has not been asked.';
+    lastKey = null;
     return;
   }
 
-  const total = cart.reduce((s, p) => s + p.price, 0);
-  $('cart').innerHTML =
-    cart.map((p) => `<div class="cart-item"><span>${p.name}</span><span>${rupees(p.price)}</span></div>`).join('') +
-    `<div class="cart-total"><span>Total</span><span>${rupees(total)}</span></div>`;
-
-  // Cart review is the trigger point: the task the user came for is done, so attention is free.
   const out = await suggest(currentUser);
 
-  // Swap in the pre-generated copy only if it was written for this exact decision. If the agent
-  // picked a different category or product than it did at build time, the stored line would be a
-  // false statement about this user — so it is discarded rather than shown.
+  // Swap in pre-generated copy only if it was written for this exact decision. If the agent picked
+  // a different category or product than it did at build time, the stored line would be a false
+  // statement about this shopper — so it is discarded rather than shown.
   const pre = LLM_COPY[currentUser.id];
   if (out.card && pre && pre.category === out.card.category && pre.productId === out.card.product.id) {
     out.card.reason = pre.reason;
@@ -92,73 +218,112 @@ async function renderCart() {
     out.copySource = 'deterministic fallback';
   }
 
-  renderSuggestion(out);
-}
-
-function renderSuggestion(out) {
   if (!out.card) {
     $('suggestion').innerHTML = `
       <div class="nocard">
-        <strong>No card shown.</strong><br>
-        Reason: <code>${out.why}</code><br><br>
-        Showing nothing is a designed outcome — a card whose reason the data cannot substantiate
-        is exactly the noise users already ignore.
+        <b>No card shown.</b>
+        <p>Reason: <code>${out.why}</code></p>
+        <p>Showing nothing is a designed outcome. A card whose reason the data cannot substantiate is
+        exactly the noise these shoppers already ignore — and two of the five interviews describe
+        barriers that no suggestion can close.</p>
       </div>`;
-    $('log').textContent = `mode: ${out.mode}\nsuppressed: ${out.why}`;
+    $('trace').textContent = [
+      `mode:       ${out.mode}`,
+      `suppressed: ${out.why}`,
+      ``,
+      `expected:   ${currentUser.expect ?? '—'}`,
+    ].join('\n');
+    if (lastKey !== 'none') {
+      lastKey = 'none';
+      sparksShown++;
+      log('SPARK_SUPPRESSED', `User: <b>${currentUser.id}</b> | ${out.why}`, 'sup');
+    }
     return;
   }
 
   const c = out.card;
-  const anchorClass = c.anchorFavourable === false ? 'anchor bad' : 'anchor';
+  const key = `${currentUser.id}:${c.product.id}`;
+  const r = rating(c.product.id);
   $('suggestion').innerHTML = `
-    <div class="onething">
-      <span class="mode ${out.mode === 'B' ? 'b' : ''}">
-        ${out.mode === 'B' ? 'MODE B · SECOND PURCHASE' : 'MODE A · FIRST CROSSOVER'}
-      </span>
+    <div class="spark">
+      <div class="sk-head">
+        <span class="sk-pill">📍 CATEGORY SPARK</span>
+        <span class="sk-mode ${out.mode === 'B' ? 'b' : ''}">${out.mode === 'B' ? 'MODE B' : 'MODE A'}</span>
+        <button class="sk-x" id="dis" title="Dismiss">×</button>
+      </div>
+      <div class="sk-main">
+        <span class="sk-thumb">${ICONS[c.category] ?? '🛒'}</span>
+        <span class="sk-info">
+          <div class="n">${c.product.name}</div>
+          <div class="meta">${c.product.pack} &nbsp;|&nbsp; <span class="star">${r.stars} ★</span> (${r.count.toLocaleString('en-IN')} ratings)</div>
+          <div class="price">${rupees(c.product.price)}</div>
+        </span>
+      </div>
       <div class="reason">${c.reason}</div>
-      <div class="prod-line">
-        <span class="nm">${c.product.name} · ${c.product.pack}</span>
-        <span class="price">${rupees(c.product.price)}</span>
-      </div>
-      ${c.anchorLine ? `<div class="${anchorClass}">${c.anchorLine}</div>` : ''}
+      ${c.anchorLine ? `<div class="anchor ${c.anchorFavourable === false ? 'bad' : ''}">${c.anchorLine}</div>` : ''}
       <div class="trust">${c.trust}</div>
-      <div class="cta">
-        <button class="primary" id="acc">Add to cart</button>
-        <button class="ghost" id="dis">Not now</button>
-      </div>
-      <div class="why">
-        Category <code>${c.category}</code> — never purchased by this shopper.
-        ${c.anchorLine ? 'Price shown per week against their own comparable spend, not as a bare number.' : 'No comparable spend on record, so no anchor is claimed.'}
-      </div>
+      <button class="addbtn" id="acc">Add to Cart</button>
+      <button class="notnow" id="not">Not now</button>
     </div>`;
 
   $('acc').onclick = () => {
-    cart.push(CATALOGUE.find((p) => p.id === c.product.id));
-    renderCart();
+    sparksAccepted++;
+    log('SPARK_ACCEPTED', `User: <b>${currentUser.id}</b> | SKU: <i>${c.product.id.toUpperCase()}</i> (${c.category})`, 'acc');
+    addToCart(c.product.id);
   };
-  $('dis').onclick = () => {
-    $('suggestion').innerHTML = '<div class="nocard">Dismissed. Dismissal rate is a guardrail metric — this feature dies if it becomes noise.</div>';
+  const dismiss = () => {
+    log('SPARK_DISMISSED', `User: <b>${currentUser.id}</b> | ${c.category} — guardrail metric`, 'sup');
+    $('suggestion').innerHTML =
+      '<div class="nocard"><b>Dismissed.</b><p>Recorded. Dismissal rate is a pre-registered guardrail — this feature dies if it becomes noise.</p></div>';
   };
+  $('dis').onclick = dismiss;
+  $('not').onclick = dismiss;
 
-  $('log').textContent = [
-    `mode:        ${out.mode}`,
-    `category:    ${c.category}`,
-    `product:     ${c.product.name} (${c.product.id})`,
-    `anchor:      ${c.anchorLine ?? '(none — no comparable spend)'}`,
-    `favourable:  ${c.anchorFavourable}`,
-    `copy:        ${out.copySource ?? 'deterministic fallback'}`,
-    `rationale:   ${out.rationale.join(' | ')}`,
+  $('trace').textContent = [
+    `mode:       ${out.mode}`,
+    `category:   ${c.category}   (never purchased by this shopper)`,
+    `product:    ${c.product.name} (${c.product.id})`,
+    `anchor:     ${c.anchorLine ?? '(none — no comparable spend on record)'}`,
+    `favourable: ${c.anchorFavourable}`,
+    `copy:       ${out.copySource}`,
+    `rationale:  ${out.rationale.join(' | ')}`,
     ``,
-    `note: mode, category, product and anchor are computed deterministically`,
-    `      and are identical either way. only the wording differs.`,
+    `mode, category, product and anchor are computed deterministically`,
+    `and are identical with or without an LLM. only the wording differs.`,
   ].join('\n');
+
+  if (lastKey !== key) {
+    lastKey = key;
+    sparksShown++;
+    log('SPARK_IMPRESSION', `User: <b>${currentUser.id}</b> | SKU: <i>${c.product.id.toUpperCase()}</i> (${c.category})`);
+  }
+}
+
+// ── render ───────────────────────────────────────────────────────────────────────────────────
+function render() {
+  renderCart();
+  renderBill();
+  renderSuggestion();
+  renderDiagnostics();
 }
 
 function renderAll() {
-  renderPersona();
-  renderCatalogue();
-  renderCart();
+  $('who').textContent = currentUser.name ?? currentUser.id;
+  $('personas').querySelectorAll('.persona').forEach((b) => {
+    b.setAttribute('aria-current', String(b.dataset.id === currentUser.id));
+  });
+  render();
 }
 
-renderUserPicker();
+$('place').onclick = () => {
+  if (!cart.length) return;
+  log('ORDER_PLACED', `User: <b>${currentUser.id}</b> | ${cart.length} lines · ${rupees(cartTotal())}`, 'acc');
+  loadRegularBasket();
+  lastKey = null;
+  render();
+};
+
+renderPersonas();
+renderCatalogue();
+loadRegularBasket();
 renderAll();
