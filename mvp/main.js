@@ -3,10 +3,10 @@
 // Deliberately runs the *same* agent modules the eval suite tests — no reimplementation for the
 // browser. If the demo shows a card, that card came from the code that passes the evals.
 //
-// On the two headline metrics: both are computed from what happens in this session, and both sit at
-// 0.0% until you accept a suggestion. They are not projections. A demo that displays an invented
-// uplift does the exact thing this project spent its validation budget arguing against — and those
-// would be the most confident numbers on the page with nothing behind them.
+// The decision trace under the phone is the only instrumentation kept: it shows mode, category,
+// product, anchor and the rationale behind whatever the agent just did. There are deliberately no
+// uplift figures anywhere in this demo — there is no experiment behind one, and an invented
+// percentage would be the most confident number on the page with nothing supporting it.
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID } from './data/seed.js';
 import { suggest } from './agent/suggest.js';
@@ -36,11 +36,7 @@ const DELIVERY_FEE = 25;
 
 let currentUser = USERS[0];
 let cart = [];
-let events = [];
 let lastKey = null;             // suppresses duplicate impressions on re-render
-let baselineTotal = 0;          // basket value before any accepted suggestion, for AOV lift
-let sparksShown = 0;
-let sparksAccepted = 0;
 
 // Deterministic rating, so the card reads like a storefront without inventing fresh numbers on
 // every render — a rating that changed as you clicked would be exactly the kind of fake detail
@@ -50,39 +46,6 @@ const rating = (id) => {
   for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 100000;
   return { stars: (4.1 + (h % 9) / 10).toFixed(1), count: 800 + (h % 2400) };
 };
-
-// ── events ───────────────────────────────────────────────────────────────────────────────────
-function log(kind, detail, cls = '') {
-  events.unshift({ t: new Date(), kind, detail, cls });
-  events = events.slice(0, 80);
-  renderDiagnostics();
-}
-
-function renderDiagnostics() {
-  // NCPR = new-category purchase rate: of the moments a spark was shown, how many converted.
-  const ncpr = sparksShown ? (sparksAccepted / sparksShown) * 100 : 0;
-  // AOV lift: how much bigger the basket is than before any suggestion was accepted.
-  const aov = baselineTotal > 0 ? ((cartTotal() - baselineTotal) / baselineTotal) * 100 : 0;
-
-  $('stats').innerHTML = `
-    <div class="stat"><b>${ncpr.toFixed(1)}%</b><span>Cohort NCPR Lift</span></div>
-    <div class="stat"><b>${aov.toFixed(1)}%</b><span>Average AOV Lift</span></div>`;
-
-  $('log').innerHTML = events.length
-    ? events.map((e) => {
-        const t = e.t;
-        const ts = `${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')}:${String(t.getSeconds()).padStart(2, '0')}.${String(t.getMilliseconds()).padStart(3, '0').slice(0, 2)}`;
-        return `<div class="ev"><span class="ts">[${ts}]</span> <span class="k ${e.cls}">${e.kind}</span><br>
-                <span class="d">&gt; ${e.detail}</span></div>`;
-      }).join('')
-    : '<span class="d">Awaiting events. Select a persona and review the basket.</span>';
-
-  $('caveat').innerHTML =
-    `Both figures are computed from this session only and start at 0.0% — <strong>they are not
-     projections.</strong> NCPR is accepted sparks over sparks shown; AOV lift is basket growth
-     against the basket before any suggestion was taken. Dismissal rate is a pre-registered
-     guardrail: this feature is designed to be killed if it becomes noise.`;
-}
 
 // ── personas ─────────────────────────────────────────────────────────────────────────────────
 const avgOrderValue = (u) =>
@@ -107,7 +70,6 @@ function renderPersonas() {
       currentUser = USERS.find((u) => u.id === b.dataset.id);
       lastKey = null;
       loadRegularBasket();
-      log('PERSONA_SELECTED', `User: <b>${currentUser.id}</b> | ${currentUser.tag ?? ''}`, 'acc');
       renderAll();
     };
   });
@@ -119,7 +81,6 @@ function renderPersonas() {
 function loadRegularBasket() {
   const last = currentUser.orders?.[0];
   cart = last ? last.items.map((i) => ({ productId: i.productId, qty: i.qty })) : [];
-  baselineTotal = cartTotal();
 }
 
 // ── catalogue + cart ─────────────────────────────────────────────────────────────────────────
@@ -133,11 +94,7 @@ function renderCatalogue() {
     </div>`).join('');
 
   $('grid').querySelectorAll('button').forEach((b) => {
-    b.onclick = () => {
-      const p = PRODUCTS_BY_ID[b.dataset.id];
-      addToCart(b.dataset.id);
-      log('SPARK_ADD_TO_CART', `User: <b>${currentUser.id}</b> | SKU: <i>${p.id.toUpperCase()}</i> (${p.category})`);
-    };
+    b.onclick = () => addToCart(b.dataset.id);
   });
 }
 
@@ -235,8 +192,6 @@ async function renderSuggestion() {
     ].join('\n');
     if (lastKey !== 'none') {
       lastKey = 'none';
-      sparksShown++;
-      log('SPARK_SUPPRESSED', `User: <b>${currentUser.id}</b> | ${out.why}`, 'sup');
     }
     return;
   }
@@ -267,12 +222,9 @@ async function renderSuggestion() {
     </div>`;
 
   $('acc').onclick = () => {
-    sparksAccepted++;
-    log('SPARK_ACCEPTED', `User: <b>${currentUser.id}</b> | SKU: <i>${c.product.id.toUpperCase()}</i> (${c.category})`, 'acc');
     addToCart(c.product.id);
   };
   const dismiss = () => {
-    log('SPARK_DISMISSED', `User: <b>${currentUser.id}</b> | ${c.category} — guardrail metric`, 'sup');
     $('suggestion').innerHTML =
       '<div class="nocard"><b>Dismissed.</b><p>Recorded. Dismissal rate is a pre-registered guardrail — this feature dies if it becomes noise.</p></div>';
   };
@@ -294,8 +246,6 @@ async function renderSuggestion() {
 
   if (lastKey !== key) {
     lastKey = key;
-    sparksShown++;
-    log('SPARK_IMPRESSION', `User: <b>${currentUser.id}</b> | SKU: <i>${c.product.id.toUpperCase()}</i> (${c.category})`);
   }
 }
 
@@ -304,7 +254,6 @@ function render() {
   renderCart();
   renderBill();
   renderSuggestion();
-  renderDiagnostics();
 }
 
 function renderAll() {
@@ -317,7 +266,6 @@ function renderAll() {
 
 $('place').onclick = () => {
   if (!cart.length) return;
-  log('ORDER_PLACED', `User: <b>${currentUser.id}</b> | ${cart.length} lines · ${rupees(cartTotal())}`, 'acc');
   loadRegularBasket();
   lastKey = null;
   render();

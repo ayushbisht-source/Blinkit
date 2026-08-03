@@ -124,24 +124,8 @@
                font:600 12px sans-serif}
   .prod button:hover{background:var(--green);color:#fff;border-color:var(--green)}
 
-  .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-  .stat b{display:block;font:800 27px var(--mono);color:var(--yellow);line-height:1.1}
-  .stat span{font-size:12.5px;color:var(--muted);display:block;margin-top:6px}
-  .term{background:#05070a;border:1px solid var(--line);border-radius:12px;padding:14px;
-        height:300px;overflow-y:auto;font:12px/1.75 var(--mono)}
-  .term .ev{margin-bottom:9px}
-  .term .ts{color:var(--cyan)}
-  .term .k{font-weight:700;color:var(--green-lit)}
-  .term .k.sup{color:var(--orange)}
-  .term .k.acc{color:var(--yellow)}
-  .term .d{color:var(--muted)}
-  .term .d b{color:var(--green-lit);font-weight:700}
-  .term .d i{color:var(--yellow);font-style:normal;font-weight:700}
   .trace{background:#05070a;border:1px solid var(--line);border-radius:12px;padding:14px;
          font:11.5px/1.75 var(--mono);color:var(--muted);white-space:pre-wrap;margin-top:2px}
-  .caveat{font-size:12.5px;color:var(--dim);line-height:1.6;border-top:1px solid var(--line);
-          margin-top:18px;padding-top:14px}
   a{color:var(--green-lit)}
 </style>
 </head>
@@ -184,21 +168,20 @@
       </div>
 
       <div class="panel" style="margin-top:22px">
-        <div class="sect">ADD MORE ITEMS</div>
-        <div class="cat" id="grid"></div>
+        <div class="sect">DECISION TRACE</div>
+        <div class="trace" id="trace">—</div>
       </div>
     </section>
 
+    <!-- catalogue -->
     <section class="panel">
-      <h2>📊 Engine Diagnostics</h2>
-      <div class="stats" id="stats"></div>
-      <div class="rule"></div>
-      <h2>🧮 Live Event Collector</h2>
-      <div class="rule"></div>
-      <div class="term" id="log"></div>
-      <div class="sect" style="margin:18px 0 8px">DECISION TRACE</div>
-      <div class="trace" id="trace">—</div>
-      <div class="caveat" id="caveat"></div>
+      <h2>🛒 Add More Items</h2>
+      <p class="hint">
+        Anything added here lands in the basket, and the agent re-runs at cart review. The
+        suggestion is computed from the shopper's own history — adding items does not change what
+        it is allowed to suggest, only whether the moment has arrived.
+      </p>
+      <div class="cat" id="grid"></div>
     </section>
   </div>
 </div>
