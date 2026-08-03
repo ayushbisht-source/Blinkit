@@ -49,7 +49,23 @@ export function candidateCategories(user, owned) {
   const unowned = unownedCategories(owned);
   const scored = [];
 
+  // Categories the user has effectively closed. Added because the interviews found two barrier
+  // types the rest of this agent cannot represent, and both of them make a suggestion actively
+  // wrong rather than merely unhelpful (docs/02 §8.4, docs/03 §2):
+  //
+  //   incumbent  — an offline supplier they are satisfied with. P04: "there is one kirana store
+  //                near me and we are buying from there like from ages." Unblocks only if they
+  //                move house or the shop closes; no in-app information touches it.
+  //   distrust   — a settled negative belief from direct experience. P05: "I will never buy from
+  //                blinkit my trust issues for vegetables is still there", after one bad delivery.
+  //
+  // Before this existed the agent would happily suggest groceries to the kirana loyalist. The card
+  // would have been *technically* valid — never-purchased category, real adjacency — and wrong in
+  // the way that matters, because the user has already decided and the reason ignores it.
+  const avoided = new Set((user.avoid ?? []).map((a) => a.category));
+
   for (const category of unowned) {
+    if (avoided.has(category)) continue;
     let score = 0;
     const reasons = [];
 
@@ -146,6 +162,15 @@ export async function suggest(user, { llm = null, now = new Date() } = {}) {
 
   if (decision.mode === 'B') {
     category = decision.category;
+
+    // Mode B bypasses candidateCategories entirely — it replays a category the user already tried —
+    // so the avoidance rule has to be applied here as well or it has a hole exactly where it
+    // matters most. A user who tried produce once, had a bad delivery and closed the category is
+    // *precisely* a Mode B candidate on the numbers, and precisely the person who must not be
+    // asked again.
+    if ((user.avoid ?? []).some((a) => a.category === category)) {
+      return { card: null, mode: 'B', why: `category_closed_by_user:${category}` };
+    }
     // Prefer what they actually bought before — that's the thing they already accepted once.
     const tried = (decision.triedProductIds ?? [])
       .map((id) => PRODUCTS_BY_ID[id])

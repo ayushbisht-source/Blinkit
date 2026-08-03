@@ -80,6 +80,9 @@ function daysAgo(n) {
 export const USERS = [
   {
     id: 'u1',
+    name: 'Narrow Repeater',
+    subtitle: 'Dairy &amp; snacks only · lives alone',
+    provenance: 'Textbook target segment',
     label: 'Narrow Repeater — dairy + snacks only',
     expect: 'Mode A. Textbook target segment: frequent, 2 categories, never crossed over.',
     signals: ['lives_alone', 'working_professional', 'tier1_metro'],
@@ -92,6 +95,9 @@ export const USERS = [
   },
   {
     id: 'u2',
+    name: 'Lapsed Crosser',
+    subtitle: 'Tried pet supplies once, 28 days ago',
+    provenance: 'P03 · the Mode B case',
     label: 'Crossed once into Pet Supplies, 28 days ago, never returned',
     expect: 'Mode B — the metric-moving case. Replenishment prompt for Pet Supplies.',
     signals: ['pet_owner', 'working_professional', 'tier1_metro'],
@@ -105,6 +111,9 @@ export const USERS = [
   },
   {
     id: 'u3',
+    name: 'Broad Basket',
+    subtitle: 'Six categories already',
+    provenance: 'Tests the novelty assertion',
     label: 'Genuinely broad basket — 6 categories',
     expect: 'No Mode A card for owned categories. Tests the novelty assertion.',
     signals: ['cooks_daily', 'tier1_metro'],
@@ -116,6 +125,9 @@ export const USERS = [
   },
   {
     id: 'u4',
+    name: 'Consolidator',
+    subtitle: 'Infrequent, wide basket',
+    provenance: 'Bundles rather than browses',
     label: 'Consolidator — infrequent but wide basket',
     expect: 'Breadth from batching, not curiosity. Should NOT read as an explorer.',
     signals: ['lives_alone', 'student', 'tier2_plus'],
@@ -133,6 +145,9 @@ export const USERS = [
   },
   {
     id: 'u5',
+    name: 'New Parent',
+    subtitle: 'Baby care already established',
+    provenance: 'P04 · buys baby care on-app',
     label: 'Parent — baby care already established',
     expect: 'Mode A into an adjacent unowned category, never Baby Care.',
     signals: ['parent_young_child', 'working_professional', 'tier1_metro'],
@@ -144,6 +159,9 @@ export const USERS = [
   },
   {
     id: 'u6',
+    name: 'Recent Crosser',
+    subtitle: 'Personal care, 40 days ago',
+    provenance: 'Outside the Mode B window',
     label: 'Crossed into Personal Care 40 days ago',
     expect: 'Mode B at the outer edge of the 14-45 day window.',
     signals: ['working_professional', 'lives_alone'],
@@ -159,11 +177,58 @@ export const USERS = [
   },
   {
     id: 'u7',
+    name: 'Brand New',
+    subtitle: 'One order on record',
+    provenance: 'Not enough history to suggest',
     label: 'Brand-new user — one order',
     expect: 'No card. Insufficient history to state a true reason (hard rule 4).',
     signals: [],
     orders: [
       { date: daysAgo(2), items: [{ productId: 'db1', qty: 1 }, { productId: 'sb1', qty: 1 }] },
+    ],
+  },
+
+  // ── Two personas taken from interviews where the correct answer is NO CARD ──────────────
+  //
+  // These exist because the demo is more honest with them than without. P04 and P05 describe
+  // barriers that no in-app information closes (docs/03 §2), so an agent suggesting anything here
+  // is simply wrong — and until these profiles existed, the demo had no way to show that.
+  {
+    id: 'u8',
+    name: 'Kirana Loyalist',
+    subtitle: 'Buys staples next door, "like from ages"',
+    provenance: 'P04 · incumbent supplier',
+    label: 'Kirana loyalist — buys staples offline by habit',
+    expect: 'NO staples card. Dairy scores top on adjacency; the user has an incumbent supplier.',
+    signals: ['parent_young_child', 'tier2_plus'],
+    avoid: [
+      { category: 'Dairy & Bread', kind: 'incumbent', note: 'buys from the kirana next door' },
+      { category: 'Fruits & Vegetables', kind: 'incumbent', note: 'buys from the kirana next door' },
+    ],
+    orders: [
+      { date: daysAgo(2), items: [{ productId: 'bc1', qty: 1 }, { productId: 'ff1', qty: 1 }, { productId: 'sb1', qty: 2 }] },
+      { date: daysAgo(9), items: [{ productId: 'bc1', qty: 1 }, { productId: 'ff2', qty: 2 }, { productId: 'sb3', qty: 3 }] },
+      { date: daysAgo(18), items: [{ productId: 'bc2', qty: 2 }, { productId: 'ff1', qty: 1 }, { productId: 'sb1', qty: 1 }] },
+      { date: daysAgo(27), items: [{ productId: 'bc1', qty: 1 }, { productId: 'ff2', qty: 1 }, { productId: 'sb2', qty: 2 }] },
+    ],
+  },
+  {
+    id: 'u9',
+    name: 'Burned on Produce',
+    subtitle: 'Tried veg once, one bad delivery, never again',
+    provenance: 'P05 · settled negative belief',
+    label: 'Trust breach — tried fruit & veg once and closed the category',
+    expect: 'NO CARD. On the numbers this is a textbook Mode B target; the user has closed it.',
+    signals: ['cooks_daily', 'tier1_metro'],
+    avoid: [
+      { category: 'Fruits & Vegetables', kind: 'distrust', note: 'one bad delivery, category closed' },
+    ],
+    orders: [
+      { date: daysAgo(3), items: [{ productId: 'db1', qty: 2 }, { productId: 'he1', qty: 1 }] },
+      { date: daysAgo(11), items: [{ productId: 'db1', qty: 2 }, { productId: 'cs1', qty: 1 }] },
+      // the single produce order, and the last one — "one time I got really bad vegetables"
+      { date: daysAgo(25), items: [{ productId: 'fv2', qty: 1 }, { productId: 'db1', qty: 2 }] },
+      { date: daysAgo(33), items: [{ productId: 'db1', qty: 3 }, { productId: 'db2', qty: 1 }] },
     ],
   },
 ];

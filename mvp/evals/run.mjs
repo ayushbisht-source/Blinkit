@@ -158,6 +158,30 @@ for (const user of USERS) {
   );
 }
 
+// ── 7. A category the user has closed is never suggested ────────────────────────────────────────
+//
+// This rule exists because of the interviews, not the survey. P04 buys groceries from the kirana
+// next door "like from ages"; P05 abandoned produce permanently after one bad delivery. Both are
+// never-purchased categories with real adjacency, so every heuristic in this agent scores them
+// highly — and a card for either would be technically valid and substantively wrong.
+//
+// Checked on both paths, because they are separate code: Mode A filters candidates, and Mode B
+// replays a previously-tried category and would otherwise walk straight past the filter. A user who
+// tried produce once and closed it is exactly the profile Mode B targets on the numbers.
+{
+  const withAvoid = cards.filter(({ user }) => (user.avoid ?? []).length > 0);
+  const violations = withAvoid.filter(
+    ({ user, out }) => out.card && user.avoid.some((a) => a.category === out.card.category)
+  );
+  record(
+    'closed categories are never suggested (Mode A and Mode B)',
+    withAvoid.length > 0 && violations.length === 0,
+    withAvoid.length === 0
+      ? 'no seeded user declares an avoid list — this check did not run'
+      : violations.map(({ user, out }) => `${user.id} was shown ${out.card.category}`).join('; ')
+  );
+}
+
 // ── Coverage report (informational, not pass/fail) ──────────────────────────────────────────────
 const byMode = cards.reduce((acc, { out }) => {
   const k = out.card ? out.mode : `${out.mode}/no-card`;
