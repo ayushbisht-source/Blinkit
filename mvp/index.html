@@ -3,191 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blinkit — Category Spark MVP</title>
+<title>One Thing — Blinkit category discovery MVP</title>
 <style>
-  :root {
-    --bg: #0b0e13; --panel: #141922; --panel-2: #1b2230; --line: #26303f;
-    --fg: #e9edf3; --muted: #8b97a8; --dim: #5f6b7d;
-    --brand: #f8cb46; --green: #0c831f; --green-lit: #21c04a;
-    --warn: #fb923c;
-    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#12131a; --muted:#6b7280; --line:#e5e7eb;
+    --brand:#f8cb46; --brand-ink:#1a1a1a; --accent:#0c831f; --warn:#b45309;
+    --radius:14px;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-  header {
-    display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
-    padding: 1rem 1.5rem; border-bottom: 1px solid var(--line); background: var(--panel);
-  }
-  .logo { font-size: 1.35rem; font-weight: 800; color: var(--brand); letter-spacing: -.02em; }
-  .tag {
-    background: var(--green-lit); color: #06240d; font: 700 11px var(--mono);
-    letter-spacing: .08em; padding: .3rem .6rem; border-radius: 999px;
-  }
-  header .right { margin-left: auto; color: var(--muted); font-size: .85rem; }
-  header .right a { color: var(--green-lit); }
-
-  .wrap {
-    display: grid; gap: 1.25rem; padding: 1.25rem 1.5rem 3rem;
-    grid-template-columns: minmax(260px, 1fr) minmax(340px, 450px) minmax(300px, 1fr);
-    align-items: start; max-width: 1700px; margin: 0 auto;
-  }
-  @media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; } }
-
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 1.1rem; }
-  .panel h2 { margin: 0 0 .35rem; font-size: 1.05rem; }
-  .panel .hint { color: var(--muted); font-size: .82rem; margin: 0 0 1rem; }
-
-  .persona {
-    width: 100%; text-align: left; cursor: pointer; margin-bottom: .6rem; display: block;
-    background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px;
-    padding: .8rem .9rem; color: inherit; font: inherit; transition: border-color .12s, background .12s;
-  }
-  .persona:hover { border-color: var(--dim); }
-  .persona[aria-current="true"] { border-color: var(--brand); background: #221f10; }
-  .persona .pname { font-weight: 650; }
-  .persona .psub { color: var(--muted); font-size: .8rem; margin-top: .15rem; }
-  .persona .pmeta {
-    display: flex; justify-content: space-between; gap: .6rem; margin-top: .55rem;
-    font-size: .72rem; color: var(--dim); font-family: var(--mono);
-  }
-  .prov { color: var(--green-lit); }
-  .persona-list { max-height: 64vh; overflow-y: auto; padding-right: .3rem; }
-
-  .phone {
-    background: #0f141c; border: 1px solid var(--line); border-radius: 22px; overflow: hidden;
-    box-shadow: 0 18px 50px rgba(0,0,0,.45);
-  }
-  .phone-top { background: var(--green); padding: .9rem 1.1rem; }
-  .phone-top .eta { font-size: .78rem; color: #bff0c6; }
-  .phone-top .who { font-weight: 700; font-size: 1.05rem; }
-  .phone-body { padding: 1rem; max-height: 68vh; overflow-y: auto; }
-  .sect { font: 700 11px var(--mono); letter-spacing: .1em; color: var(--muted); margin: .2rem 0 .6rem; }
-  .row {
-    display: flex; align-items: center; gap: .7rem; background: var(--panel-2);
-    border: 1px solid var(--line); border-radius: 10px; padding: .6rem .75rem; margin-bottom: .5rem;
-  }
-  .row .ico { font-size: 1.2rem; }
-  .row .nm { flex: 1; min-width: 0; }
-  .row .nm b { display: block; font-weight: 600; font-size: .9rem; }
-  .row .nm span { color: var(--muted); font-size: .75rem; }
-  .row .pr { font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
-  .qty { display: flex; align-items: center; gap: .3rem; }
-  .qty button {
-    width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line);
-    background: var(--bg); color: var(--fg); cursor: pointer; font: 600 14px/1 sans-serif;
-  }
-  .qty button:hover { border-color: var(--green-lit); }
-  .qty b { min-width: 1.2em; text-align: center; font-family: var(--mono); font-size: .85rem; }
-  .empty { color: var(--muted); font-size: .87rem; padding: .8rem 0; }
-
-  .spark { border: 1px solid var(--brand); border-radius: 12px; padding: .85rem; margin: .9rem 0; background: #191708; }
-  .spark-head { display: flex; align-items: center; gap: .5rem; margin-bottom: .7rem; flex-wrap: wrap; }
-  .spark-pill { background: var(--brand); color: #241d00; font: 700 10px var(--mono); letter-spacing: .07em; padding: .22rem .5rem; border-radius: 999px; }
-  .mode-pill { font: 700 10px var(--mono); letter-spacing: .07em; padding: .22rem .5rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
-  .mode-pill.b { border-color: var(--green-lit); color: var(--green-lit); }
-  .spark-x { margin-left: auto; background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.05rem; }
-  .spark .pname { font-weight: 650; }
-  .spark .meta { color: var(--muted); font-size: .78rem; margin: .1rem 0 .45rem; }
-  .spark .price { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; }
-  .reason { background: #0f141c; border-left: 3px solid var(--brand); border-radius: 6px; padding: .55rem .7rem; margin: .6rem 0; font-size: .88rem; }
-  .anchor { font-size: .8rem; color: var(--green-lit); margin-bottom: .3rem; }
-  .anchor.bad { color: var(--warn); }
-  .trust { font-size: .78rem; color: var(--muted); margin-bottom: .7rem; }
-  .cta { display: flex; gap: .5rem; }
-  .cta button { flex: 1; border-radius: 9px; padding: .6rem; cursor: pointer; font: 600 .9rem sans-serif; border: 1px solid var(--line); }
-  .primary { background: var(--green); border-color: var(--green) !important; color: #fff; }
-  .ghost { background: transparent; color: var(--muted); }
-
-  .nocard { border: 1px dashed var(--line); border-radius: 12px; padding: .9rem; margin: .9rem 0; background: #12161d; }
-  .nocard b { color: var(--warn); }
-  .nocard p { margin: .5rem 0 0; font-size: .81rem; color: var(--muted); }
-  .nocard code { font-family: var(--mono); font-size: .78rem; color: var(--fg); }
-
-  .bill { border-top: 1px solid var(--line); margin-top: .9rem; padding-top: .8rem; font-size: .86rem; }
-  .bill div { display: flex; justify-content: space-between; margin-bottom: .35rem; }
-  .bill .tot { font-weight: 700; font-size: .98rem; border-top: 1px solid var(--line); padding-top: .5rem; margin-top: .5rem; }
-  .free { color: var(--green-lit); }
-  .place { width: 100%; margin-top: .8rem; background: var(--green); color: #fff; border: 0; border-radius: 10px; padding: .8rem; font: 700 1rem sans-serif; cursor: pointer; }
-
-  .cat-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
-  .prod { background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: .6rem; }
-  .prod .c { font-size: .66rem; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; }
-  .prod .n { font-size: .82rem; font-weight: 600; margin: .2rem 0; }
-  .prod .p { font-size: .73rem; color: var(--muted); }
-  .prod button { width: 100%; margin-top: .45rem; background: transparent; border: 1px solid var(--green-lit); color: var(--green-lit); border-radius: 7px; padding: .3rem; cursor: pointer; font: 600 .78rem sans-serif; }
-  .prod button:hover { background: var(--green); color: #fff; border-color: var(--green); }
-
-  .stats { display: grid; gap: .6rem; grid-template-columns: 1fr 1fr; margin-bottom: 1rem; }
-  .stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: .7rem .8rem; }
-  .stat b { display: block; font-size: 1.45rem; font-family: var(--mono); line-height: 1.15; }
-  .stat span { font-size: .71rem; color: var(--muted); }
-  .log { background: #0a0d12; border: 1px solid var(--line); border-radius: 10px; padding: .7rem; height: 230px; overflow-y: auto; font: 11.5px/1.6 var(--mono); }
-  .log .ev { margin-bottom: .5rem; }
-  .log .t { color: var(--dim); }
-  .log .k { color: var(--green-lit); font-weight: 700; }
-  .log .k.sup { color: var(--warn); }
-  .log .k.acc { color: var(--brand); }
-  .log .d { color: var(--muted); }
-  .trace { background: #0a0d12; border: 1px solid var(--line); border-radius: 10px; padding: .7rem; margin-top: .3rem; font: 11.5px/1.7 var(--mono); color: var(--muted); white-space: pre-wrap; }
-  .caveat { font-size: .77rem; color: var(--dim); border-top: 1px solid var(--line); margin-top: 1rem; padding-top: .7rem; }
-  a { color: var(--green-lit); }
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg);color:var(--ink)}
+  header{background:var(--brand);padding:14px 20px;display:flex;align-items:center;gap:16px;
+         flex-wrap:wrap;position:sticky;top:0;z-index:10}
+  header h1{font-size:17px;margin:0;font-weight:700;color:var(--brand-ink)}
+  header .sub{font-size:12px;color:#6b5a12}
+  .wrap{max-width:1140px;margin:0 auto;padding:20px;display:grid;
+        grid-template-columns:1fr 380px;gap:20px;align-items:start}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+            margin:0 0 12px}
+  select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:14px;
+         background:#fff}
+  .persona{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .owned{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+  .chip{font-size:11px;background:#eef2f7;border-radius:99px;padding:3px 9px;color:#374151}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
+  .prod{border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff;
+        display:flex;flex-direction:column;gap:5px}
+  .prod .cat{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .prod .nm{font-weight:600;font-size:13.5px;line-height:1.3}
+  .prod .pk{font-size:11.5px;color:var(--muted)}
+  .prod .row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;
+             padding-top:7px}
+  .prod .pr{font-weight:700;font-size:14px}
+  button{cursor:pointer;font:inherit}
+  .add{background:#fff;color:var(--accent);border:1px solid var(--accent);border-radius:8px;
+       padding:4px 12px;font-size:12.5px;font-weight:600}
+  .add:hover{background:var(--accent);color:#fff}
+  .cart-item{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;
+             border-bottom:1px solid #f1f2f4}
+  .cart-total{display:flex;justify-content:space-between;font-weight:700;padding-top:10px;
+              font-size:15px}
+  .empty{color:var(--muted);font-size:13px;padding:8px 0}
+  /* The One Thing card */
+  .onething{border:2px solid var(--accent);border-radius:var(--radius);padding:14px;margin-top:14px;
+            background:linear-gradient(180deg,#f4fbf5,#fff)}
+  .onething .reason{font-weight:650;font-size:14px;margin-bottom:10px;line-height:1.4}
+  .onething .prod-line{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .onething .nm{font-weight:600}
+  .onething .price{font-weight:700;font-size:15px;white-space:nowrap}
+  .anchor{font-size:12.5px;margin-top:6px;padding:6px 9px;border-radius:8px;background:#eef7ef;
+          color:#14532d;font-variant-numeric:tabular-nums}
+  .anchor.bad{background:#fdf3e7;color:var(--warn)}
+  .trust{font-size:12px;color:var(--muted);margin-top:7px}
+  .cta{display:flex;gap:8px;margin-top:12px}
+  .cta .primary{flex:1;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:9px;
+                font-weight:650}
+  .cta .ghost{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 14px;
+              color:var(--muted)}
+  .mode{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+        padding:2px 7px;border-radius:5px;background:var(--accent);color:#fff;margin-bottom:9px}
+  .mode.b{background:#7c3aed}
+  .why{margin-top:12px;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);
+       padding-top:9px}
+  .why code{background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:11.5px}
+  .nocard{border:1px dashed var(--line);border-radius:var(--radius);padding:14px;margin-top:14px;
+          color:var(--muted);font-size:13px}
+  .log{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#374151;
+       background:#f9fafb;border:1px solid var(--line);border-radius:9px;padding:9px;
+       max-height:180px;overflow:auto;white-space:pre-wrap}
+  footer{max-width:1140px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-
 <header>
-  <span class="logo">Blinkit</span>
-  <span class="tag">CATEGORY SPARK MVP</span>
-  <span class="right">
-    Graduation project · <a href="./deck/">case study deck</a> ·
-    decisions are deterministic, only the wording is generated
-  </span>
+  <h1>One&nbsp;Thing</h1>
+  <span class="sub">Blinkit category-discovery MVP · cart-triggered adjacent-category card</span>
 </header>
 
 <div class="wrap">
-  <section class="panel">
-    <h2>👥 Shopper profiles</h2>
-    <p class="hint">
-      Synthetic profiles on synthetic order histories. Several are patterned on findings from the
-      five depth interviews — <strong>including two where the correct behaviour is to suggest
-      nothing at all.</strong> They are not the interviewees, who remain anonymous as P01–P05.
-    </p>
-    <div class="persona-list" id="personas"></div>
-  </section>
-
-  <section>
-    <div class="phone">
-      <div class="phone-top">
-        <div class="eta">Delivering in 10 minutes</div>
-        <div class="who" id="who">—</div>
-      </div>
-      <div class="phone-body">
-        <div class="sect">YOUR BASKET</div>
-        <div id="cart"></div>
-        <div id="suggestion"></div>
-        <div class="bill" id="bill"></div>
-        <button class="place" id="place">Place order</button>
-
-        <div class="sect" style="margin-top:1.4rem">ADD MORE</div>
-        <div class="cat-grid" id="grid"></div>
-      </div>
+  <main>
+    <div class="panel" style="margin-bottom:16px">
+      <h2>Shopper</h2>
+      <select id="user"></select>
+      <div class="persona" id="persona"></div>
+      <div class="owned" id="owned"></div>
     </div>
-  </section>
 
-  <section class="panel">
-    <h2>📊 Engine diagnostics</h2>
-    <p class="hint">Counted from what you do in this session. Nothing here is projected or simulated.</p>
-    <div class="stats" id="stats"></div>
-    <div class="sect">LIVE EVENT COLLECTOR</div>
-    <div class="log" id="log"></div>
-    <div class="sect" style="margin-top:1rem">DECISION TRACE</div>
-    <div class="trace" id="trace">—</div>
-    <div class="caveat" id="caveat"></div>
-  </section>
+    <div class="panel">
+      <h2>Catalogue</h2>
+      <div class="grid" id="grid"></div>
+    </div>
+  </main>
+
+  <aside>
+    <div class="panel">
+      <h2>Cart</h2>
+      <div id="cart"></div>
+      <div id="suggestion"></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <h2>Decision trace</h2>
+      <div class="log" id="log">—</div>
+    </div>
+  </aside>
 </div>
+
+<footer>
+  Synthetic catalogue and order histories. The suggestion runs entirely in the browser on the
+  deterministic path — no API key required — so the demo behaves identically regardless of model
+  quota. Card copy is richer when an LLM is available; the decision itself is unchanged.
+</footer>
 
 <script type="module" src="./main.js"></script>
 </body>
