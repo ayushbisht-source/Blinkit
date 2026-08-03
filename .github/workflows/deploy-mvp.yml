@@ -49,11 +49,28 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node mvp/scripts/pregenerate-copy.mjs
 
+      # Cache-bust every internal reference with the commit sha.
+      #
+      # GitHub Pages serves these with a long max-age, and ES module imports are resolved by the
+      # browser independently of the entry script — so a rebuild could ship correct files that a
+      # returning visitor never fetched. That is a bad failure mode for a demo: the page loads, it
+      # works, and it is silently the previous version. Adding ?v=<sha> to every internal path means
+      # a changed commit is a changed URL.
       - name: Stage site
         run: |
           mkdir -p _site/deck
           cp -r mvp/index.html mvp/main.js mvp/agent mvp/data _site/
           cp deck/index.html _site/deck/index.html
+
+          V="${{ github.sha }}"
+          find _site -name '*.html' -o -name '*.js' | while read -r f; do
+            sed -i -E "s#(from '\./[^']+\.js)'#\1?v=$V'#g;
+                       s#(from '\.\./[^']+\.js)'#\1?v=$V'#g;
+                       s#(src=\"\./[^\"]+\.js)\"#\1?v=$V\"#g;
+                       s#(fetch\('\./[^']+\.json)'#\1?v=$V'#g" "$f"
+          done
+          echo "Cache-busted with $V:"
+          grep -ho "v=$V" _site/index.html _site/main.js | head -3
           ls -la _site/data/llm-copy.json || echo 'no llm-copy.json — site will use deterministic copy'
           # Pages serves 404.html for unknown paths; point it at the app so deep links work.
           cp mvp/index.html _site/404.html
