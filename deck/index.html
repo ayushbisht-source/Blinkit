@@ -66,7 +66,7 @@
   <p class="lede">Increasing the share of Monthly Active Customers who purchase from at least one
   new category each month — in Indian quick commerce.</p>
   <div class="note">
-    Evidence base: 3,372 public reviews · 40 survey responses · 3 depth interviews · a deployed MVP.
+    Evidence base: 3,372 public reviews · 40 survey responses · 5 depth interviews · a deployed MVP.
     Every number in this deck is computed from committed data and reproducible from the repository.
   </div>
 </section>
@@ -98,7 +98,7 @@
     <tr><th>Instrument</th><th>Scale</th><th>Good at</th><th>Blind to</th></tr>
     <tr><td>Discovery engine</td><td class="n">3,372 docs</td><td>What disappoints buyers, at volume</td><td>Anyone who didn't buy</td></tr>
     <tr><td>Survey</td><td class="n">n=40</td><td>Prevalence across a known frame</td><td>Anything not on the form</td></tr>
-    <tr><td>Depth interviews</td><td class="n">n=3</td><td>Barriers nobody thought to ask about</td><td>Prevalence</td></tr>
+    <tr><td>Depth interviews</td><td class="n">n=5</td><td>Barriers nobody thought to ask about</td><td>Prevalence</td></tr>
     <tr><td>AI personas</td><td class="n">5</td><td>Generating hypotheses fast</td><td>Anything outside their input</td></tr>
   </table></div>
   <p>They were built to be compared, not averaged. Where they agree, the finding is solid. Where
@@ -143,6 +143,12 @@
   <p>Two datasets — one mined from public reviews, one asked directly — independently rank the same
   three barriers the same way. And the corpus corrects the survey once: <code>return_anxiety</code>
   is the engine's third-largest barrier and neither the survey nor any interview surfaced it.</p>
+  <p><strong>And one interview supplied what the corpus could not.</strong> The engine's three
+  largest themes are all spoiled produce and quality failure (72 + 51 + 42 statements). It
+  established prevalence; it could not say what the reviewer does <em>next</em>, because reviews are
+  cross-sectional. P05: <em>"one time I got really bad vegetables… I will never buy."</em>
+  <strong>The category is abandoned permanently, from one incident.</strong> 3,372 documents give the
+  size; one interview gives the mechanism.</p>
   <p class="note">Top information gaps, which is what the MVP had to close:
   <code>freshness_expiry</code> (198) · <code>returnability</code> (164) ·
   <code>price_benchmark</code> (161).</p>
@@ -229,19 +235,25 @@
 
 <section class="slide">
   <div class="num">10</div>
-  <div class="kicker">Part 2 · Interviews (n=3)</div>
-  <h2>Three conversations found three things the vocabulary can't express</h2>
-  <p>All three respondents, unprompted, on two different apps, named a never-bought category and
+  <div class="kicker">Part 2 · Interviews (n=5)</div>
+  <h2>A finding, and the test that could have killed it</h2>
+  <p>Three of five respondents, unprompted, on two different apps, named a never-bought category and
   explained it as <strong>irrelevance, not obstruction</strong>.</p>
   <div class="quote">"Pet supplies, baby care never bought. I don't have kids and pets."<cite>P01</cite></div>
   <div class="quote">"Baby care never bought because I don't have kids."<cite>P02</cite></div>
   <div class="quote">"Home appliance, because I live alone and I live in full furnished so nothing to do with it."<cite>P03</cite></div>
-  <p>None answered "where do you buy it instead?" — because nobody is buying it anywhere. All eight
-  values in the engine's <code>barrier[]</code> enum presume latent demand being blocked. Forced onto
-  the survey's closed list, all three would have been recorded as <em>blocked</em>, overstating
-  addressable demand.</p>
-  <p class="note">The other two gaps: <strong>access of last resort</strong> (2 of 3 opened the app
-  only because nothing else was available) and <strong>basket economics</strong> — see next slide.</p>
+  <p>None answered "where do you buy it instead?" — nobody is buying it anywhere. All eight values in
+  the engine's <code>barrier[]</code> enum presume latent demand being blocked, so all three would
+  have been miscoded as <em>blocked</em>, overstating addressable demand.</p>
+  <p><strong>The obvious objection: these were all non-parents.</strong> So was the finding about the
+  instrument, or about who I could reach? P04 was recruited to test it — a parent of a newborn.</p>
+  <div class="quote">"Pampers for my newly born child… it's midnight all shops closed and we need
+  that urgent for our baby."<cite>P04 — buys baby care, on an app</cite></div>
+  <p>The finding <strong>survives</strong> — irrelevance tracks <em>life stage</em>, exactly as
+  claimed — and <strong>narrows</strong>: 3 of 5, not 3 of 3. A claim that rested on universality
+  came down.</p>
+  <p class="note">The other two gaps: <strong>access of last resort</strong> (3 of 5 opened the app
+  only because nothing else was available) and <strong>basket economics</strong> — next slide.</p>
 </section>
 
 <section class="slide">
@@ -267,6 +279,33 @@
 
 <section class="slide">
   <div class="num">12</div>
+  <div class="kicker">Part 2 · The limit on the whole thesis</div>
+  <h2>For some users, no information helps</h2>
+  <p>The root cause says the constraint is <em>evaluation speed</em> — users would try if judging
+  were cheaper. Interviews 4 and 5 describe barriers where that simply isn't the mechanism.</p>
+  <div class="quote">"Maybe when we shift to our new home or maybe when the kirana store which is
+  near to our home will close permanently."<cite>P04, asked what would unblock groceries</cite></div>
+  <p>The question asks for information. The answer contains none — both conditions are structural
+  changes to their life. They have a working supplier used <em>"like from ages"</em>.</p>
+  <div class="quote">"I will never buy from blinkit my trust issues for vegetables is still there."
+  <cite>P05, after "one time I got really bad vegetables"</cite></div>
+  <p>P05 isn't short of information. They <em>have</em> information — they tried it, it was bad, they
+  updated. No badge reopens that.</p>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Barrier type</th><th>Does the MVP help?</th></tr>
+    <tr><td>Evaluation cost — can't judge fit, price or trust fast enough</td><td class="ok">Yes — this is what it's for</td></tr>
+    <tr><td>Incumbent supplier (P04)</td><td class="flag">No — resolves only on a life change</td></tr>
+    <tr><td>Settled negative belief (P05)</td><td class="flag">No — a card here is wasted</td></tr>
+    <tr><td>Category irrelevance (P01–P03)</td><td class="flag">No — suppression case</td></tr>
+  </table></div>
+  <p class="note"><strong>This bounds the sizing, not the design.</strong> The addressable population
+  is smaller than "39/40 want to explore" implies, which is why §5 expresses value as a formula over
+  segment share rather than a headline number. The agent already refuses to show a card it cannot
+  substantiate — the correct behaviour for all three non-addressable rows.</p>
+</section>
+
+<section class="slide">
+  <div class="num">13</div>
   <div class="kicker">Part 2 · Method finding</div>
   <h2>We tested the shortcut, and it failed</h2>
   <p>Interviews are slow. The obvious substitute is generating personas from survey data — a real,
@@ -288,27 +327,33 @@
 </section>
 
 <section class="slide">
-  <div class="num">13</div>
+  <div class="num">14</div>
   <div class="kicker">Part 3 · The reframe</div>
   <h2>The goal is a monthly metric. One-off trial doesn't move it.</h2>
   <p>Half the survey had already crossed into a new category in three months. That looks like success
   until you check <em>why the crossers still don't try more</em> — their reasons are near-identical to
   the non-crossers' reasons for never trying at all. Crossing over once did not lower the barrier.</p>
-  <p><strong>So crossover is event-triggered and non-repeating.</strong> Something external forces it,
-  the user buys once, and reverts to their list. All three interviews confirm it, with three
-  different triggers:</p>
-  <ul>
-    <li>P01 — ran out. <em>"I needed that very urgent."</em></li>
-    <li>P02 — urgency plus no nearby shop.</li>
-    <li>P03 — a life event. <em>"i joined gym and i don't have sipper."</em></li>
-  </ul>
+  <p><strong>So crossover is event-triggered and non-repeating.</strong> Something external forces
+  it, the user buys once, and reverts. <strong>All five interviews confirm it — five for five, five
+  different triggers, three platforms.</strong> Not one described trying something because it looked
+  interesting.</p>
+  <div class="scroll"><table class="tbl">
+    <tr><th></th><th>Last new-category purchase</th><th>Trigger</th></tr>
+    <tr><td>P01</td><td>Refined oil</td><td>Ran out — <em>"needed that very urgent"</em></td></tr>
+    <tr><td>P02</td><td>Liquid detergent</td><td>Urgency + no shop nearby</td></tr>
+    <tr><td>P03</td><td>Sipper</td><td>Life event — <em>"i joined gym"</em></td></tr>
+    <tr><td>P04</td><td>Pampers</td><td>Urgency — <em>"midnight all shops closed"</em></td></tr>
+    <tr><td>P05</td><td>Home appliance</td><td>Life event — <em>"we shifted to our new home"</em></td></tr>
+  </table></div>
+  <p><strong>Price never triggers; it confirms.</strong> Four of five mention price alongside the
+  real trigger, never as it. Events open categories, price closes purchases.</p>
   <p>This changes what to build. The highest-value moment is not first trial at all — it is the
   window <strong>immediately after a first cross-category purchase, before the user reverts</strong>.
   That is a moment the platform can detect precisely.</p>
 </section>
 
 <section class="slide">
-  <div class="num">14</div>
+  <div class="num">15</div>
   <div class="kicker">Part 4 · The MVP</div>
   <h2>"One Thing" — a single card, at cart review</h2>
   <p>Not a feed, not a rail, not a browse tab. F2 rules those out: almost nobody is browsing. The
@@ -327,7 +372,7 @@
 </section>
 
 <section class="slide">
-  <div class="num">15</div>
+  <div class="num">16</div>
   <div class="kicker">Part 4 · The hard part</div>
   <h2>The agent's most important behaviour is refusing</h2>
   <p>When the data cannot substantiate a reason, the card <strong>is not shown</strong> and the
@@ -346,7 +391,7 @@
 </section>
 
 <section class="slide">
-  <div class="num">16</div>
+  <div class="num">17</div>
   <div class="kicker">Measurement</div>
   <h2>How we'd know it worked</h2>
   <p><strong>Primary metric — CER (Category Expansion Rate):</strong> share of MAC purchasing from
@@ -369,13 +414,14 @@
 </section>
 
 <section class="slide">
-  <div class="num">17</div>
+  <div class="num">18</div>
   <div class="kicker">Limitations</div>
   <h2>Stated up front, not discovered by a reader</h2>
   <ul>
-    <li><strong>3 depth interviews against a target of 5–6.</strong> All three are non-parents and
-    two live alone. A parent or pet owner would have tested whether "this category is irrelevant to
-    me" is a property of these respondents or of the question. That test was not run.</li>
+    <li><strong>5 depth interviews — the brief's minimum, and no more.</strong> Recruitment is
+    convenience-sampled through my own network, so the interviews correct the survey's
+    <em>vocabulary</em> but inherit its <em>sampling</em>. Prevalence of every interview finding
+    remains unknown.</li>
     <li><strong>95% of the corpus is one platform.</strong> This is why source spread reports NOT RUN
     rather than a green tick.</li>
     <li><strong>Only 2 of the 7 requested source types</strong> were collected. Social APIs are
@@ -392,12 +438,12 @@
 </section>
 
 <section class="slide">
-  <div class="num">18</div>
+  <div class="num">19</div>
   <div class="kicker">What I'd do next</div>
   <h2>The three things that would change the answer</h2>
   <ul>
     <li><strong>Add a "not relevant to me" option</strong> to the barrier taxonomy and re-field the
-    survey. Three of three interviews hit a gap the instrument cannot record; prevalence is genuinely
+    survey. Three of five interviews hit a gap the instrument cannot record; prevalence is genuinely
     unknown and currently overstated.</li>
     <li><strong>Add <code>basket_economics</code> to the schema</strong> and re-run extraction. The
     signal is already collected — 133 documents — and currently mislabelled as price uncertainty,

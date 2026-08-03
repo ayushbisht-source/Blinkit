@@ -1,9 +1,9 @@
 # Part 3 — Problem Definition
 
 > **Status of evidence.** Everything below rests on the 40-response survey (real), the discovery
-> engine's corpus of 3,372 documents, and 3 depth interviews (real, async text — fieldwork closed
-> at 3 against a target of 5–6, see `docs/02-user-research.md` §5 and §8.7). Interview evidence is
-> labelled n=3 wherever it appears and never carries a quantitative claim on its own.
+> engine's corpus of 3,372 documents, and 5 depth interviews (real, async text, meeting the brief's
+> minimum — see `docs/02-user-research.md` §8). Interview evidence is labelled n=5 wherever it
+> appears and never carries a quantitative claim on its own.
 
 ---
 
@@ -90,32 +90,54 @@ This matters because it dictates what will and won't work. Interventions that ad
 variables that are already non-zero. Only interventions that raise *evaluation speed* touch the
 constraint.
 
-### One interview suggests a constraint upstream of this one
+### Two of five interviews describe barriers this model does not cover
 
-P03 gave a reason for never buying a category that is not an evaluation problem at all:
+The analysis above says the constraint is *evaluation speed*: users would try an unfamiliar category
+if judging it were cheaper. Supplying the missing reference point is therefore the intervention.
 
-> *"we need to buy atleast minimum rs product like 150 or 200 rs of products for not to charge
-> delivery fees too so I never bought home appliance"*
+Two respondents describe barriers where that is not the mechanism at all.
 
-Read as **basket-shape mismatch** — the user has internalised what this app is *for*, assembling
-₹150–200 of small top-up items, and a category outside that shape never enters consideration — this
-sits *before* the ability constraint rather than inside it. P03 isn't failing to evaluate the home
-appliance quickly enough; they never open the question.
+> **P04**, asked what would have to be true to buy groceries on the app: *"Maybe when we shift to our
+> new home or maybe when the kirana store which is near to our home will close permanently."*
 
-Three qualifications, all load-bearing:
+The question asks for information or evidence; the answer contains none. Both unblocking conditions
+are structural changes to their circumstances. P04 has a working supplier used *"like from ages"* —
+an incumbent relationship, not an evaluation problem.
 
-1. **n=1.** No other respondent raised it.
-2. **The mechanism as stated doesn't parse literally** — a minimum-order threshold should push a
-   basket up, and an appliance clears ₹200 easily. Basket-shape mismatch is the analyst's reading,
-   not the respondent's words (`research/transcripts/P03.md` §2).
-3. **Async text couldn't probe it.** A live interview would have resolved this in one follow-up.
+> **P05**, on vegetables: *"I will never buy from blinkit my trust issues for vegetables is still
+> there"* — after *"one time I got really bad vegetables."*
 
-It is recorded here rather than in a footnote because if it holds, it bounds this section's claim:
-the Fogg analysis would explain why users skip categories they *consider*, and say nothing about
-categories that never reach consideration. **The MVP is not changed by it either way** — a single
-cross-category suggestion at cart review is, if anything, helped by a threshold the user is trying
-to clear. But the root cause above would be one of two, not the only one, and that is worth knowing
-before treating it as settled.
+P05 is not short of information. They have information: they tried it, it was bad, and they updated.
+A belief formed by direct experience is not reopened by a price anchor or a freshness badge.
+
+**A third case, weaker and recorded for completeness.** P03 gave a reason that is not an evaluation
+problem either — *"we need to buy atleast minimum rs product like 150 or 200 rs of products for not
+to charge delivery fees too so I never bought home appliance"* — read as **basket-shape mismatch**:
+the app is internalised as a place for ₹150–200 of small top-up items, and categories outside that
+shape never enter consideration. That reading is the analyst's, not the respondent's, and the
+mechanism as stated does not parse literally (a minimum should push a basket *up*).
+`research/transcripts/P03.md` §2 records it as ambiguous.
+
+**What this changes.** The Fogg analysis above is not wrong, and the survey evidence for it is
+strong — 39/40 want to explore, 13/40 name comparison time as the blocker. But it describes **users
+who would try if evaluation were cheaper**, and that is not everyone:
+
+| Barrier type | Mechanism | Does the MVP help? |
+|---|---|---|
+| Evaluation cost (the model above) | Cannot judge fit, price or trust fast enough | **Yes** — this is what it is for |
+| Incumbent supplier (P04) | Existing offline relationship, no dissatisfaction | **No** — resolves only on a life change |
+| Settled negative belief (P05) | Direct bad experience, already updated | **No** — and a card here is a wasted impression |
+| Category irrelevance (P01–P03) | No latent demand at all | **No** — suppression case, not a conversion case |
+
+At 2 of 5 for the middle two rows this is not a rate, and the sample is too small and too
+convenience-drawn to size any of them. What it does establish is that **the addressable population
+is smaller than the survey's 39/40 implies**, because that number counts everyone who has ever
+wanted to try something — not everyone whose barrier a faster evaluation would remove.
+
+That is a limitation on the *sizing* in §5, and it is why the model there is expressed as a formula
+over segment share rather than a headline number. It is not a limitation on the MVP's design: the
+agent already refuses to show a card when the data cannot substantiate a reason, which is the
+correct behaviour for all three non-addressable rows.
 
 ---
 
@@ -220,10 +242,12 @@ insights. Honest reporting of that comparison, including its limits:
 |---|---|
 | **Confirmed by survey** | **The ranking of barriers matches.** Engine, across 832 extractions carrying a barrier code: `trust_quality` **45.3%**, `price_risk` **22.7%**, `awareness` **4.8%**. Survey, n=40: quality/taste uncertainty is the top blocker (14) with brand distrust close behind (12); price second (8 "priced higher than usual" + 7 "price feels risky"); and *nobody's* leading answer is "I didn't know they sold it." Two independently collected datasets — one mined from public reviews, one asked directly — put the same three barriers in the same order. |
 | **Challenged by survey** | **The engine almost cannot see the survey's second-biggest blocker.** "Took too long to explore/compare" is 13/40 — **32.5%**, rank 2. The corresponding engine code, `choice_overload`, appears **13 times in 832 extractions: 1.5%**. A twentyfold gap is not sampling noise. The explanation is structural: reviews are written *after* a transaction, by people motivated by an outcome. Nobody writes a review saying "I considered pet food, found comparing too slow, and bought nothing." The non-purchase leaves no text. See below. |
-| **Where the engine outruns both** | Its third-largest barrier is `return_anxiety` at **18.4%** — a concern the survey barely probes and no interview raised. This is the corpus doing what it is genuinely good at: 3,372 documents surface a substantial, specific post-purchase barrier that 40 closed-form responses and three conversations all under-weight. The correction runs both ways, and this row is why the engine is worth building rather than replacing with more interviews. |
+| **Where the engine outruns both** | Its third-largest barrier is `return_anxiety` at **18.4%** — a concern the survey barely probes and no interview raised. 3,372 documents surface a substantial post-purchase barrier that 40 closed-form responses and five conversations all under-weight. The correction runs both ways, and this row is why the engine is worth building rather than replacing with more interviews. |
+| **Where the two complete each other** | The engine's largest themes are spoiled produce and quality failure — THM-01 (72 statements), THM-02 (51), THM-04 (42). It established the *prevalence* and could not establish the *consequence*, because reviews are cross-sectional: one moment, one person, no follow-up. P05 supplies it — the category is abandoned **permanently**, from a single incident. 3,372 documents give the size of the problem; one interview gives its mechanism. |
 | **Structural limit of the survey** | The survey cannot strongly challenge the engine *by construction* — its barrier options were written from the engine's own `barrier[]` vocabulary so the two datasets would compare directly. It can confirm prevalence; it is structurally poor at surfacing a barrier nobody thought to ask about. |
-| **Confirmed by interview** (n=3) | **3 of 3 on event-triggered crossover**, with the three different triggers §5 predicts: ran out (P01, refined oil), urgent need with no alternative (P02, liquid detergent), and a life event creating a need that did not exist before (P03 — *"i joined gym and i don't have sipper so i bought urgently"*). **3 of 3 arrived knowing the item.** **3 of 3 named quality unprompted** as the precondition for trying a new category, matching F3; none mentioned delivery speed, returns, or brand. |
-| **Challenged by interview** (n=3) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** All three named a never-bought category and explained it as irrelevance, not obstruction — *"I don't have kids and pets"* (P01), *"I don't have kids"* (P02), *"I live alone and I live in full furnished so nothing to do with it"* (P03) — and none named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked. Forced onto the survey's closed list, all three would have been recorded as blocked, overstating addressable demand. See `docs/02-user-research.md` §8.1. |
+| **Confirmed by interview** (n=5) | **5 of 5 on event-triggered crossover**, spanning the full trigger set §5 predicts: ran out (P01), urgency with no alternative (P02, P04 — *"it's midnight all shops closed and we need that urgent for our baby"*), and a life event creating a need that did not exist before (P03 joined a gym, P05 moved house). **5 of 5 arrived knowing the item; not one described browsing.** The prediction that a single browsing respondent would overturn the fetch-mode model was written at n=2 and survived three more interviews. |
+| **Challenged by interview** (n=5) | **The engine's `barrier[]` enum has no code for "this category does not apply to me."** Three of five named a never-bought category and explained it as irrelevance, not obstruction — *"I don't have kids and pets"* (P01), *"I don't have kids"* (P02), *"I live alone and I live in full furnished so nothing to do with it"* (P03) — and none named a competing channel, because no purchase is happening anywhere. All eight enum values presume latent demand being blocked, so all three would have been miscoded as blocked, overstating addressable demand. **The obvious objection was tested:** at n=3 every respondent was a non-parent, so P04 was recruited as a parent of a newborn — and buys baby care, on an app. Irrelevance tracks life stage, as claimed; the pattern narrows to 3 of 5. See `docs/02-user-research.md` §8.1. |
+| **Challenged by interview, structurally** (n=2 of 5) | **Two respondents have barriers no information can close** — P04's incumbent kirana (*"we are buying from there like from ages"*, unblocked only by moving house or the shop closing) and P05's settled belief after one bad delivery (*"I will never buy… my trust issues for vegetables is still there"*). Neither is an evaluation-speed problem, so neither is addressed by the root cause above or by the MVP. §2 now carries this explicitly. |
 | **Challenged by interview, with corpus evidence** | **A barrier that is neither informational nor in the schema: basket economics.** P03 — *"we need to buy atleast minimum rs product like 150 or 200 rs of products for not to charge delivery fees too so I never bought home appliance."* Unlike the other gaps this one leaves text, so it is checkable: **133 of 3,372 documents** use minimum-order / delivery-fee / threshold language (`research/check_basket_economics.py`). The gate rejected 64 of them as delivery or support complaints. The rest reached extraction and clustered into a theme of their own — **THM-05, 34 statements, 5.4%** — which the pipeline then coded `price_risk`, meaning *"unsure if the price is fair"*, when its quotes are people re-planning a basket around a threshold that moved (*"Before it serves free delivery on 100₹ , And now 400₹"*). The theme is real; no `barrier[]` value fits it — `price_risk` means *"unsure if the price is fair"*, and these users know exactly what the fee is. The engine collected the signal at scale and has nowhere to store it. See `docs/02-user-research.md` §8.3. |
 | **Also challenged** (n=2 of 3, weaker) | P01 and P02 opened the app because of the **absence of an alternative** — *"only Blinkit is available there"*, *"late night… no shop around me"*. No `HabitDriver` value covers access-of-last-resort; all six describe choosing between available options. P03 does not replicate it. Recorded as a hypothesis to check against extraction output, not a finding. |
 | **Unsettled by interview** | **Whether price triggers a crossover or merely confirms one.** P02 named it third, after urgency and absence of alternatives; P03's last order was triggered by price alone with no urgency, after deliberate cross-platform comparison (*"200 rs discount apart from other platforms"*). Three interviews cannot say which is typical, and this is left open rather than resolved in whichever direction suits the MVP. |

@@ -176,23 +176,24 @@ first and refuses to publish if any check fails.
 
 Stated up front rather than discovered by a reader.
 
-1. **3 depth interviews against a target of 5–6.** Real, async over text, verbatim in
-   `research/transcripts/`. Fieldwork closed at three, for time. The quantitative findings rest on
-   the survey alone and interview evidence is labelled n=3 everywhere it appears. All three
-   respondents are non-parents and two live alone — a recruitment confound that is stated, not
-   resolved, and a parent or pet owner would have tested whether "the category is irrelevant to me"
-   is a property of these respondents or of the question. `docs/02-user-research.md` §8.7 sets out
-   which claims survive n=3: the taxonomy gaps do, because one uncodeable answer is enough to show
-   a vocabulary is incomplete; anything of the form "X% of users" does not, and none is made.
-   No interview was fabricated and no synthetic persona is counted toward the total.
+1. **5 depth interviews, meeting the brief's minimum of 5–6.** Real, async over text, verbatim in
+   `research/transcripts/` as P01–P05 across three platforms. Quantitative findings still rest on
+   the survey alone; interview evidence is labelled n=5 everywhere it appears. Recruitment is
+   convenience-sampled and inherits the survey's skew — the interviews correct its *vocabulary*, not
+   its *sampling*. `docs/02-user-research.md` §8.8 separates what n=5 supports (the taxonomy is
+   incomplete; the root-cause model does not cover everyone) from what it cannot (any "X% of users"
+   claim, and none is made). No interview was fabricated and no synthetic persona is counted toward
+   the total.
 2. **The survey shares the engine's vocabulary by design**, so the two datasets compare directly —
    at the cost of being structurally poor at *challenging* the engine. It can confirm a hypothesised
-   barrier; it cannot surface one nobody thought to ask about. Three interviews then found three
-   barriers it has no name for: *"this category does not apply to me"* (3 of 3), using the app
-   because nothing else was open (2 of 3), and organising the basket around a free-delivery
-   threshold (1 of 3). The first two leave no text for the engine to mine. The third leaves
+   barrier; it cannot surface one nobody thought to ask about. Five interviews then found three
+   barriers it has no name for: *"this category does not apply to me"* (3 of 5), using the app
+   because nothing else was open (3 of 5), and organising the basket around a free-delivery
+   threshold (1 of 5). The first two leave no text for the engine to mine. The third leaves
    plenty — **133 of the 3,372 collected documents** — and the schema has nowhere to put any of it
-   (`research/check_basket_economics.py`).
+   (`research/check_basket_economics.py`). They also found something the schema cannot fix: two
+   respondents have barriers **no information closes at all** — an incumbent kirana, and a belief
+   settled by one bad delivery — which bounds the root cause rather than the vocabulary.
 3. **AI-synthesized personas were generated and are excluded from the evidence base**
    (`docs/02-user-research.md` §6). They are retained as a labelled method artifact. A persona
    generated *from* survey data cannot contain what the survey did not capture — it can rephrase,
