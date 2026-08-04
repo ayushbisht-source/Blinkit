@@ -47,8 +47,10 @@ APPS: dict[str, str] = {
     # category specialists — beauty/personal care, pharma, meat & fish
     "nykaa": "com.fsn.nykaa",
     "tata_1mg": "com.aranoah.healthkart.plus",
-    "netmeds": "com.NMS.NetmedsMarketPlace",
     "licious": "com.licious",
+    # netmeds ("com.NMS.NetmedsMarketPlace") was tried and returned zero reviews — the package id
+    # is wrong or the listing is gone. Removed rather than left in: an app that yields nothing
+    # still inflates a count of "apps covered", which is the kind of number nobody checks.
 }
 
 SORTS = [Sort.NEWEST, Sort.RATING, Sort.MOST_RELEVANT]
