@@ -8,15 +8,22 @@
 // the rules are enforced by tests rather than living only in prose.
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID, CATEGORIES } from '../data/seed.js';
-import { suggest, SIGNAL_PHRASE } from '../agent/suggest.js';
+import { suggest, suggestMany, SIGNAL_PHRASE } from '../agent/suggest.js';
 import { categoryHistory, priceAnchor, MODE_B_MIN_DAYS, MODE_B_MAX_DAYS } from '../agent/eligibility.js';
 
 const results = [];
 const record = (name, pass, detail = '') => results.push({ name, pass, detail });
 
+// A check whose precondition no seeded shopper meets is reported NOT RUN, never PASS. It is not
+// evidence, and printing it green would make the suite look stronger than it is — the same reason
+// engine/validation/checks.py reports the source-spread and kappa checks that way.
+const notRun = (name, why) => results.push({ name, pass: true, skipped: true, detail: why });
+
+const MAX_SUGGESTIONS = 5;
+
 const cards = [];
 for (const user of USERS) {
-  cards.push({ user, out: await suggest(user) });
+  cards.push({ user, out: await suggest(user), many: await suggestMany(user, { limit: MAX_SUGGESTIONS }) });
 }
 
 // ── Check 1 — Novelty (hard rule 2) ────────────────────────────────────────────────────────────
@@ -153,12 +160,21 @@ for (const user of USERS) {
 // reasons for users it knows nothing about.
 {
   const thin = cards.find(({ user }) => user.orders.length < 2);
-  const pass = thin ? thin.out.card === null : true;
-  record(
-    'silence — thin-history users receive no card',
-    pass,
-    thin && thin.out.card ? `${thin.user.id} got a card with ${thin.user.orders.length} order(s)` : ''
-  );
+  if (!thin) {
+    // Every seeded shopper has 3-4 orders, so there is nothing here to assert. This used to report
+    // PASS, which was a green line standing for zero observations.
+    notRun(
+      'silence — thin-history users receive no card',
+      'no seeded shopper has fewer than 2 orders; the suppression path is covered instead by the ' +
+        'closed-category check below'
+    );
+  } else {
+    record(
+      'silence — thin-history users receive no card',
+      thin.out.card === null,
+      thin.out.card ? `${thin.user.id} got a card with ${thin.user.orders.length} order(s)` : ''
+    );
+  }
 }
 
 // ── 7. A category the user has closed is never suggested ────────────────────────────────────────
@@ -185,6 +201,142 @@ for (const user of USERS) {
   );
 }
 
+// ── 8. The five-card row obeys every rule the single card obeys ─────────────────────────────────
+//
+// Showing five suggestions instead of one multiplies by five whatever the agent gets wrong, so the
+// row is held to the same hard rules rather than treated as a display concern: never an owned
+// category, never a closed one, never an unbuyable SKU, and never more than the cap.
+{
+  let pass = true;
+  const bad = [];
+  for (const { user, many } of cards) {
+    const owned = Object.keys(categoryHistory(user));
+    const closed = new Set((user.avoid ?? []).map((a) => a.category));
+
+    if (many.cards.length > MAX_SUGGESTIONS) {
+      pass = false;
+      bad.push(`${user.id}: ${many.cards.length} cards exceeds the cap of ${MAX_SUGGESTIONS}`);
+    }
+
+    // Asserted at a limit that actually binds. No seeded shopper currently has more than five
+    // substantiated candidates, so testing the cap only at five would pass even with the cap
+    // deleted — a check that cannot fail is not evidence of anything.
+    const capped = await suggestMany(user, { limit: 2 });
+    if (capped.cards.length > 2) {
+      pass = false;
+      bad.push(`${user.id}: limit=2 returned ${capped.cards.length} cards`);
+    }
+
+    for (const c of many.cards) {
+      if (c.mode === 'A' && owned.includes(c.category)) {
+        pass = false;
+        bad.push(`${user.id}: row offers ${c.category}, already owned`);
+      }
+      if (closed.has(c.category)) {
+        pass = false;
+        bad.push(`${user.id}: row offers ${c.category}, closed by the user`);
+      }
+      const p = PRODUCTS_BY_ID[c.product.id];
+      if (!p || p.stock <= 0 || p.name !== c.product.name || p.price !== c.product.price) {
+        pass = false;
+        bad.push(`${user.id}: row SKU ${c.product.id} missing, out of stock, or mismatched`);
+      }
+    }
+  }
+  record(`the ${MAX_SUGGESTIONS}-card row keeps novelty, avoidance, stock and the cap`, pass, bad.join('; '));
+}
+
+// ── 9. Every row entry is a distinct new category ───────────────────────────────────────────────
+//
+// The strategic goal counts customers who buy from at least one *new category* in a month. Five
+// products from one category would be five shots at a single target; five categories are five
+// targets. A duplicate category in the row is therefore a wasted slot, not a cosmetic repeat.
+{
+  let pass = true;
+  const bad = [];
+  for (const { user, many } of cards) {
+    const seen = new Set();
+    for (const c of many.cards) {
+      if (seen.has(c.category)) {
+        pass = false;
+        bad.push(`${user.id}: ${c.category} appears twice in the row`);
+      }
+      seen.add(c.category);
+    }
+  }
+  record('every suggestion in the row opens a different new category', pass, bad.join('; '));
+}
+
+// ── 10. Silence still survives the row ──────────────────────────────────────────────────────────
+//
+// The easiest way to break this feature is to fill five slots because five were asked for. A user
+// with too little history must get an empty row, and a user who has closed a category must not see
+// it reappear simply because there were slots left to fill.
+{
+  const withAvoid = cards.filter(({ user }) => (user.avoid ?? []).length > 0);
+  const failures = [];
+  for (const { user, many } of withAvoid) {
+    const closed = new Set(user.avoid.map((a) => a.category));
+    for (const c of many.cards) {
+      if (closed.has(c.category)) failures.push(`${user.id} was offered ${c.category} to fill the row`);
+    }
+  }
+  record(
+    'the row is never padded with a category the shopper has closed',
+    withAvoid.length > 0 && failures.length === 0,
+    withAvoid.length === 0 ? 'no seeded shopper declares an avoid list' : failures.join('; ')
+  );
+}
+
+// ── 11. The brief's three named crossovers actually happen ──────────────────────────────────────
+//
+// The strategic goal names three examples: groceries → pet supplies, snacks → personal care,
+// household essentials → baby products. Those are reached by declared lifestyle signals, not by the
+// category-adjacency graph, so this check ties the goal to the code: a shopper who declares the
+// signal, has never bought the category and has not closed it must be offered it in the row.
+//
+// Membership in the row is too weak a bar to assert: with five slots the goal category still lands
+// somewhere even if signal scoring is gutted. So the check asserts *rank* — the declared signal must
+// be the leading first-crossover pick — which is the property that fails the moment signals stop
+// outranking generic adjacency, the exact regression that turns this back into "customers like you
+// also bought".
+{
+  const GOAL = {
+    pet_owner: 'Pet Supplies',
+    skincare_routine: 'Personal Care',
+    parent_young_child: 'Baby Care',
+  };
+  let pass = true;
+  const bad = [];
+  let exercised = 0;
+
+  for (const { user, many } of cards) {
+    const owned = Object.keys(categoryHistory(user));
+    const closed = new Set((user.avoid ?? []).map((a) => a.category));
+    for (const [signal, category] of Object.entries(GOAL)) {
+      if (!(user.signals ?? []).includes(signal)) continue;
+      if (owned.includes(category) || closed.has(category)) continue;
+      exercised++;
+      // Mode B leads the row when it is eligible, so rank is measured among first-crossover picks.
+      const firstCrossover = many.cards.find((c) => c.mode === 'A');
+      if (!many.cards.some((c) => c.category === category)) {
+        pass = false;
+        bad.push(`${user.id}: declares ${signal} but the row never offers ${category}`);
+      } else if (firstCrossover?.category !== category) {
+        pass = false;
+        bad.push(
+          `${user.id}: declares ${signal} but ${firstCrossover?.category} leads instead of ${category}`
+        );
+      }
+    }
+  }
+  record(
+    `the brief's named crossovers reach the row (${exercised} signal/category pairs exercised)`,
+    pass && exercised > 0,
+    exercised === 0 ? 'no seeded shopper declares one of the three signals — check did not run' : bad.join('; ')
+  );
+}
+
 // ── Coverage report (informational, not pass/fail) ──────────────────────────────────────────────
 const byMode = cards.reduce((acc, { out }) => {
   const k = out.card ? out.mode : `${out.mode}/no-card`;
@@ -194,15 +346,24 @@ const byMode = cards.reduce((acc, { out }) => {
 
 console.log('\n── One Thing — eval suite ──\n');
 for (const r of results) {
-  console.log(`${r.pass ? 'PASS' : 'FAIL'}  ${r.name}`);
+  console.log(`${r.skipped ? 'NOT RUN' : r.pass ? 'PASS' : 'FAIL'}  ${r.name}`);
   if (r.detail) console.log(`      ${r.detail}`);
 }
+const rowSizes = cards.map(({ many }) => many.cards.length);
 console.log(`\ncoverage across ${cards.length} seeded users:`, byMode);
+console.log(
+  `row size (cap ${MAX_SUGGESTIONS}): min ${Math.min(...rowSizes)}, max ${Math.max(...rowSizes)}, ` +
+    `mean ${(rowSizes.reduce((a, b) => a + b, 0) / rowSizes.length).toFixed(1)} — ` +
+    `short rows are candidates dropped for want of a substantiated reason, not a bug`
+);
 console.log(`catalogue: ${CATALOGUE.length} SKUs across ${CATEGORIES.length} categories\n`);
 
-const failed = results.filter((r) => !r.pass).length;
+const failed = results.filter((r) => !r.pass && !r.skipped).length;
+const skipped = results.filter((r) => r.skipped).length;
 if (failed > 0) {
   console.error(`${failed} check(s) failed.`);
   process.exit(1);
 }
-console.log('All checks passed.\n');
+console.log(
+  `${results.length - skipped} check(s) passed` + (skipped ? `, ${skipped} not run.\n` : '.\n')
+);

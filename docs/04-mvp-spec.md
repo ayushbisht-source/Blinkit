@@ -87,10 +87,43 @@ computation *for* them is the feature.
 
 ---
 
+## Amendment — the row of five
+
+The deployed prototype now shows **up to five suggestions in one go**, each opening a *different*
+category the shopper has never bought from. This is a deliberate departure from the spec above and
+it is recorded here rather than quietly absorbed, because it trades directly against the survey.
+
+**What it buys.** The goal metric counts customers who purchase from at least one new category in a
+month. One card is one attempt per session at a binary outcome; five categories are five independent
+attempts at the same outcome. Under any per-card acceptance rate the row strictly dominates on the
+metric the project is actually judged on. It also makes the brief's three named crossovers reachable
+in a single view rather than across five separate sessions.
+
+**What it costs.** The table above rules out a recommendation carousel because comparison time is the
+#2 blocker (13/40), and "one option only, no compare view" was the line that closed it. A five-item
+row reintroduces exactly that comparison. That blocker is now **not closed by the layout** — it is
+mitigated only by each row entry carrying its own price anchor, so the comparison the shopper would
+otherwise do manually is still pre-computed for each option. Whether that mitigation is sufficient is
+an open empirical question and is not something this project has evidence for either way.
+
+**What did not change.** Every hard rule below applies to every entry in the row, not just the first,
+and this is asserted rather than asserted-in-prose: novelty, the closed-category rule, in-stock
+grounding, anchor arithmetic and the substantiated-reason rule are each checked across all five
+(`mvp/evals/run.mjs`, checks 8–11). Rows are frequently shorter than five — mean 3.6 across the ten
+seeded shoppers — because a candidate with no substantiated reason is dropped rather than padded.
+Hard rule 4 outranks filling the row.
+
+**The honest summary:** this version optimises harder for the stated metric and gives up part of the
+"One Thing" argument to do it. Both halves of that sentence are true.
+
+---
+
 ## Hard rules
 
 1. **One card per session. Maximum one per 72 hours.** Dismissal rate is a guardrail metric; this
-   feature dies if it becomes noise.
+   feature dies if it becomes noise. *(Amended above: the deployed prototype shows up to five
+   distinct new categories in a single row. The 72-hour cadence and the dismissal guardrail are
+   unchanged — the row is one impression, not five.)*
 2. **Never a category the user has already bought from** (Mode A). Asserted in code and in the eval
    suite — showing a familiar category defeats the entire purpose.
 3. **Only in-stock SKUs from the live catalogue.** The agent may not name a product that

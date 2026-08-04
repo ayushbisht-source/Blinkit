@@ -106,17 +106,24 @@ the insights can be blamed on one vendor, nothing more (`engine/validation/multi
 
 ## Part 4 — The MVP: "One Thing"
 
-A single adjacent-category card, fired at cart review. Not a feed, not a rail, not a browse tab.
+Adjacent-category suggestions, fired at cart review. Not a feed, not a browse tab.
 
-Each line answers a blocker the survey named:
+Each line of a card answers a blocker the survey named:
 
 | Card element | Blocker closed | Survey n |
 |---|---|---|
 | Reason drawn from the user's own history | "not sure it'll suit my need" | 14/40 |
 | **Price anchor** — ₹/week vs *their own* comparable spend | "priced higher than usual" / "price feels risky" | 15/40 |
 | Trust signal from similar buyers | "don't trust the brand" / "want reviews first" | 26/40 |
-| Exactly one option, no compare view | "took too long to explore/compare" | 13/40 |
 | Smallest available pack | "too expensive" / "found cheaper elsewhere" | 20/40 |
+
+**The row shows up to five, each opening a different new category.** The spec originally argued for
+exactly one option, because comparison time is the #2 blocker (13/40) and one option leaves nothing
+to compare. Showing five trades that away to buy five independent attempts at the metric — which
+counts customers who buy from at least one new category per month — instead of one. The trade is
+recorded in full in `docs/04-mvp-spec.md` ("Amendment — the row of five"), including what it gives
+up. Every hard rule applies to every entry in the row, not just the first, and the eval suite checks
+all five.
 
 **Two modes, and the second is the one that matters.** Mode A is first crossover. Mode B fires when
 someone bought a new category 2–6 weeks ago and hasn't returned. Since the goal metric counts
@@ -126,7 +133,7 @@ repeat it counts — so Mode B wins whenever both are eligible.
 ### Running it
 
 ```bash
-node mvp/evals/run.mjs      # the six hard rules, as pass/fail assertions
+node mvp/evals/run.mjs      # the hard rules, as pass/fail assertions
 ```
 
 The app runs entirely client-side on a deterministic path — **no API key required.** An LLM improves

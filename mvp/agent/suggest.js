@@ -177,6 +177,119 @@ function composeFallback({ mode, user, category, product, lapsedDays, cadence, d
 }
 
 /**
+ * Assemble one card from an already-chosen (mode, category, product), or return null with a reason.
+ *
+ * Shared by the single-card and the five-card paths so both inherit the same hard rules. When this
+ * was inlined in `suggest`, adding a second caller would have meant a second copy of the stock check
+ * and the substantiation check — and a rule enforced in two places is a rule that will eventually
+ * only be enforced in one.
+ */
+function buildCard({ user, mode, category, product, lapsedDays = null, driver = null }) {
+  // Hard rule 3: fail closed rather than surface something unbuyable.
+  if (!product || product.stock <= 0) return { card: null, why: 'no_in_stock_product' };
+
+  const anchor = priceAnchor(user, product);
+  const cadence =
+    driver?.kind === 'adjacency' ? purchaseCadenceDays(user, driver.ownedCategory) : null;
+
+  const copy = composeFallback({ mode, user, category, product, lapsedDays, cadence, driver });
+
+  // Hard rule 4: no substantiated reason means no card.
+  if (!copy) return { card: null, why: 'no_substantiated_reason' };
+
+  return {
+    card: {
+      mode,
+      category,
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        pack: product.pack,
+      },
+      reason: copy.reason,
+      trust: copy.trust,
+      // The anchor line is the feature. Rendered only when it can be computed honestly.
+      anchorLine: anchor
+        ? `~₹${anchor.candidatePerWeek}/week · your usual runs ~₹${anchor.theirTypicalPerWeek}/week`
+        : null,
+      anchorFavourable: anchor?.cheaper ?? null,
+    },
+  };
+}
+
+/**
+ * Up to `limit` suggestions in one go, each from a *different* category the shopper has never
+ * bought from.
+ *
+ * The distinct-category rule is the whole point rather than a nicety. The strategic goal counts
+ * customers who buy from at least one new category in a month, so five products from one new
+ * category would move the metric exactly as much as one product does — five shots at the same
+ * target. Five different new categories is five separate chances to score, which is why the list is
+ * deduplicated by category rather than by SKU.
+ *
+ * Ranking is unchanged from the single-card path, so the brief's three named crossovers still come
+ * out on top where they apply: a declared signal scores 100 (groceries → pet supplies, snacks →
+ * personal care, household essentials → baby care) and generic category adjacency scores 10.
+ *
+ * The list is frequently shorter than `limit`, and that is correct. A candidate with no
+ * substantiated driver produces no copy, and hard rule 4 drops it rather than padding the row with
+ * an invented reason. Returning three honest cards beats returning five where two are decoration.
+ */
+export async function suggestMany(user, { limit = 5, now = new Date() } = {}) {
+  const decision = decideMode(user, now);
+  if (decision.mode === 'none') return { cards: [], mode: 'none', why: decision.why };
+
+  const cards = [];
+  const usedCategories = new Set();
+
+  // Mode B leads when it is eligible. It converts a one-off crossover into the repeat the metric
+  // actually counts, so it outranks any first trial no matter how well that trial scores.
+  if (decision.mode === 'B' && !(user.avoid ?? []).some((a) => a.category === decision.category)) {
+    const tried = (decision.triedProductIds ?? [])
+      .map((id) => PRODUCTS_BY_ID[id])
+      .filter((p) => p && p.stock > 0);
+    const built = buildCard({
+      user,
+      mode: 'B',
+      category: decision.category,
+      product: tried[0] ?? mostReordered(CATALOGUE, decision.category),
+      lapsedDays: decision.lapsedDays,
+    });
+    if (built.card) {
+      cards.push(built.card);
+      usedCategories.add(decision.category);
+    }
+  }
+
+  // Then first-crossover candidates, best-scoring first. candidateCategories already excludes owned
+  // categories and anything the shopper has closed, so novelty and the avoid rule hold for every
+  // row, not just the first.
+  for (const candidate of candidateCategories(user, decision.owned)) {
+    if (cards.length >= limit) break;
+    if (usedCategories.has(candidate.category)) continue;
+
+    const built = buildCard({
+      user,
+      mode: 'A',
+      category: candidate.category,
+      product: candidate.trial,
+      driver: candidate.driver,
+    });
+    if (!built.card) continue;
+
+    cards.push(built.card);
+    usedCategories.add(candidate.category);
+  }
+
+  return {
+    cards,
+    mode: decision.mode,
+    why: cards.length === 0 ? 'no_substantiated_reason' : null,
+  };
+}
+
+/**
  * Build the card, or return null.
  *
  * Returning null is a first-class outcome, not a failure: hard rule 4 says show no card rather than
@@ -241,28 +354,18 @@ export async function suggest(user, { llm = null, now = new Date() } = {}) {
     rationale.push(...chosen.reasons);
   }
 
-  if (!product || product.stock <= 0) {
-    // Hard rule 3: fail closed rather than surface something unbuyable.
-    return { card: null, mode: decision.mode, why: 'no_in_stock_product' };
-  }
-
-  const anchor = priceAnchor(user, product);
-  const driver = decision.mode === 'A' ? chosenDriver : null;
-  const cadence =
-    driver?.kind === 'adjacency' ? purchaseCadenceDays(user, driver.ownedCategory) : null;
-
-  let copy = composeFallback({
-    mode: decision.mode,
+  const built = buildCard({
     user,
+    mode: decision.mode,
     category,
     product,
     lapsedDays: decision.lapsedDays,
-    cadence,
-    driver,
+    driver: decision.mode === 'A' ? chosenDriver : null,
   });
+  if (!built.card) return { card: null, mode: decision.mode, why: built.why };
 
-  // Hard rule 4: no substantiated reason means no card.
-  if (!copy) return { card: null, mode: decision.mode, why: 'no_substantiated_reason' };
+  const card = built.card;
+  let copy = { reason: card.reason, trust: card.trust };
 
   if (llm) {
     try {
@@ -272,7 +375,7 @@ export async function suggest(user, { llm = null, now = new Date() } = {}) {
         product: { name: product.name, price: product.price, pack: product.pack },
         ownedCategories: decision.owned,
         lapsedDays: decision.lapsedDays ?? null,
-        anchor,
+        anchor: priceAnchor(user, product),
       });
       if (written?.reason && written?.trust) {
         copy = written;
@@ -283,24 +386,12 @@ export async function suggest(user, { llm = null, now = new Date() } = {}) {
     }
   }
 
+  // Only the wording is allowed to differ from what buildCard produced. Category, product and the
+  // anchor stay exactly as the deterministic path computed them, which is what makes the demo
+  // identical with or without an API key.
   return {
     mode: decision.mode,
-    card: {
-      category,
-      product: {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        pack: product.pack,
-      },
-      reason: copy.reason,
-      trust: copy.trust,
-      // The anchor line is the feature. Rendered only when it can be computed honestly.
-      anchorLine: anchor
-        ? `~₹${anchor.candidatePerWeek}/week · your usual runs ~₹${anchor.theirTypicalPerWeek}/week`
-        : null,
-      anchorFavourable: anchor?.cheaper ?? null,
-    },
+    card: { ...card, reason: copy.reason, trust: copy.trust },
     rationale,
   };
 }

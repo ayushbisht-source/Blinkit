@@ -11,7 +11,11 @@
 // nothing supporting it.
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID } from './data/seed.js';
-import { suggest } from './agent/suggest.js';
+import { suggestMany } from './agent/suggest.js';
+
+// How many suggestions the row may carry. The agent routinely returns fewer — a candidate with no
+// substantiated reason is dropped rather than padded — so this is a ceiling, not a quota.
+const MAX_SUGGESTIONS = 5;
 
 // LLM-written copy, generated in CI where the API key lives (see scripts/pregenerate-copy.mjs).
 // Absent or empty is fine — the agent's deterministic copy takes over and the card still works.
@@ -162,24 +166,23 @@ async function renderSuggestion() {
     return;
   }
 
-  const out = await suggest(currentUser);
+  const out = await suggestMany(currentUser, { limit: MAX_SUGGESTIONS });
 
-  // Swap in pre-generated copy only if it was written for this exact decision. If the agent picked
-  // a different category or product than it did at build time, the stored line would be a false
-  // statement about this shopper — so it is discarded rather than shown.
+  // Swap in pre-generated copy only for the card it was written for. If the agent picked a different
+  // category or product than it did at build time, the stored line would be a false statement about
+  // this shopper — so it is discarded rather than shown.
   const pre = LLM_COPY[currentUser.id];
-  if (out.card && pre && pre.category === out.card.category && pre.productId === out.card.product.id) {
-    out.card.reason = pre.reason;
-    out.card.trust = pre.trust;
-    out.copySource = `LLM (${pre.model})`;
-  } else if (out.card) {
-    out.copySource = 'deterministic fallback';
+  for (const c of out.cards) {
+    if (pre && pre.category === c.category && pre.productId === c.product.id) {
+      c.reason = pre.reason;
+      c.trust = pre.trust;
+    }
   }
 
-  if (!out.card) {
+  if (!out.cards.length) {
     $('suggestion').innerHTML = `
       <div class="nocard">
-        <b>No card shown.</b>
+        <b>Nothing to suggest.</b>
         <p>Reason: <code>${out.why}</code></p>
         <p>Showing nothing is a designed outcome. A card whose reason the data cannot substantiate is
         exactly the noise these shoppers already ignore — and two of the five interviews describe
@@ -191,34 +194,42 @@ async function renderSuggestion() {
     return;
   }
 
-  const c = out.card;
-  const key = `${currentUser.id}:${c.product.id}`;
-  const r = rating(c.product.id);
+  const key = `${currentUser.id}:${out.cards.map((c) => c.product.id).join(',')}`;
+  const plural = out.cards.length === 1 ? 'CATEGORY' : 'CATEGORIES';
+
   $('suggestion').innerHTML = `
     <div class="spark">
       <div class="sk-head">
         <span class="sk-pill">📍 CATEGORY SPARK</span>
-        <span class="sk-mode ${out.mode === 'B' ? 'b' : ''}">${out.mode === 'B' ? 'MODE B' : 'MODE A'}</span>
+        <span class="sk-mode ${out.mode === 'B' ? 'b' : ''}">${out.cards.length} NEW ${plural}</span>
         <button class="sk-x" id="dis" title="Dismiss">×</button>
       </div>
-      <div class="sk-main">
-        <span class="sk-thumb">${ICONS[c.category] ?? '🛒'}</span>
-        <span class="sk-info">
-          <div class="n">${c.product.name}</div>
-          <div class="meta">${c.product.pack} &nbsp;|&nbsp; <span class="star">${r.stars} ★</span> (${r.count.toLocaleString('en-IN')} ratings)</div>
-          <div class="price">${rupees(c.product.price)}</div>
-        </span>
-      </div>
-      <div class="reason">${c.reason}</div>
-      ${c.anchorLine ? `<div class="anchor ${c.anchorFavourable === false ? 'bad' : ''}">${c.anchorLine}</div>` : ''}
-      <div class="trust">${c.trust}</div>
-      <button class="addbtn" id="acc">Add to Cart</button>
+      ${out.cards.map((c) => {
+        const r = rating(c.product.id);
+        return `
+        <div class="skitem">
+          <span class="th">${ICONS[c.category] ?? '🛒'}</span>
+          <div class="bd">
+            <div class="cat">${c.category.toUpperCase()}${c.mode === 'B' ? ' · <em>MODE B</em>' : ''}</div>
+            <div class="n">${c.product.name}</div>
+            <div class="meta">${c.product.pack} &nbsp;|&nbsp; <span class="star">${r.stars} ★</span> (${r.count.toLocaleString('en-IN')})</div>
+            <div class="rs">${c.reason}</div>
+            ${c.anchorLine ? `<div class="an ${c.anchorFavourable === false ? 'bad' : ''}">${c.anchorLine}</div>` : ''}
+            <div class="tr">${c.trust}</div>
+          </div>
+          <div class="sd">
+            <span class="pz">${rupees(c.product.price)}</span>
+            <button class="ad" data-add="${c.product.id}">Add</button>
+          </div>
+        </div>`;
+      }).join('')}
       <button class="notnow" id="not">Not now</button>
     </div>`;
 
-  $('acc').onclick = () => {
-    addToCart(c.product.id);
-  };
+  $('suggestion').querySelectorAll('[data-add]').forEach((b) => {
+    b.onclick = () => addToCart(b.dataset.add);
+  });
+
   const dismiss = () => {
     $('suggestion').innerHTML =
       '<div class="nocard"><b>Dismissed.</b><p>Recorded. Dismissal rate is a pre-registered guardrail — this feature dies if it becomes noise.</p></div>';
