@@ -25,16 +25,39 @@ log = logging.getLogger(__name__)
 
 # Verified against the India Play Store. Dunzo is deliberately absent — it shut down in 2024 and
 # its listing is gone, so it can only ever contribute zero.
+# The five quick-commerce apps the project is about, plus category specialists.
+#
+# The specialists are here for a specific reason. This project is about *category* exploration, and
+# a general grocery app produces reviews about delivery and packaging. An app that sells only
+# cosmetics, only medicine or only meat produces reviews about buying cosmetics, medicine and meat —
+# which is the vocabulary the schema's barrier and information-gap enums are trying to capture. They
+# also cover exactly the categories the brief names as crossover targets: personal care, baby, pet
+# and pharma.
 APPS: dict[str, str] = {
+    # quick commerce — the core corpus
     "blinkit": "com.grofers.customerapp",
     "zepto": "com.zeptoconsumerapp",
     "instamart": "in.swiggy.android",       # Instamart lives inside the Swiggy app
     "bigbasket": "com.bigbasket.mobileapp",
     "jiomart": "com.jpl.jiomart",
+    # broad marketplaces — where users go when they leave quick commerce (survey: Amazon 3)
+    "amazon_in": "in.amazon.mShop.android.shopping",
+    "flipkart": "com.flipkart.android",
+    "zomato": "com.application.zomato",
+    # category specialists — beauty/personal care, pharma, meat & fish
+    "nykaa": "com.fsn.nykaa",
+    "tata_1mg": "com.aranoah.healthkart.plus",
+    "netmeds": "com.NMS.NetmedsMarketPlace",
+    "licious": "com.licious",
 }
 
 SORTS = [Sort.NEWEST, Sort.RATING, Sort.MOST_RELEVANT]
-LANGS = ["en", "hi"]
+
+# Language coverage is a sampling decision, not a technical one. The survey's stated limitation is a
+# sample "skewed young, metro and English-literate"; collecting only en+hi reproduces that skew in
+# the corpus too. Play Store serves reviews per locale, so widening this is the one lever that
+# reaches non-English-literate users at all.
+LANGS = ["en", "hi", "mr", "ta", "te", "bn", "kn", "gu", "ml", "pa"]
 
 
 def _fetch_slice(
@@ -115,6 +138,17 @@ def fetch_app(app_name: str, package: str, target: int = 1000, country: str = "i
 
 def collect(target_per_app: int = 1000) -> list[dict]:
     out: list[dict] = []
+    yields: dict[str, int] = {}
     for app_name, package in APPS.items():
-        out.extend(fetch_app(app_name, package, target=target_per_app))
+        got = fetch_app(app_name, package, target=target_per_app)
+        yields[app_name] = len(got)
+        out.extend(got)
+
+    # Printed so a wrong package id is visible as a zero rather than hiding inside a total. An app
+    # listed here that never returns anything should be removed, not left in to inflate a count of
+    # "apps covered".
+    log.info("play_store: yield by app: %s", yields)
+    empty = [a for a, n in yields.items() if n == 0]
+    if empty:
+        log.warning("play_store: these returned nothing and should be dropped or corrected: %s", empty)
     return out
