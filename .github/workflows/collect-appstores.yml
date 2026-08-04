@@ -48,6 +48,10 @@ jobs:
           PY
 
       - name: Collect and merge
+        env:
+          # Author hashes must be stable across runs or the same reviewer appears as two people
+          # once a second collection is merged in.
+          AUTHOR_HASH_SALT: ${{ secrets.AUTHOR_HASH_SALT }}
         run: |
           python -m engine.collect \
             --sources play_store,app_store \

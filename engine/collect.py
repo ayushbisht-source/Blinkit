@@ -75,10 +75,21 @@ def main() -> None:
     if args.append and out.exists():
         existing = [Document.model_validate_json(line) for line in out.read_text().splitlines() if line.strip()]
         log.info("append: %d existing + %d newly collected", len(existing), len(docs))
-        docs = existing + docs
 
-    # De-duplication runs across the merged set, so a document collected twice by two runs is
-    # counted once — and so a Reddit post quoting an app-store review cannot inflate a theme twice.
+        # Exact re-collections must be dropped on doc_id *before* the near-duplicate pass. doc_id is
+        # a hash of (source, external_id, text), so re-running a collector over the same reviews
+        # produces byte-identical ids — and the MinHash index raises on a repeated key rather than
+        # ignoring it, which is what ended the previous run. Earliest occurrence wins, so the
+        # original corpus entry is the one kept.
+        merged: dict[str, Document] = {}
+        for d in existing + docs:
+            merged.setdefault(d.doc_id, d)
+        exact = len(existing) + len(docs) - len(merged)
+        if exact:
+            log.info("append: %d exact re-collections dropped on doc_id", exact)
+        docs = list(merged.values())
+
+    # Near-duplicate pass over the merged set: a review reposted with trivial edits counts once.
     before = len(docs)
     docs = dedupe(docs)
     if before != len(docs):
