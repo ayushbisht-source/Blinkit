@@ -37,18 +37,42 @@ QUERIES = [
 ]
 
 
+_FAILURES: dict[str, int] = {}
+
+
 def _get(url: str, params: dict | None = None) -> dict | None:
+    """One listing. Failures are counted and surfaced, never silently swallowed.
+
+    This used to log at DEBUG and return None, which meant a run that was being blocked outright
+    looked exactly like a run that found nothing to report — "0 documents from 13 subreddits" with
+    no indication that not one request had actually succeeded. Reddit blocks unauthenticated
+    requests from datacenter ranges, so that distinction is the whole diagnosis.
+    """
     try:
         r = requests.get(url, params=params, headers=HEADERS, timeout=25)
         if r.status_code == 429:
+            _FAILURES["429 rate limited"] = _FAILURES.get("429 rate limited", 0) + 1
             log.warning("reddit: rate limited, backing off")
             time.sleep(5)
             return None
-        r.raise_for_status()
+        if r.status_code != 200:
+            key = f"HTTP {r.status_code}"
+            _FAILURES[key] = _FAILURES.get(key, 0) + 1
+            if _FAILURES[key] == 1:
+                log.warning("reddit: %s — first body: %s", key, r.text[:200].replace("\n", " "))
+            return None
         return r.json()
     except Exception as exc:  # noqa: BLE001 — one bad listing must not end the run
-        log.debug("reddit: %s failed: %s", url, exc)
+        key = type(exc).__name__
+        _FAILURES[key] = _FAILURES.get(key, 0) + 1
+        if _FAILURES[key] == 1:
+            log.warning("reddit: %s — %s", key, str(exc)[:200])
         return None
+
+
+def failure_summary() -> dict[str, int]:
+    """What went wrong and how often, for the caller to report."""
+    return dict(_FAILURES)
 
 
 def _posts(subreddit: str, query: str, limit: int) -> Iterator[dict]:
@@ -128,4 +152,13 @@ def collect(limit_per_query: int = 40, comments_per_post: int = 12, pause: float
             log.info("reddit: r/%s '%s' -> %d cumulative", sub, query, len(collected))
 
     log.info("reddit: %d documents from %d subreddits", len(collected), len(SUBREDDITS))
+    if _FAILURES:
+        log.warning("reddit: request failures by kind: %s", failure_summary())
+        if not collected:
+            log.warning(
+                "reddit: every request failed — this is a blocked or unreachable endpoint, not an "
+                "absence of discussion. Reddit refuses unauthenticated .json reads from datacenter "
+                "IP ranges, which includes CI runners. Set REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET "
+                "to use the authenticated API instead."
+            )
     return collected
