@@ -49,6 +49,8 @@ jobs:
       - name: Collect Reddit and merge into the corpus
         env:
           REDDIT_LIMIT: ${{ github.event.inputs.limit_per_query }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
         run: |
           python -m engine.collect --sources reddit --append
 
