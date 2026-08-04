@@ -78,7 +78,8 @@
     <h1>Review Analysis Workflow</h1>
     <p>How 3,372 public reviews became 25 validated themes and 25 insights — the gathering, the
     clustering, the synthesis, and every check that was run against the result, including the two
-    that could not run.</p>
+    that could not run. Collection has since widened to 5,898 documents; section 1 says exactly which
+    figure each number below refers to.</p>
     <div class="links">
       <a href="https://github.com/ayushbisht-source/Blinkit">Repository</a>
       <a href="https://github.com/ayushbisht-source/Blinkit/tree/claude/category-exploration-discovery-q5hqgb/engine">Pipeline code</a>
@@ -104,16 +105,36 @@
 <div class="scroll"><table>
   <thead><tr><th>Source</th><th>Documents</th><th>Apps covered</th></tr></thead>
   <tbody>
-    <tr><td>Google Play Store reviews</td><td class="num">3,033</td><td>Blinkit, Zepto, Instamart, BigBasket, JioMart</td></tr>
-    <tr><td>Apple App Store reviews</td><td class="num">339</td><td>same five</td></tr>
-    <tr><td><strong>Total corpus</strong></td><td class="num"><strong>3,372</strong></td><td>—</td></tr>
+    <tr><td>Google Play Store reviews</td><td class="num">5,559</td><td>11 apps · 5 quick-commerce, 3 marketplaces, 3 category specialists</td></tr>
+    <tr><td>Apple App Store reviews</td><td class="num">339</td><td>Blinkit, Zepto, Instamart, BigBasket</td></tr>
+    <tr><td><strong>Total collected</strong></td><td class="num"><strong>5,898</strong></td><td>—</td></tr>
+    <tr><td><strong>Analysed in this submission</strong></td><td class="num"><strong>3,372</strong></td><td>the first collection — see the note below</td></tr>
   </tbody>
 </table></div>
 
+<div class="box note">
+  <h4>Two numbers, and which one every figure below refers to</h4>
+  <p>The corpus was widened late — from 5 apps to 11, adding broad marketplaces and category
+  specialists (beauty, pharma, meat) whose reviews discuss the specific categories this project is
+  about. That collection succeeded: <strong>5,898 documents</strong> are committed in
+  <code>data/interim/documents.jsonl</code> and reproducible from
+  <code>.github/workflows/collect-appstores.yml</code>.</p>
+  <p><strong>The 2,526 newly collected documents have not been through the gate or extraction.</strong>
+  Every theme, insight and validation figure on this page therefore describes the original
+  <strong>3,372</strong>-document run: 971 judged relevant, 937 extracted, 25 themes. Enrichment is
+  resumable, so processing the remainder is a re-run rather than a rebuild — it simply did not fit
+  before submission. Reporting the larger number as if it had been analysed would be the easiest
+  thing on this page to get wrong, so it is separated explicitly instead.</p>
+</div>
+
 <div class="box warn">
   <h4>What is not in the corpus, stated up front</h4>
-  <p>A Reddit collector is implemented (<code>engine/collectors/reddit.py</code>) but contributed
-  <strong>zero documents</strong> — the corpus is app-store review text only. This is not a footnote:
+  <p>A Reddit collector is implemented (<code>engine/collectors/reddit.py</code>) and contributed
+  <strong>zero documents</strong>, and the reason is measured rather than assumed: a collection run
+  from CI returned <strong>HTTP 403 on 117 of 117 requests</strong>, with Reddit's HTML block page as
+  the body. Reddit refuses unauthenticated reads from datacenter IP ranges. An authenticated path
+  against <code>oauth.reddit.com</code> is implemented and needs only credentials. So the corpus is
+  app-store review text only — and this is not a footnote:
   a review corpus contains only people who <em>completed a transaction</em>, so every barrier that
   stops someone before they buy is invisible to it by construction. Section 4 returns to what that
   cost, and the interviews in Part 2 exist largely to cover it.</p>

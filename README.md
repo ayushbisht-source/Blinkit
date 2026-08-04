@@ -61,8 +61,9 @@ collect ──► normalize ──► relevance gate ──► extract ──►
 
 | | |
 |---|---|
-| Documents collected | **3,372** across Blinkit, Zepto, Instamart, BigBasket, JioMart |
-| Sources | Play Store (3,033) · App Store (339) |
+| Documents collected | **5,898** across 11 apps — 5 quick-commerce, 3 marketplaces, 3 category specialists |
+| Sources | Play Store (5,559) · App Store (339) |
+| **Analysed in this submission** | **3,372** — the first collection. The 2,526 added later are collected but not yet gated or extracted; enrichment is resumable, so that is a re-run rather than a rebuild |
 | Gated | **3,372 — complete** |
 | Judged relevant | **971** (28.8%) |
 | Filtered as noise | delivery 941 · support 550 · contentless 527 · technical 252 · unrelated 132 |
