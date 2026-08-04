@@ -195,10 +195,21 @@ softened.
 > **Therefore crossover is event-triggered and non-repeating.** Something external forces it (ran
 > out, a discount, a life event), the user buys once, and reverts to their list.
 
-This changes what to build. A *monthly* metric is not moved by one-off trial — it is moved by
-repeat. So the highest-value moment is not first trial at all; it is the window **immediately after
-a first cross-category purchase, before the user reverts**. That is a moment the platform can detect
-precisely, and it is why the MVP prioritises Mode B over Mode A (`docs/04-mvp-spec.md`).
+This changes what to build — though not in the direction first written here.
+
+> **Correction.** This section originally concluded that the monthly metric is moved by a *repeat
+> purchase in the category already tried*, and that the MVP should therefore prioritise Mode B. CER
+> counts a purchase in month M from a category the user bought from in **none of M-1 … M-6**
+> (`docs/00-foundation.md`), so a repeat 14–45 days after first trial sits inside the lookback and
+> contributes nothing to it. Measured against the seeded shoppers, 35 of 36 suggestions in the MVP's
+> row would register in CER and the single one that would not is the Mode B card
+> (`mvp/evals/cer-audit.mjs`).
+>
+> The finding above survives intact and is the more important half: **crossing once did not reduce
+> the barrier.** What follows is that the intervention must supply fit, price and trust *again, for a
+> different category, every month* — there is no one-shot unlock. Mode A therefore leads and Mode B
+> takes the last slot, serving the secondary metric it belongs to (30-day repeat within a newly
+> tried category), which is what stops CER being satisfied by one-off trials that never return.
 
 ### Sizing
 
