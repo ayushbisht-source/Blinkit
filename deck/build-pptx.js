@@ -185,7 +185,7 @@ function card(slide, o) {
   });
 
   const stats = [
-    ['3,372', 'documents collected', 'Play Store 3,033 · App Store 339, across 5 quick-commerce apps'],
+    ['3,372', 'documents analysed', 'Of 5,898 collected across 11 apps; the rest are not yet gated'],
     ['971', 'relevant — 28.8%', 'The gate removing 71% is the design: most reviews discuss delivery, not choice'],
     ['25', 'interpretable themes', 'TF-IDF → LSA → agglomerative, merge threshold calibrated on homogeneity'],
     ['0.4%', 'fabrication rate', '4 in 924. Every quote must be a verbatim substring, asserted character-for-character'],
@@ -228,7 +228,7 @@ function card(slide, o) {
     { x: 7.08, y: 5.16, w: 5.5, h: 1.3, fontSize: 14, color: INK, fontFace: BODY, margin: 0, lineSpacing: 17 }
   );
 
-  s.addText('Corpus is app-store review text only — Play Store 3,033 · App Store 339.', {
+  s.addText('App-store review text only. 5,898 collected; the figures here describe the 3,372 analysed.', {
     x: 0.55, y: 6.62, w: 12.25, h: 0.4, fontSize: 14, color: MUTED, fontFace: BODY, margin: 0,
     hyperlink: { url: REPO, tooltip: 'Repository' },
   });
