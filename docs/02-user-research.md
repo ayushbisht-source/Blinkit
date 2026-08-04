@@ -105,12 +105,30 @@ softened. They didn't.
 doesn't get added to the routine.
 
 This reframes the goal metric. Blinkit's target is % of MAC buying a new category **every month** —
-a recurrence metric. One-off trial doesn't move it. Two implications:
+measured monthly. One-off trial doesn't move it *twice*.
 
-1. Targeting non-crossers with "try something new" is the harder half of the problem *and* the
-   lower-value half. The 20 who already crossed are warmer, and the metric rewards their repeat.
-2. The window that matters is **immediately after a first cross-category purchase**, before the
-   user reverts. That's a moment the platform can detect precisely.
+> **Correction — what "recurrence" means here.** An earlier version of this section concluded that
+> the metric rewards a *repeat purchase in the category already tried*, and that the 20 crossers
+> were therefore the warmer, higher-value half. That does not survive contact with the metric's own
+> definition in `docs/00-foundation.md`: CER counts a purchase in month M from a category the user
+> bought from in **none of M-1 … M-6**. A second purchase in a category tried last month is inside
+> that lookback and scores zero.
+>
+> What recurrence actually demands is a **different new category each month**. So the two
+> implications invert:
+>
+> 1. The crossers are not the easier half. This section's own finding is that crossing once did
+>    *not* soften their stated barriers — their reasons for not trying *more* match the
+>    non-crossers' reasons for not trying at all. There is no confidence dividend to bank.
+> 2. Because the barriers do not soften, the intervention has to supply fit, price and trust **again,
+>    for a fresh category, every time**. It is not a one-shot unlock. That is the single strongest
+>    argument for showing several new categories at once rather than one, and it comes from the
+>    survey rather than from the convenience of a bigger card.
+>
+> The moment immediately after a first cross-category purchase is still a real and detectable
+> window — it is just a *secondary*-metric window (30-day repeat within a newly tried category),
+> which `docs/00-foundation.md` values for a different and good reason: trial without repeat is a
+> discount, not exploration. `mvp/evals/cer-audit.mjs` measures both.
 
 ---
 
@@ -120,10 +138,33 @@ a recurrence metric. One-off trial doesn't move it. Two implications:
 |---|---|
 | F2 | Must work in a ~2-minute fetch-mode session. Cannot require browsing, scrolling a new surface, or a separate discovery journey. |
 | F3 | Must supply three specific things at the point of consideration: *will this suit my need*, *is this price fair vs. what I normally pay*, *can I trust it*. Generic recommendations supply none of these. |
-| F3 | Must not add comparison time — 13/40 named that as the blocker. If the nudge makes the session longer, it fails on its own terms. |
+| F3 | Must not add comparison time — 13/40 named that as the blocker. If the nudge makes the session longer, it fails on its own terms. **The shipped prototype knowingly breaks this**: it shows up to five suggestions. The trade is argued in full in `docs/04-mvp-spec.md` ("Amendment — the row of five") and is not claimed as a win. |
 | F4 | Does not need to fight for attention. Intent already arrives in-app. |
-| §3 | Should prioritise **second purchase in a newly-tried category** over first trial. That's what the monthly metric actually measures. |
+| §3 | Must work **repeatedly, on a different category each time** — crossing once does not soften the barriers, so there is no one-shot unlock. Second purchase in a newly-tried category serves the *secondary* metric, not CER; see the correction in §3. |
 | Backing-out data | "Didn't really need it" (13) is the top reason people abandon — so relevance-to-actual-need beats novelty. Price sensitivity (20 combined across "cheaper elsewhere" + "too expensive") means trial must be low-stakes in rupees. |
+
+### Where the prototype is weakest against F3
+
+F3's sharpest instruction is that *generic* recommendations supply none of the three things. Measured
+against the seeded shoppers (`node mvp/evals/survey-alignment.mjs`):
+
+| | |
+|---|---|
+| Cards carrying a price anchor | **36/36** |
+| Cards carrying a trust signal | **36/36** |
+| Reasons resting on a **declared fact about the person** | **7/36** |
+| Reasons resting on a **population pattern** | **29/36** |
+
+The row made this worse, not better: with one card the lead pick was usually the declared signal, and
+scaling to five filled the extra slots with category adjacency, which is the weakest evidence the
+agent has. The copy was rewritten to stop the weak case impersonating the strong one — it now says
+the pairing is common rather than implying the shopper was individually understood, and ends on a
+checkable fact (the item is the lowest-priced in-stock option in that category) that answers the
+price blockers 20/40 named.
+
+That is mitigation, not a fix. **A shopper who declares no lifestyle signal has nothing but adjacency
+available**, so their whole row rests on population patterns. This is the honest ceiling on the
+feature without a richer profile, and it is the thing to fix next — not more slots.
 
 ---
 

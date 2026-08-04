@@ -167,8 +167,17 @@ function composeFallback({ mode, user, category, product, lapsedDays, cadence, d
     const cadenceText = cadence
       ? ` every ${cadence > 10 ? Math.round(cadence / 7) + ' weeks' : cadence + ' days'}`
       : '';
+    // The old line read "most people who do also keep X stocked" — a true statement about a crowd,
+    // worn as if it were a statement about this shopper. F3 is explicit that generic
+    // recommendations supply none of fit, price or trust, and the row made it worse by scaling that
+    // phrasing from one card to most of five (29 of 36 before this change).
+    //
+    // So the claim now owns being a pattern rather than impersonating personalisation, and the
+    // sentence ends on a fact that is checkable and answers a blocker the survey ranked: `product`
+    // is the lowest-priced in-stock item in the category by construction (trialPack), which speaks
+    // to "too expensive" (8) and "found cheaper elsewhere" (12) — 20 of 40 combined.
     return {
-      reason: `You buy ${driver.ownedCategory.toLowerCase()}${cadenceText} — most people who do also keep ${category.toLowerCase()} stocked`,
+      reason: `You buy ${driver.ownedCategory.toLowerCase()}${cadenceText} — ${category.toLowerCase()} is the common pairing, and ${product.name} is the lowest-priced one we stock`,
       trust,
     };
   }
