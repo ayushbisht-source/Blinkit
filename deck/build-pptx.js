@@ -240,30 +240,31 @@ function card(slide, o) {
 // ═══════════════════════════════════════════════════════════════════════════
 {
   const s = pres.addSlide();
-  head(s, 4, 'Trying to break our own insights: 3 pass, 2 report NOT RUN');
+  head(s, 4, 'Trying to break our own insights: 4 pass, 2 report NOT RUN');
 
   const checks = [
-    ['Quote grounding', 'PASS', '125 quotes checked against source text. 4 fabrications in 924 extractions; the rest are filtered before display.'],
-    ['Hold-out generalisation', 'PASS', 'Out-of-sample, against a size-matched permutation null. Real themes z = +17.4; word salad z = −2.6.'],
-    ['Theme non-degeneracy', 'PASS', 'An earlier run collapsed to one theme at 100% prevalence and reported success. Now asserted in code.'],
-    ['Source spread', 'NOT RUN', '95% of the corpus is one source, so the check cannot discriminate. Reports the chance figure instead.'],
-    ['Inter-rater agreement', 'NOT RUN', 'Needs a hand-labelled gold set that does not exist. Reported absent, not approximated.'],
+    ['Quote grounding', 'PASS', '924 quotes checked against source text; 4 fabricated (0.43%). Of the 125 reaching a theme, 0 unverifiable.'],
+    ['Theme saturation', 'PASS', '95.3% of the 15 distinct labels were found by the halfway point; 0.003 new per document after that.'],
+    ['Hold-out generalisation', 'PASS', 'Re-fit on 505, tested on 126 unseen. Fit 0.460 vs 0.462 on training, against a permutation null: z = 11.42.'],
+    ['Relevance gate audit', 'PASS', '40 of 2,402 rejected documents re-read. 0 false negatives — enough to bound a large error rate, not a small one.'],
+    ['Source spread', 'NOT RUN', '95.1% of the corpus is one source. 11 of 25 themes are single-source; 8.6 would be by chance.'],
+    ['Human agreement (Cohen\u2019s \u03BA)', 'NOT RUN', 'Needs a hand-labelled gold set that does not exist. Reported absent, not approximated.'],
   ];
-  let y = 1.3;
+  let y = 1.26;
   checks.forEach(([name, status, txt]) => {
     const pass = status === 'PASS';
-    card(s, { x: 0.55, y, w: 8.05, h: 0.98, fill: WHITE, line: LINE });
-    s.addText(name, { x: 0.75, y: y + 0.1, w: 2.6, h: 0.32, fontSize: 14, bold: true, color: INK, fontFace: BODY, margin: 0 });
+    card(s, { x: 0.55, y, w: 8.05, h: 0.92, fill: WHITE, line: LINE });
+    s.addText(name, { x: 0.75, y: y + 0.08, w: 2.6, h: 0.5, valign: 'top', fontSize: 14, bold: true, color: INK, fontFace: BODY, margin: 0 });
     s.addShape(pres.ShapeType.roundRect, {
-      x: 3.45, y: y + 0.11, w: 1.25, h: 0.3, rectRadius: 0.06,
+      x: 3.45, y: y + 0.09, w: 1.25, h: 0.3, rectRadius: 0.06,
       fill: { color: pass ? BLUE : ORANGE },
     });
     s.addText(status, {
-      x: 3.45, y: y + 0.11, w: 1.25, h: 0.3, align: 'center', valign: 'middle',
+      x: 3.45, y: y + 0.09, w: 1.25, h: 0.3, align: 'center', valign: 'middle',
       fontSize: 14, bold: true, color: WHITE, fontFace: BODY, margin: 0,
     });
-    s.addText(txt, { x: 4.85, y: y + 0.08, w: 3.6, h: 0.82, fontSize: 14, color: MUTED, fontFace: BODY, margin: 0, lineSpacing: 15 });
-    y += 1.08;
+    s.addText(txt, { x: 4.85, y: y + 0.07, w: 3.6, h: 0.74, valign: 'top', fontSize: 14, color: MUTED, fontFace: BODY, margin: 0, lineSpacing: 15 });
+    y += 0.95;
   });
 
   card(s, { x: 8.85, y: 1.3, w: 3.95, h: 2.82, fill: TINTY, line: YELLOW });
@@ -285,7 +286,7 @@ function card(slide, o) {
   });
   s.addText(
     'Two of these used to print PASS over zero observations. A green line standing for no evidence is worse than an honest gap. ' +
-      'Three pass, two abstain, and the deck says which.',
+      'Four pass, two abstain, and the deck says which.',
     { x: 9.08, y: 4.8, w: 3.5, h: 1.6, fontSize: 14, color: INK_SOFT, fontFace: BODY, margin: 0, lineSpacing: 17 }
   );
   s.addNotes('Validation. The NOT RUN rows are the credibility argument, not an apology.');

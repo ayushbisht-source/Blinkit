@@ -3,7 +3,9 @@
 Graduation project. Goal: increase the share of Monthly Active Customers who purchase from at least
 one **new** category each month.
 
-**Live MVP:** _(published from `mvp/` via GitHub Pages — see Deployment below)_
+**Live MVP:** https://ayushbisht-source.github.io/Blinkit/  
+**Review analysis workflow:** https://ayushbisht-source.github.io/Blinkit/workflow/  
+**Case study deck:** https://ayushbisht-source.github.io/Blinkit/deck/ · [PPTX](deck/Blinkit-Category-Exploration.pptx) · [PDF](deck/Blinkit-Category-Exploration.pdf)
 
 ---
 
@@ -52,7 +54,7 @@ collect ──► normalize ──► relevance gate ──► extract ──►
 | Extract | `engine/pipeline/enrich.py` | Structured extraction against `engine/schema.py` |
 | Cluster | `engine/pipeline/cluster.py` | TF-IDF → LSA → agglomerative, then centroid merge |
 | Synthesize | `engine/pipeline/synthesize.py` | Themes → insights with computed contradicting evidence |
-| Validate | `engine/validation/checks.py` | Five checks, no API key required |
+| Validate | `engine/validation/checks.py` | Six checks — 4 pass, 2 report NOT RUN. No API key required |
 | Cross-check | `engine/validation/multi_model.py` | Re-runs synthesis on a second model family and measures agreement |
 
 ### Corpus

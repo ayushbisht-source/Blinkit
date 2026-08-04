@@ -58,9 +58,10 @@ jobs:
       # a changed commit is a changed URL.
       - name: Stage site
         run: |
-          mkdir -p _site/deck
+          mkdir -p _site/deck _site/workflow
           cp -r mvp/index.html mvp/main.js mvp/agent mvp/data _site/
           cp deck/index.html _site/deck/index.html
+          cp workflow/index.html _site/workflow/index.html
 
           V="${{ github.sha }}"
           find _site -name '*.html' -o -name '*.js' | while read -r f; do

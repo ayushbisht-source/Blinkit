@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review Analysis Workflow — Blinkit Category Discovery Engine</title>
+<style>
+  :root{
+    --ink:#1a1d29; --body:#2c3242; --muted:#5a6270; --dim:#8b93a1;
+    --line:#e2e7ee; --bg:#ffffff; --tint:#f4f7fa; --tinty:#fef7e3;
+    --blue:#1d6fb8; --orange:#c4552b; --yellow:#f8cb46;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--body);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 90px}
+
+  header{background:var(--ink);color:#fff;padding:44px 0 40px;margin-bottom:44px}
+  header .wrap{padding-bottom:0}
+  .brand{color:var(--yellow);font-weight:800;font-size:20px;letter-spacing:-.3px}
+  h1{font-size:34px;line-height:1.2;margin:16px 0 12px;color:#fff;letter-spacing:-.5px}
+  header p{color:#c9cfdb;font-size:16.5px;margin:0 0 22px;max-width:70ch}
+  .links{display:flex;flex-wrap:wrap;gap:10px}
+  .links a{background:#272c3a;border:1px solid #3b4256;color:var(--yellow);
+           text-decoration:none;font-weight:700;font-size:14px;padding:9px 15px;border-radius:8px}
+  .links a:hover{background:#31374a}
+
+  h2{font-size:25px;line-height:1.25;margin:52px 0 6px;color:var(--ink);letter-spacing:-.3px;
+     display:flex;gap:13px;align-items:baseline}
+  h2 .n{flex:0 0 auto;background:var(--yellow);color:var(--ink);font:800 15px/1 var(--mono);
+        width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;
+        justify-content:center;transform:translateY(-2px)}
+  h2 + .lede{color:var(--muted);font-size:16px;margin:0 0 22px 43px}
+  h3{font-size:17.5px;margin:30px 0 8px;color:var(--ink)}
+  p{margin:0 0 14px}
+  a{color:var(--blue)}
+  code{font-family:var(--mono);font-size:13.5px;background:var(--tint);
+       border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+
+  .pipe{display:flex;flex-wrap:wrap;gap:7px;margin:22px 0 26px}
+  .pipe span{background:var(--blue);color:#fff;font-weight:700;font-size:13.5px;
+             padding:8px 13px;border-radius:7px}
+  .pipe span:last-child{background:var(--ink)}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0 22px;font-size:15px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;border-bottom:0}
+  th:first-child{border-radius:7px 0 0 0} th:last-child{border-radius:0 7px 0 0}
+  td.num{font-family:var(--mono);white-space:nowrap}
+  tbody tr:nth-child(even){background:var(--tint)}
+
+  .scroll{overflow-x:auto}
+  .box{border:1px solid var(--line);border-radius:11px;padding:18px 20px;margin:22px 0;background:var(--tint)}
+  .box.warn{background:var(--tinty);border-color:#eddba4}
+  .box.note{background:#fff;border-left:4px solid var(--blue)}
+  .box h4{margin:0 0 8px;font-size:15.5px;color:var(--ink)}
+  .box p:last-child{margin-bottom:0}
+  .box.warn h4{color:var(--orange)}
+
+  .pill{display:inline-block;font:800 11.5px/1 var(--mono);letter-spacing:.5px;
+        padding:5px 9px;border-radius:5px;color:#fff;white-space:nowrap}
+  .pill.pass{background:var(--blue)} .pill.notrun{background:var(--orange)}
+
+  pre{background:var(--ink);color:#dfe5ef;padding:15px 17px;border-radius:9px;overflow-x:auto;
+      font-family:var(--mono);font-size:13.5px;line-height:1.6;margin:16px 0 20px}
+  ul{margin:0 0 16px;padding-left:22px} li{margin-bottom:7px}
+  .foot{border-top:1px solid var(--line);margin-top:56px;padding-top:22px;
+        color:var(--dim);font-size:14px}
+  @media (max-width:640px){ h1{font-size:27px} h2{font-size:21px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">blinkit</div>
+    <h1>Review Analysis Workflow</h1>
+    <p>How 3,372 public reviews became 25 validated themes and 25 insights — the gathering, the
+    clustering, the synthesis, and every check that was run against the result, including the two
+    that could not run.</p>
+    <div class="links">
+      <a href="https://github.com/ayushbisht-source/Blinkit">Repository</a>
+      <a href="https://github.com/ayushbisht-source/Blinkit/tree/claude/category-exploration-discovery-q5hqgb/engine">Pipeline code</a>
+      <a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/docs/01-discovery-engine.md">What it found</a>
+      <a href="https://github.com/ayushbisht-source/Blinkit/actions">Workflow runs</a>
+      <a href="../">Live MVP</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="pipe">
+  <span>Collect</span><span>Normalize</span><span>Relevance gate</span><span>Extract</span>
+  <span>Cluster</span><span>Synthesize</span><span>Validate</span>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────── 1 ── -->
+<h2><span class="n">1</span> How the workflow gathers and analyses data</h2>
+<p class="lede">Collect wide, then spend model budget only on the documents that survive a cheap filter.</p>
+
+<h3>What was collected</h3>
+<div class="scroll"><table>
+  <thead><tr><th>Source</th><th>Documents</th><th>Apps covered</th></tr></thead>
+  <tbody>
+    <tr><td>Google Play Store reviews</td><td class="num">3,033</td><td>Blinkit, Zepto, Instamart, BigBasket, JioMart</td></tr>
+    <tr><td>Apple App Store reviews</td><td class="num">339</td><td>same five</td></tr>
+    <tr><td><strong>Total corpus</strong></td><td class="num"><strong>3,372</strong></td><td>—</td></tr>
+  </tbody>
+</table></div>
+
+<div class="box warn">
+  <h4>What is not in the corpus, stated up front</h4>
+  <p>A Reddit collector is implemented (<code>engine/collectors/reddit.py</code>) but contributed
+  <strong>zero documents</strong> — the corpus is app-store review text only. This is not a footnote:
+  a review corpus contains only people who <em>completed a transaction</em>, so every barrier that
+  stops someone before they buy is invisible to it by construction. Section 4 returns to what that
+  cost, and the interviews in Part 2 exist largely to cover it.</p>
+</div>
+
+<h3>Normalisation, before any model sees a document</h3>
+<ul>
+  <li><strong>PII scrubbing</strong> — emails and phone numbers stripped; usernames hashed with a
+      salt at ingestion, so raw handles are never written to disk.</li>
+  <li><strong>Near-duplicate removal</strong> via MinHash — app-store corpora are full of
+      near-identical one-liners that would otherwise inflate every theme's prevalence.</li>
+  <li><strong>Hinglish detection</strong>, so code-mixed reviews are kept rather than discarded as
+      malformed English.</li>
+</ul>
+
+<h3>A two-stage model pass, not one</h3>
+<p>Running structured extraction over 3,372 documents would spend most of the budget on reviews
+about delivery times. So a cheap <strong>relevance gate</strong> runs first and only survivors reach
+extraction.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Stage</th><th>In</th><th>Out</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>Relevance gate</td><td class="num">3,372</td><td class="num">971 (28.8%)</td>
+        <td>Cheap model judges whether the text says anything about <em>what</em> someone chooses to buy</td></tr>
+    <tr><td>Extraction</td><td class="num">971</td><td class="num">937 (96.5%)</td>
+        <td>Structured output against <code>engine/schema.py</code> — barriers, habit drivers, information gaps, segment signals, and one verbatim pain statement</td></tr>
+  </tbody>
+</table></div>
+
+<p>Rejected as noise: delivery 941 · support 550 · contentless 527 · technical 252 · unrelated 132.
+<strong>The gate removing ~71% of the corpus is the design, not a loss</strong> — most app-store
+reviews are about how fast the order arrived, which says nothing about category choice.</p>
+
+<div class="box warn">
+  <h4>The gate has a measured error rate, and it is reported rather than tuned away</h4>
+  <p>An interviewee described building their basket around a free-delivery threshold — a genuine
+  constraint on <em>what gets bought</em>, expressed as a fee complaint. Re-checking the corpus,
+  <strong>133 documents</strong> use that language and the gate discarded <strong>64</strong> of them
+  as delivery or support noise
+  (<a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/research/check_basket_economics.py">check_basket_economics.py</a>).
+  The filter's premise is right most of the time and wrong in a specific, identifiable way. That is
+  part of what the engine's output <em>means</em>, so it is documented instead of quietly retuned.</p>
+</div>
+
+<h3>Two rules that constrain the whole pipeline</h3>
+<ul>
+  <li><strong>The schema is the single source of truth.</strong> Every enum in
+      <code>engine/schema.py</code> traces to one of the brief's eight research questions, so
+      coverage of the brief is checkable rather than asserted.</li>
+  <li><strong>Numbers never come from a model.</strong> Prevalence, counts, source spread and segment
+      skew are computed from data and carried through untouched. The model sees labels and quotes
+      only — it cannot inflate a statistic it is never shown.</li>
+</ul>
+
+<!-- ─────────────────────────────────────────────────────────────────── 2 ── -->
+<h2><span class="n">2</span> How themes are identified</h2>
+<p class="lede">Deterministic clustering over the extracted pain statements — no model involved at this stage at all.</p>
+
+<pre>pain statements  →  TF-IDF  →  LSA (TruncatedSVD)  →  agglomerative clustering  →  centroid merge  →  25 themes</pre>
+
+<p>Clustering runs on the <em>extracted pain statements</em>, not raw reviews, so the grouping is
+over structured claims rather than over whatever vocabulary a reviewer happened to use.
+Character-level n-grams (<code>char_wb</code>, 3–5) handle the paraphrase and spelling variation that
+word n-grams miss in code-mixed text.</p>
+
+<h3>The merge threshold was calibrated, and silhouette could not do it</h3>
+<p>The obvious approach — pick the number of clusters by silhouette score — does not work here.
+Silhouette is <strong>monotone in k</strong> on both the sparse TF-IDF and the dense LSA
+representation, so it always prefers more clusters and can never select. Adjusted Mutual Information
+and V-measure are dominated by completeness, which is maximised by the degenerate one-cluster
+solution.</p>
+<p>What was used instead: a reproducible sweep against a synthetic corpus with planted themes,
+selecting on <strong>homogeneity</strong>, which plateaus at 0.35
+(<a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/engine/pipeline/calibrate_merge.py">calibrate_merge.py</a>).
+Purity is flat across 0.25–0.40 and cannot discriminate either. The chosen value is
+<code>DEFAULT_MERGE_AT = 0.35</code>.</p>
+
+<div class="box warn">
+  <h4>The failure this was written to catch</h4>
+  <p>At the original threshold of 0.12 the clustering <strong>collapsed to a single theme covering
+  100% of documents — and reported success.</strong> A one-theme result is technically a valid
+  clustering and every downstream stage accepted it. Two guards now exist:
+  <code>assert_not_degenerate()</code>, and a <code>MAX_THEME_SHARE</code> of 0.60 so no theme may
+  swallow the corpus. Recalibration to 0.35 produced the 25 interpretable themes used throughout.</p>
+</div>
+
+<h3>What came out</h3>
+<div class="scroll"><table>
+  <thead><tr><th>Theme</th><th>Statements</th><th>What it is</th></tr></thead>
+  <tbody>
+    <tr><td>THM-01</td><td class="num">72</td><td><code>receives / expiry / spoiled / milk</code> — produce and freshness failure</td></tr>
+    <tr><td>THM-02</td><td class="num">51</td><td>quality failure on arrival</td></tr>
+    <tr><td>THM-04</td><td class="num">42</td><td>related quality and substitution complaints</td></tr>
+    <tr><td>THM-05</td><td class="num">34</td><td><code>free / minimum / threshold / value</code> — basket economics</td></tr>
+  </tbody>
+</table></div>
+
+<div class="box note">
+  <h4>THM-05 is the theme that proved a prediction</h4>
+  <p>An interviewee's account of basket-shaping around a delivery threshold predicted that this
+  behaviour would exist in the corpus but be <em>miscoded</em>. It clustered into a theme of its own —
+  34 statements, 5.4% — which the pipeline then labelled <code>price_risk</code>, meaning "unsure
+  whether the price is fair". Its quotes are people re-planning a basket around a threshold that
+  moved: <em>"Before it serves free delivery on 100₹, And now 400₹."</em> These users know exactly what
+  the fee is. The theme is real; <strong>no value in the schema fits it.</strong> The engine collected
+  the signal at scale and has nowhere to store it.</p>
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────── 3 ── -->
+<h2><span class="n">3</span> How insights are generated</h2>
+<p class="lede">Themes go to a model for interpretation; every number stays out of its reach.</p>
+
+<p>Each theme is passed to the model with its labels and its verbatim quotes, and the model returns a
+mechanism, a confidence, and the research questions the theme answers. Batches of three, so a single
+failure costs three themes rather than twenty-five.</p>
+
+<h3>Three constraints on what a model is allowed to do</h3>
+<ul>
+  <li><strong>It never sees a statistic.</strong> Prevalence and counts are computed before synthesis
+      and re-attached after it, so a number in the output is arithmetic, not generation.</li>
+  <li><strong>Contradicting evidence is computed, never requested.</strong> Asking a model for
+      evidence against its own conclusion reliably returns nothing useful. Instead the code counts
+      documents <em>inside</em> each theme whose labels disagree with that theme's dominant barrier.</li>
+  <li><strong>Placeholders cannot ship.</strong> If a client is configured and nothing was
+      synthesised, the run exits non-zero rather than writing 25 empty insights and reporting
+      success — which is exactly what an earlier version did.</li>
+</ul>
+
+<h3>Confidence is self-scored, and low scores are kept</h3>
+<p>Median confidence across the 25 insights is <strong>0.85</strong>. THM-03 scored itself
+<strong>0.35</strong> and declined to assert a mechanism its evidence did not support. That row was
+kept rather than dropped or rewritten — a synthesis step that never produces a low-confidence output
+is not being honest about anything.</p>
+
+<h3>Provider independence</h3>
+<p>The client is provider-agnostic (Anthropic → Gemini → Groq) with account-level failover, because a
+single free-tier quota should not be able to end a run. The final synthesis ran on Gemini; the
+cross-check in section 4 re-ran the entire step on a different model family.</p>
+
+<!-- ─────────────────────────────────────────────────────────────────── 4 ── -->
+<h2><span class="n">4</span> How the quality of the insights was validated</h2>
+<p class="lede">Six checks. Four pass, two report NOT RUN — and the two that abstain are the more informative half.</p>
+
+<p>Every figure below is read from
+<a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/data/processed/validation.json">data/processed/validation.json</a>,
+the artifact the pipeline actually wrote. The checks need no API key, so anyone can re-run them:
+<code>python -m engine.validation.checks</code></p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Check</th><th>Result</th><th>What it measured</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Quote grounding</strong></td><td><span class="pill pass">PASS</span></td>
+      <td>924 extracted quotes checked character-for-character against source text. 917 exact,
+          3 whitespace-normalised, <strong>4 fabricated (0.43%)</strong>. Of the 125 quotes that
+          reach a theme, <strong>0 are unverifiable</strong> — clustering filters them out first.</td>
+    </tr>
+    <tr>
+      <td><strong>Theme saturation</strong></td><td><span class="pill pass">PASS</span></td>
+      <td>Across 937 documents, 15 distinct labels. <strong>95.3% of them were found by the halfway
+          point</strong>, and the final decile yields 0.003 new labels per document. Collecting more
+          of the same source would not have found more kinds of thing.</td>
+    </tr>
+    <tr>
+      <td><strong>Hold-out generalisation</strong></td><td><span class="pill pass">PASS</span></td>
+      <td>Genuinely out-of-sample: vectoriser, LSA and clustering re-fit on 505 training statements
+          only, then 126 unseen statements assigned to nearest centroid. Hold-out fit
+          <strong>0.460</strong> vs training's own 0.462 — unseen data fits essentially as well as
+          seen data — against a size-matched permutation null of 0.341,
+          <strong>z = 11.42</strong>.</td>
+    </tr>
+    <tr>
+      <td><strong>Relevance gate audit</strong></td><td><span class="pill pass">PASS</span></td>
+      <td>40 of the 2,402 rejected documents sampled and re-read for false negatives.
+          <strong>0 found</strong> in the sample. Note the ceiling: 40 of 2,402 can bound a large
+          error rate, not a small one — and the basket-economics gap in section 1 was found by
+          interview, not by this audit.</td>
+    </tr>
+    <tr>
+      <td><strong>Source spread</strong></td><td><span class="pill notrun">NOT RUN</span></td>
+      <td>The corpus is <strong>95.1% a single source</strong> (600 Play Store vs 31 App Store among
+          themed documents). 11 of 25 themes are single-source, but <strong>8.6 would be by
+          chance</strong> at that mix — so the check cannot separate a platform artifact from a
+          finding, and says so instead of returning a green tick.</td>
+    </tr>
+    <tr>
+      <td><strong>Human agreement (Cohen's κ)</strong></td><td><span class="pill notrun">NOT RUN</span></td>
+      <td>Requires a hand-labelled gold set (<code>data/gold/labels.jsonl</code>) that does not
+          exist. Reported as absent rather than approximated with a model-labelled substitute, which
+          would measure agreement between a model and itself.</td>
+    </tr>
+  </tbody>
+</table></div>
+
+<div class="box warn">
+  <h4>Why two checks report NOT RUN instead of PASS</h4>
+  <p>Earlier versions of this suite printed <strong>PASS over zero observations.</strong> The
+  grounding check ran against themes that were never passed in, so "no unverifiable quotes used" was
+  measured over an empty set. The hold-out check compared training data to itself. Both were green,
+  and both were meaningless.</p>
+  <p>A green line standing for no evidence is worse than an honest gap, because it is the failure
+  mode that survives review. Four checks pass, two abstain, and the report says which is which.</p>
+</div>
+
+<h3>The hold-out null was designed so the check could fail</h3>
+<p>The obvious floor — similarity to a randomly chosen centroid — is far too weak, because taking the
+<em>maximum</em> over 25 centroids is biased upward regardless of what those centroids contain.
+Measured against that floor, <strong>word-salad statements built from the real corpus vocabulary
+scored 0.71 and passed</strong>, despite containing no structure at all.</p>
+<p>The null in use keeps the geometry and destroys only the grouping: the same training points are
+assigned to clusters of the same sizes at random. Verified by mutation during development — real
+statements scored z = +17.4, and the same statements with every pain statement replaced by random
+corpus vocabulary scored <strong>z = −2.6</strong>, below the null and correctly failing. (Those two
+figures come from the mutation test in
+<a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/engine/validation/checks.py">checks.py</a>,
+not from the stored run above, which scored 11.42 on its own data.)</p>
+
+<h3>Cross-checked against a second model family</h3>
+<p>Everything else in the engine is counted or verified; the mechanism prose is not. So synthesis was
+re-run end to end on <strong>Llama 3.3 70B</strong> and compared against the Gemini output across all
+25 themes.</p>
+<div class="scroll"><table>
+  <thead><tr><th>Measure</th><th>Result</th><th>Reading</th></tr></thead>
+  <tbody>
+    <tr><td>Themes compared</td><td class="num">25 / 25</td><td>full coverage, no drop-outs</td></tr>
+    <tr><td>Research-question agreement</td><td class="num">0.66 Jaccard</td><td>substantial overlap on what each theme answers</td></tr>
+    <tr><td>Themes at zero overlap</td><td class="num">0</td><td>no theme was read completely differently</td></tr>
+    <tr><td>Mean confidence gap</td><td class="num">0.10</td><td>the two families are about equally sure</td></tr>
+    <tr><td>Mechanism nearest-match</td><td class="num">12 / 25</td><td>against a <strong>4%</strong> chance baseline</td></tr>
+  </tbody>
+</table></div>
+<p><strong>Agreement is not correctness.</strong> Two models can be wrong together. What this bounds
+is how much of the interpretation can be blamed on one vendor's idiosyncrasies — nothing more, and
+the report says so.</p>
+
+<!-- ───────────────────────────────────────────────────────────────────── -->
+<h2><span class="n">5</span> Run it yourself</h2>
+<p class="lede">Every stage is reproducible; the validation stage needs no key.</p>
+
+<pre>pip install -r requirements.txt
+cp .env.example .env                     # set AUTHOR_HASH_SALT; add an API key for enrichment
+
+python -m engine.collect --per-app 1000  # ~3.4k documents
+python -m engine.pipeline.enrich         # gate + extract   (needs an API key)
+python -m engine.pipeline.cluster        # themes           (deterministic, no key)
+python -m engine.pipeline.synthesize     # insights         (needs an API key)
+python -m engine.validation.checks       # validation       (no key needed)</pre>
+
+<p>Enrichment is <strong>resumable</strong> — completed document ids are skipped, so an interrupted
+run costs a retry rather than the run. Everything also runs on GitHub Actions
+(<code>.github/workflows/analyse.yml</code>), which is how it was actually executed: the development
+sandbox is network-restricted from the review endpoints.</p>
+
+<div class="box note">
+  <h4>What the engine found</h4>
+  <p>This page is the method. The findings — all eight research questions answered from the corpus,
+  with a per-question grade computed from real field coverage rather than asserted — are in
+  <a href="https://github.com/ayushbisht-source/Blinkit/blob/claude/category-exploration-discovery-q5hqgb/docs/01-discovery-engine.md">Part 1 — What the Discovery Engine Found</a>.</p>
+</div>
+
+<div class="foot">
+  Blinkit Category Exploration &amp; Discovery · Product Manager Fellowship graduation project.
+  All figures on this page are read from committed pipeline artifacts in
+  <code>data/processed/</code> and are reproducible from the repository.
+</div>
+
+</div>
+</body>
+</html>
