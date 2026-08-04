@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 
 from engine.collectors import app_store, play_store, reddit
 from engine.pipeline.normalize import dedupe, normalize
+from engine.schema import Document
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
@@ -33,6 +34,15 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-app", type=int, default=800, help="Play Store reviews per app")
     ap.add_argument("--sources", default="play_store,app_store,reddit")
+    ap.add_argument(
+        "--append",
+        action="store_true",
+        help=(
+            "Merge into the existing corpus instead of replacing it, then de-duplicate across "
+            "both. Without this, collecting one source alone silently discards every document "
+            "from the others — which is how a 3,372-document corpus becomes a 300-document one."
+        ),
+    )
     args = ap.parse_args()
 
     RAW.mkdir(parents=True, exist_ok=True)
@@ -59,9 +69,21 @@ def main() -> None:
             fh.write(json.dumps(r, default=str) + "\n")
     log.info("raw snapshot -> %s (%d records)", snapshot, len(raw))
 
-    docs = dedupe(normalize(raw))
-
+    docs = normalize(raw)
     out = INTERIM / "documents.jsonl"
+
+    if args.append and out.exists():
+        existing = [Document.model_validate_json(line) for line in out.read_text().splitlines() if line.strip()]
+        log.info("append: %d existing + %d newly collected", len(existing), len(docs))
+        docs = existing + docs
+
+    # De-duplication runs across the merged set, so a document collected twice by two runs is
+    # counted once — and so a Reddit post quoting an app-store review cannot inflate a theme twice.
+    before = len(docs)
+    docs = dedupe(docs)
+    if before != len(docs):
+        log.info("dedupe removed %d near-duplicates", before - len(docs))
+
     with out.open("w") as fh:
         for d in docs:
             fh.write(d.model_dump_json() + "\n")
