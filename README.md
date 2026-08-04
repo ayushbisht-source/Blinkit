@@ -125,10 +125,21 @@ recorded in full in `docs/04-mvp-spec.md` ("Amendment — the row of five"), inc
 up. Every hard rule applies to every entry in the row, not just the first, and the eval suite checks
 all five.
 
-**Two modes, and the second is the one that matters.** Mode A is first crossover. Mode B fires when
-someone bought a new category 2–6 weeks ago and hasn't returned. Since the goal metric counts
-*monthly recurrence*, Mode A produces the one-off the metric ignores and Mode B converts it into the
-repeat it counts — so Mode B wins whenever both are eligible.
+**Two modes, and only one of them can move CER.** Mode A is first crossover; Mode B fires when
+someone bought a new category 2–6 weeks ago and hasn't returned. CER counts a purchase in month M
+from a category absent in **M-1 … M-6**, so Mode B — which fires 14–45 days after the first
+purchase — lands inside that lookback and contributes **zero** to it. An earlier version of the spec
+had this backwards and gave Mode B priority; the correction and its evidence are in
+`docs/04-mvp-spec.md`. Mode A now leads the row and Mode B takes the last slot, where it serves the
+secondary metric it actually belongs to: *30-day repeat within a newly tried category*, which is what
+stops CER being satisfied by one-off trials that never return.
+
+```bash
+node mvp/evals/cer-audit.mjs   # would accepting each suggestion register in CER?
+```
+
+Across the ten seeded shoppers: **35 of 36 row entries would count**, all 10 are offered at least one
+category that counts, and the single entry that would not is the Mode B card.
 
 ### Running it
 

@@ -13,6 +13,7 @@ import {
   mostReordered,
   purchaseCadenceDays,
   categoryHistory,
+  countsTowardCER,
 } from './eligibility.js';
 
 // Which categories plausibly follow from which. Used by the fallback, and as a candidate filter for
@@ -184,7 +185,7 @@ function composeFallback({ mode, user, category, product, lapsedDays, cadence, d
  * and the substantiation check — and a rule enforced in two places is a rule that will eventually
  * only be enforced in one.
  */
-function buildCard({ user, mode, category, product, lapsedDays = null, driver = null }) {
+function buildCard({ user, mode, category, product, lapsedDays = null, driver = null, now = new Date() }) {
   // Hard rule 3: fail closed rather than surface something unbuyable.
   if (!product || product.stock <= 0) return { card: null, why: 'no_in_stock_product' };
 
@@ -201,6 +202,10 @@ function buildCard({ user, mode, category, product, lapsedDays = null, driver = 
     card: {
       mode,
       category,
+      // Whether accepting this would register in CER, per the six-month lookback. Carried on the
+      // card so the claim is a computed property of the suggestion rather than an assertion in a
+      // document that can drift away from the code.
+      countsTowardCER: countsTowardCER(user, category, now),
       product: {
         id: product.id,
         name: product.name,
@@ -243,28 +248,14 @@ export async function suggestMany(user, { limit = 5, now = new Date() } = {}) {
   const cards = [];
   const usedCategories = new Set();
 
-  // Mode B leads when it is eligible. It converts a one-off crossover into the repeat the metric
-  // actually counts, so it outranks any first trial no matter how well that trial scores.
-  if (decision.mode === 'B' && !(user.avoid ?? []).some((a) => a.category === decision.category)) {
-    const tried = (decision.triedProductIds ?? [])
-      .map((id) => PRODUCTS_BY_ID[id])
-      .filter((p) => p && p.stock > 0);
-    const built = buildCard({
-      user,
-      mode: 'B',
-      category: decision.category,
-      product: tried[0] ?? mostReordered(CATALOGUE, decision.category),
-      lapsedDays: decision.lapsedDays,
-    });
-    if (built.card) {
-      cards.push(built.card);
-      usedCategories.add(decision.category);
-    }
-  }
-
-  // Then first-crossover candidates, best-scoring first. candidateCategories already excludes owned
+  // First-crossover candidates lead, best-scoring first. candidateCategories already excludes owned
   // categories and anything the shopper has closed, so novelty and the avoid rule hold for every
-  // row, not just the first.
+  // row entry, not just the first.
+  //
+  // These lead rather than Mode B because they are the entries that can actually register in CER.
+  // The metric counts a purchase in month M from a category absent in M-1 … M-6, so a category the
+  // shopper tried 14-45 days ago is inside the lookback and its repeat scores zero. Sustained CER
+  // comes from a stream of *different* first crossovers, not from deepening one.
   for (const candidate of candidateCategories(user, decision.owned)) {
     if (cards.length >= limit) break;
     if (usedCategories.has(candidate.category)) continue;
@@ -275,11 +266,37 @@ export async function suggestMany(user, { limit = 5, now = new Date() } = {}) {
       category: candidate.category,
       product: candidate.trial,
       driver: candidate.driver,
+      now,
     });
     if (!built.card) continue;
 
     cards.push(built.card);
     usedCategories.add(candidate.category);
+  }
+
+  // Mode B keeps a place in the row, at the end, and it is not decoration. docs/00-foundation.md
+  // names "30-day repeat rate within a newly tried category" as a secondary metric and says why:
+  // trial without repeat is a discount, not exploration. Mode B is what stops the primary metric
+  // being gamed by one-off trials that never come back. It simply is not itself a CER event, and
+  // the row now ranks by what the goal actually counts rather than by which card converts best.
+  if (decision.mode === 'B' && !(user.avoid ?? []).some((a) => a.category === decision.category)) {
+    const tried = (decision.triedProductIds ?? [])
+      .map((id) => PRODUCTS_BY_ID[id])
+      .filter((p) => p && p.stock > 0);
+    const built = buildCard({
+      user,
+      mode: 'B',
+      category: decision.category,
+      product: tried[0] ?? mostReordered(CATALOGUE, decision.category),
+      lapsedDays: decision.lapsedDays,
+      now,
+    });
+    if (built.card && !usedCategories.has(decision.category)) {
+      // Takes the last slot, displacing the weakest first crossover rather than extending the row.
+      if (cards.length >= limit) cards.pop();
+      cards.push(built.card);
+      usedCategories.add(decision.category);
+    }
   }
 
   return {

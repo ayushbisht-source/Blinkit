@@ -11,6 +11,15 @@ export const MODE_B_MIN_DAYS = 14;
 export const MODE_B_MAX_DAYS = 45;
 const MIN_ORDERS_FOR_A_REASON = 2;
 
+// The goal metric's lookback, from docs/00-foundation.md:
+//
+//   CER(M) = users who purchased from category C in month M, where C is in none of M-1 … M-6
+//            ───────────────────────────────────────────────────────────────────────────────
+//                                  users with >=1 order in M
+//
+// Six months, stated in days so it can be applied to an order date directly.
+export const CER_LOOKBACK_DAYS = 182;
+
 function daysBetween(isoDate, now = new Date()) {
   const then = new Date(isoDate + 'T00:00:00Z');
   return Math.floor((now - then) / 86400000);
@@ -98,6 +107,21 @@ export function decideMode(user, now = new Date()) {
   }
 
   return { mode: 'A', owned };
+}
+
+/**
+ * Would buying this category *now* count toward CER?
+ *
+ * Only if the shopper has not bought from it inside the six-month lookback. This is the difference
+ * between a suggestion that is merely good and one that moves the metric the project is judged on,
+ * and it is the reason Mode B does not lead the row: a category tried 14-45 days ago is squarely
+ * inside the lookback, so a repeat purchase there is worth a great deal to the shopper and to
+ * retention, and worth exactly zero to CER.
+ */
+export function countsTowardCER(user, category, now = new Date()) {
+  const entry = categoryHistory(user)[category];
+  if (!entry) return true; // never bought at all
+  return !entry.orderDates.some((d) => daysBetween(d, now) <= CER_LOOKBACK_DAYS);
 }
 
 /**

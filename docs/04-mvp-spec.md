@@ -37,21 +37,37 @@ they are today. Firing earlier competes with the task. Firing at checkout compet
 
 ---
 
-## Two modes — and mode B is the one that matters
+## Two modes — and which one serves which metric
 
-### Mode A — First crossover
+### Mode A — First crossover *(the CER mode)*
 User has never bought from category C. Show one item from C.
 
-### Mode B — Second purchase *(the metric-moving mode)*
+### Mode B — Second purchase *(the secondary-metric mode)*
 User bought from category C for the first time in the last 14–45 days and hasn't returned. Show a
 replenishment prompt for C.
 
-**Why B is the priority.** The goal metric is % of MAC buying a new category *every month* — a
-recurrence measure. The research found crossover is event-triggered and non-repeating: users cross
-once, then revert. Mode A produces the one-off that the metric doesn't reward. Mode B converts it
-into the repeat that it does. Mode A exists to create Mode B's inventory.
+> **Correction.** An earlier version of this spec called Mode B "the metric-moving mode" and gave it
+> priority whenever both were eligible, on the reasoning that the goal measures *monthly recurrence*
+> so a repeat is what counts. That is wrong against this project's own metric definition, and the
+> error is recorded rather than silently edited out.
+>
+> CER, from `docs/00-foundation.md`, counts a purchase in month M from a category the user bought
+> from in **none of M-1 … M-6**. Mode B fires 14–45 days after a first purchase — squarely inside
+> that six-month lookback. **A Mode B repeat therefore scores exactly zero against CER.** For a user
+> to count in two consecutive months they need a *different* new category each month, so sustained
+> CER comes from a stream of first crossovers, which is Mode A repeated, not Mode A converted.
+>
+> `mvp/evals/cer-audit.mjs` measures this against the seeded shoppers: 35 of 36 row entries would
+> register in CER, and the single one that would not is the Mode B card.
 
-Priority when both are eligible: **B wins.** Warmer user, higher conversion, direct metric impact.
+**Mode B is still in the product, and not as a consolation.** `docs/00-foundation.md` lists "30-day
+repeat rate within a newly tried category" as a secondary metric with the note *trial without repeat
+is a discount, not exploration*. Mode B is what stops CER being satisfied by one-off trials that
+never come back — it defends the primary metric's meaning without contributing to its numerator.
+
+**Priority when both are eligible: A wins.** Mode B takes the last slot in the row rather than the
+first. The row is ranked by what the goal counts, not by which card converts best — those are
+different orderings, and the difference is the whole point of writing the metric down.
 
 ---
 
@@ -182,7 +198,8 @@ history. One deployable unit, one URL, free tier — least that can go wrong on 
 ## Build order — stop wherever time runs out
 
 1. **Storefront + seeded data + cart + Mode A card** ← minimum viable demo
-2. **Mode B (second-purchase prompt)** ← the metric-moving half; do not skip if avoidable
+2. **Mode B (second-purchase prompt)** ← serves the secondary metric, not CER; skip before skipping
+   anything above it
 3. **Event instrumentation + CER dashboard**
 4. **Eval suite**
 5. A/B holdout assignment

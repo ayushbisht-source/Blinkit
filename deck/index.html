@@ -365,9 +365,14 @@
     <tr><td>Trust signal from similar buyers</td><td>"don't trust the brand"</td><td class="n">26/40</td></tr>
     <tr><td>Smallest available pack</td><td>"too expensive"</td><td class="n">20/40</td></tr>
   </table></div>
-  <p><strong>Mode B is the one that matters.</strong> Mode A is first crossover; Mode B fires when
-  someone tried a category 2–6 weeks ago and hasn't returned. The metric counts monthly recurrence,
-  so Mode A produces the one-off it ignores and Mode B converts it into the repeat it counts.</p>
+  <p><strong>Two modes — and only one can move CER.</strong> Mode A is first crossover; Mode B fires
+  when someone tried a category 2–6 weeks ago and hasn't returned. CER counts a purchase in month M
+  from a category absent in M-1 … M-6, so Mode B lands <em>inside</em> that six-month lookback and
+  contributes zero to it. An earlier version of this spec claimed the opposite and ranked Mode B
+  first; <code>mvp/evals/cer-audit.mjs</code> settles it — 35 of 36 row entries would register in
+  CER, and the one that would not is the Mode B card. Mode A now leads; Mode B takes the last slot,
+  serving the secondary metric it belongs to (30-day repeat within a newly tried category), which is
+  what stops CER being satisfied by one-off trials that never come back.</p>
   <p><strong>One card became five — and the trade is stated, not hidden.</strong> The spec argued for
   exactly one option because comparison time is the #2 blocker (13/40). The row shows up to five,
   each opening a <em>different</em> new category, which buys five independent attempts at a metric

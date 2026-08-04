@@ -9,7 +9,13 @@
 
 import { USERS, CATALOGUE, PRODUCTS_BY_ID, CATEGORIES } from '../data/seed.js';
 import { suggest, suggestMany, SIGNAL_PHRASE } from '../agent/suggest.js';
-import { categoryHistory, priceAnchor, MODE_B_MIN_DAYS, MODE_B_MAX_DAYS } from '../agent/eligibility.js';
+import {
+  categoryHistory,
+  priceAnchor,
+  countsTowardCER,
+  MODE_B_MIN_DAYS,
+  MODE_B_MAX_DAYS,
+} from '../agent/eligibility.js';
 
 const results = [];
 const record = (name, pass, detail = '') => results.push({ name, pass, detail });
@@ -334,6 +340,48 @@ for (const user of USERS) {
     `the brief's named crossovers reach the row (${exercised} signal/category pairs exercised)`,
     pass && exercised > 0,
     exercised === 0 ? 'no seeded shopper declares one of the three signals — check did not run' : bad.join('; ')
+  );
+}
+
+// ── 12. The lead slot goes to a suggestion that can actually move the metric ────────────────────
+//
+// CER counts a purchase in month M from a category absent in M-1 … M-6. A Mode B repeat sits inside
+// that lookback by construction — the category was tried 14-45 days ago — so it cannot register,
+// however well it converts. The most prominent slot therefore belongs to a card that counts.
+//
+// This is the check that catches the error the spec used to contain in prose: that Mode B was "the
+// metric-moving mode". It is the *secondary*-metric mode. Ranking it first spent the best slot on
+// the one card guaranteed to score zero against the goal.
+{
+  let pass = true;
+  const bad = [];
+  let exercised = 0;
+
+  for (const { user, many } of cards) {
+    if (many.cards.length === 0) continue;
+    const anyCounts = many.cards.some((c) => c.countsTowardCER);
+    if (!anyCounts) continue; // nothing in the row could count; no ranking choice to make
+    exercised++;
+    if (!many.cards[0].countsTowardCER) {
+      pass = false;
+      bad.push(`${user.id}: row leads with ${many.cards[0].category} (${many.cards[0].mode}), which cannot count`);
+    }
+  }
+
+  // And the flag itself must agree with the metric definition rather than being decorative.
+  for (const { user, many } of cards) {
+    for (const c of many.cards) {
+      if (c.countsTowardCER !== countsTowardCER(user, c.category)) {
+        pass = false;
+        bad.push(`${user.id}: countsTowardCER on ${c.category} disagrees with the lookback`);
+      }
+    }
+  }
+
+  record(
+    `the row leads with a CER-eligible suggestion (${exercised} rows exercised)`,
+    pass && exercised > 0,
+    exercised === 0 ? 'no row contained a CER-eligible card — check did not run' : bad.join('; ')
   );
 }
 
