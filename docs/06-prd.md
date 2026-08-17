@@ -1,8 +1,8 @@
 # PRD — Category Spark
 
-**Product:** Blinkit · Growth · Category Exploration
-**Author:** Ayush Bisht
-**Status:** Prototype deployed, not experimented. No lift figure exists and none is claimed.
+**Product:** Blinkit · Growth · Category Exploration  
+**Author:** Ayush Bisht  
+**Status:** Prototype deployed, not experimented. No lift figure exists and none is claimed.  
 **Last updated:** 4 August 2026
 
 | | |
