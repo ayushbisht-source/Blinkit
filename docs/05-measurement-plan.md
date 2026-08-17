@@ -102,7 +102,7 @@ Named in advance, because a hypothesis that can't be wrong isn't one.
 |---|---|
 | Trial rises, 30-day repeat flat | The feature creates one-offs. Root-cause diagnosis (crossover is event-triggered) is right, but this intervention doesn't convert it into habit |
 | Conversion identical whether the anchor is favourable or not | The price anchor isn't the active ingredient. The whole §2 argument in `docs/03-problem-definition.md` is wrong |
-| Mode B underperforms Mode A | The post-crossover window isn't the high-value moment; recency doesn't beat novelty |
+| Mode B's 30-day repeat rate stays flat | The post-crossover window isn't recoverable. Note this is a *secondary*-metric falsifier: Mode B sits inside CER's six-month lookback and cannot move the primary metric either way — see the correction in `docs/03-problem-definition.md` §5 |
 | Dismissal >60% within a week | Users in fetch mode reject *any* interruption — an ability-side fix isn't enough on its own |
 | CER moves, but core order frequency drops >3% | Exploration was bought with retention. Net negative |
 

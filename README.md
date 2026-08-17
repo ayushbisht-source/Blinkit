@@ -30,6 +30,8 @@ The MVP supplies the missing reference point.
 | `docs/02-user-research.md` | Part 2 — survey findings (n=40) and what they constrain |
 | `docs/03-problem-definition.md` | Part 3 — root cause, workarounds, user and business case |
 | `docs/04-mvp-spec.md` | Part 4 — the "One Thing" spec and why every obvious build was rejected |
+| `docs/05-measurement-plan.md` | Primary metric, guardrails with kill thresholds, experiment design |
+| `docs/06-prd.md` | **PRD** — the whole project as one product document |
 | `docs/ARCHITECTURE.md` | Original phase plan |
 | `engine/` | Part 1 — the discovery engine |
 | `mvp/` | Part 4 — the deployed prototype |
