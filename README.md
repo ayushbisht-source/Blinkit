@@ -1,5 +1,7 @@
 # Blinkit — Category Exploration & Discovery
 
+![Category Spark — 39 of 40 users wanted to try a new category and didn't](assets/thumbnail.png)
+
 Graduation project. Goal: increase the share of Monthly Active Customers who purchase from at least
 one **new** category each month.
 

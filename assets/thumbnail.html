@@ -1,0 +1,109 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  :root{
+    --ink:#12151d; --ink2:#1c2230; --line:#2c3444;
+    --fg:#ffffff; --soft:#aab3c4; --dim:#79839a;
+    --yellow:#f8cb46; --blue:#3f97e0; --green:#28b34a; --orange:#e0723c;
+    --mono:"DejaVu Sans Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:630px;background:var(--ink);color:var(--fg);
+       font-family:"DejaVu Sans",Arial,sans-serif;overflow:hidden;position:relative}
+
+  /* soft glow, keeps the flat dark from reading as a slide */
+  .glow{position:absolute;width:760px;height:760px;border-radius:50%;
+        background:radial-gradient(circle,rgba(248,203,70,.13) 0%,rgba(248,203,70,0) 62%);
+        top:-290px;right:-190px}
+
+  .pad{position:relative;padding:40px 52px 34px;height:100%;display:flex;flex-direction:column}
+
+  .top{display:flex;align-items:center;gap:13px}
+  .logo{font-size:25px;font-weight:800;color:var(--yellow);letter-spacing:-.6px}
+  .tag{font:700 11px var(--mono);letter-spacing:1.5px;color:var(--soft);
+       border:1px solid var(--line);border-radius:20px;padding:6px 13px}
+
+  .main{display:flex;gap:40px;flex:1;align-items:center;margin-top:2px}
+  .left{width:662px}
+
+  h1{font-size:41px;line-height:1.15;letter-spacing:-1px;font-weight:800}
+  h1 .hl{color:var(--yellow)}
+  .sub{margin-top:15px;font-size:15.5px;line-height:1.55;color:var(--soft)}
+  .sub b{color:#e4e9f2;font-weight:600}
+  .urls{margin-top:22px;display:flex;gap:9px;flex-wrap:wrap}
+  .u{font:600 12.5px var(--mono);color:var(--yellow);background:#1b2030;
+     border:1px solid var(--line);border-radius:8px;padding:8px 13px}
+  .u span{color:var(--dim)}
+
+  /* the product, not just the claim */
+  .card{width:358px;background:var(--ink2);border:1px solid var(--line);
+        border-radius:16px;padding:17px;box-shadow:0 22px 52px rgba(0,0,0,.42)}
+  .chead{display:flex;align-items:center;gap:8px;margin-bottom:13px}
+  .pill{background:var(--orange);color:#fff;font:800 9.5px var(--mono);
+        letter-spacing:.8px;padding:5px 9px;border-radius:5px}
+  .mode{font:800 9.5px var(--mono);letter-spacing:.8px;color:var(--dim);
+        border:1px solid var(--line);border-radius:5px;padding:5px 8px}
+  .row{display:flex;gap:11px;align-items:flex-start}
+  .thumb{width:46px;height:46px;border-radius:10px;background:#28303f;
+         display:flex;align-items:center;justify-content:center;font-size:23px;flex:0 0 auto}
+  .nm{font-size:15px;font-weight:700;line-height:1.25}
+  .meta{font-size:11.5px;color:var(--dim);margin-top:3px}
+  .why{margin-top:12px;background:#151a24;border-left:3px solid var(--green);
+       border-radius:7px;padding:9px 11px;font-size:12.3px;line-height:1.45;color:#d5dbe6}
+  .anchor{margin-top:9px;font:700 12.5px var(--mono);color:var(--blue)}
+  .anchor small{display:block;font:400 10.5px "DejaVu Sans";color:var(--dim);margin-top:3px;
+                letter-spacing:0}
+
+  .stats{display:flex;gap:0;border-top:1px solid var(--line);padding-top:18px;margin-top:0}
+  .s{flex:1;border-left:1px solid var(--line);padding-left:16px}
+  .s:first-child{border-left:0;padding-left:0}
+  .s .v{font-size:25px;font-weight:800;color:var(--yellow);letter-spacing:-.5px}
+  .s .k{font-size:11.5px;color:var(--dim);margin-top:4px;line-height:1.35}
+</style></head><body>
+<div class="glow"></div>
+<div class="pad">
+
+  <div class="top">
+    <span class="logo">blinkit</span>
+    <span class="tag">CATEGORY EXPLORATION &amp; DISCOVERY</span>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <h1>39 of 40 users wanted to try a new category — <span class="hl">and didn't.</span></h1>
+      <p class="sub">Motivation was never the constraint. The app shows an unfamiliar category
+      exactly what it shows a familiar one — <b>a price with no reference point.</b> Evaluating it
+      costs time a two-minute fetch session hasn't budgeted, so skipping is rational.
+      <b>Category Spark supplies the missing reference point.</b></p>
+      <div class="urls">
+        <span class="u"><span>live →</span> ayushbisht-source.github.io/Blinkit</span>
+        <span class="u"><span>workflow →</span> /workflow</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="chead">
+        <span class="pill">CATEGORY SPARK</span>
+        <span class="mode">5 NEW CATEGORIES</span>
+      </div>
+      <div class="row">
+        <span class="thumb">🐕</span>
+        <span>
+          <div class="nm">Drools Puppy Treats</div>
+          <div class="meta">150g · ₹65 · Pet Supplies</div>
+        </span>
+      </div>
+      <div class="why">“You have a pet — pet supplies is the usual next thing people add”</div>
+      <div class="anchor">~₹65/week · your usual runs ~₹68/week
+        <small>the price anchor — computed from their own spend</small></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="s"><div class="v">3,372</div><div class="k">reviews analysed<br>of 5,898 collected</div></div>
+    <div class="s"><div class="v">25</div><div class="k">validated themes<br>0.4% fabrication rate</div></div>
+    <div class="s"><div class="v">n=40</div><div class="k">survey respondents<br>+ 5 depth interviews</div></div>
+    <div class="s"><div class="v">12</div><div class="k">agent evals, each<br>mutation-tested</div></div>
+    <div class="s"><div class="v">LIVE</div><div class="k">deployed prototype<br>no API key required</div></div>
+  </div>
+
+</div>
+</body></html>
